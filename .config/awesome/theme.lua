@@ -60,17 +60,20 @@ theme.menu_logout_icon													=	icondir .. "log-out.svg"
 theme.menu_reboot_icon													=	icondir .. "refresh-cw.svg"
 theme.menu_power_icon														=	icondir .. "power.svg"
 
-theme.taglist_font = "sans-serif semi-bold italic"
-theme.taglist_shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
-theme.taglist_shape_border_width = 5
-theme.taglist_shape_border_color = "#00000000"
-theme.taglist_bg_focus = "#185a7a"
-theme.taglist_fg_focus = "#ffffff"
-theme.taglist_fg_occupied = "#ffffff"
-theme.taglist_fg_empty = "#555555"
+theme.taglist_font 															= "sans-serif semi-bold italic 10"
+-- theme.taglist_shape 													= function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
+-- theme.taglist_shape 													= function(cr, w, h) gears.shape.parallelogram(cr, w, h, w*0.87) end
+-- theme.taglist_shape_border_width 						= 5
+-- theme.taglist_shape_border_color 						= "#00000000"
+-- theme.taglist_bg_focus 											= "#185a7a"
+-- theme.taglist_fg_focus 											= "#ffffff"
+theme.taglist_bg_focus 													= "#00000000"
+theme.taglist_fg_focus 													= "#42adf0"
+theme.taglist_fg_occupied 											= "#a6a6a6"
+theme.taglist_fg_empty 													= "#555555"
 
--- theme.tasklist_plain_task_name                  = true
--- theme.tasklist_disable_icon                     = true
+-- theme.tasklist_plain_task_name               = true
+-- theme.tasklist_disable_icon                  = true
 theme.useless_gap                               = 5
 
 -- theme.layout_tile                            = icondir .. "tile.png"
@@ -106,8 +109,6 @@ theme.cal = lain.widget.cal({
     }
 })
 mytextclock:disconnect_signal("mouse::enter", theme.cal.hover_on)
--- mytextclock:disconnect_signal("mouse::leave", theme.cal.hide)
--- redefine mouse button functions
 mytextclock:buttons(awful.util.table.join(
 	awful.button({}, 1, function() 
 			if theme.cal.notification then
@@ -120,7 +121,6 @@ mytextclock:buttons(awful.util.table.join(
 	awful.button({}, 5, theme.cal.prev),
 	awful.button({}, 4, theme.cal.next))
 )
-
 
 -- CPU
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
@@ -159,7 +159,6 @@ local bat = lain.widget.bat({
 --         if volume_now.status == "off" then
 --             volume_now.level = volume_now.level .. "M"
 --         end
-
 --         widget:set_markup(markup.fontfg(theme.font, "#7493d2", volume_now.level .. "% "))
 --     end
 -- })
@@ -171,14 +170,6 @@ local bat = lain.widget.bat({
 -- local netupicon = wibox.widget.imagebox(theme.widget_netup)
 -- local netupinfo = lain.widget.net({
 --     settings = function()
---         --[[ uncomment if using the weather widget
---         if iface ~= "network off" and
---            string.match(theme.weather.widget.text, "N/A")
---         then
---             theme.weather.update()
---         end
---         --]]
-
 --         widget:set_markup(markup.fontfg(theme.font, "#e54c62", net_now.sent .. " "))
 --         netdowninfo:set_markup(markup.fontfg(theme.font, "#87af5f", net_now.received .. " "))
 --     end
@@ -196,11 +187,7 @@ local memory = lain.widget.mem({
 
 function theme.at_screen_connect(s)
     local wallpaper = theme.wallpapers[s.index]
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
-    end
     gears.wallpaper.maximized(wallpaper, s)
-    -- gears.wallpaper.fit(wallpaper, s)
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
@@ -254,7 +241,7 @@ function theme.at_screen_connect(s)
 		awful.util.mymainmenu.wibox.shape = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
 		local menulauncher = awful.widget.launcher({ image = theme.menu_launcher, menu = awful.util.mymainmenu })
 
-		-- -- Hide the menu when the mouse leaves it
+		-- Hide the menu when the mouse leaves it
 		
 		local mouse_in_menu = false
 		-- when mouse leaves launcher icon without entering menu. close it
@@ -277,7 +264,7 @@ function theme.at_screen_connect(s)
 		)
 		
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, bg = theme.bg_wibar, fg = theme.fg_normal })
+    s.mywibox = awful.wibox({ position = "top", screen = s, bg = theme.bg_wibar, fg = theme.fg_normal })
 		
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -313,5 +300,9 @@ function theme.at_screen_connect(s)
     }
 
 end
+
+client.connect_signal("manage", function (c)
+    c.shape = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 6) end
+end)
 
 return theme
