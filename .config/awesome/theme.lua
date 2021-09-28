@@ -47,6 +47,7 @@ theme.menu_fg_focus                             = theme.menu_fg_normal
 local icondir																		= gears.filesystem.get_configuration_dir() .. "icons/"
 theme.widget_cpu                                = icondir .. "cpu.png"
 theme.widget_mem                                = icondir .. "mem.png"
+theme.widget_spotify                            = icondir .. "spoti.png"
 theme.widget_batt                               = icondir .. "bat.png"
 theme.widget_clock                              = icondir .. "clock.png"
 theme.widget_temp                               = icondir .. "temp.png"
@@ -68,8 +69,10 @@ theme.taglist_font 															= "sans-serif semi-bold italic 10"
 -- theme.taglist_bg_focus 											= "#185a7a"
 -- theme.taglist_fg_focus 											= "#ffffff"
 theme.taglist_bg_focus 													= "#00000000"
+theme.taglist_bg_urgent		 											= "#00000000"
 theme.taglist_fg_focus 													= "#42adf0"
 theme.taglist_fg_occupied 											= "#a6a6a6"
+theme.taglist_fg_urgent		 											= theme.taglist_fg_occupied
 theme.taglist_fg_empty 													= "#555555"
 
 -- theme.tasklist_plain_task_name               = true
@@ -185,124 +188,125 @@ local memory = lain.widget.mem({
 })
 
 
+-- Systray Container
+function trayshape(cr, width, height) gears.shape.partially_rounded_rect(cr, width, height, true, false, false, true, 25) end
+local mysystray = wibox.container.margin(wibox.widget {
+	{
+		wibox.widget.systray(),
+		left = 10,
+		top = 0,
+		bottom = 0,
+		right = 2,
+		widget = wibox.container.margin
+	},
+	bg = theme.bg_systray,
+	shape = trayshape,
+	shape_clip = true,
+	widget = wibox.container.background
+}, 6, 0, 3, 4)
+
+
+-- Spotify Widget
+local my_spotify_widget = spotify_widget({icon = theme.widget_spotify, font=theme.font})
+
+
+-- Active Screen Indicator
+-- local screen_indicator = 
+
+
 function theme.at_screen_connect(s)
-    local wallpaper = theme.wallpapers[s.index]
-    gears.wallpaper.maximized(wallpaper, s)
+	gears.wallpaper.maximized(theme.wallpapers[s.index], s)
 
-    -- Tags
-    awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
+	-- Tags
+	awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
 
+	-- Create an imagebox widget which will contains an icon indicating which layout we're using.
+	-- We need one layoutbox per screen.
+	-- s.mylayoutbox = awful.widget.layoutbox(s)
+	-- s.mylayoutbox:buttons(gears.table.join(
+	-- 	awful.button({}, 1, function() awful.layout.inc(1) end),
+	-- 	awful.button({}, 2, function() awful.layout.set(awful.layout.layouts[1]) end),
+	-- 	awful.button({}, 3, function() awful.layout.inc(-1) end)
+	-- ))
 
-    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
-    -- We need one layoutbox per screen.
-    -- s.mylayoutbox = awful.widget.layoutbox(s)
-    -- s.mylayoutbox:buttons(gears.table.join(
-		-- 	awful.button({}, 1, function() awful.layout.inc(1) end),
-		-- 	awful.button({}, 2, function() awful.layout.set(awful.layout.layouts[1]) end),
-		-- 	awful.button({}, 3, function() awful.layout.inc(-1) end)
-		-- ))
-    -- Create a taglist widget
+	-- -- Create a tasklist widget
+	-- s.mytasklist = awful.widget.tasklist {
+	-- 	screen = s,
+	-- 	filter = awful.widget.tasklist.filter.currenttags,
+	-- 	buttons = awful.util.tasklist_buttons
+	-- }
 
-    -- -- Create a tasklist widget
-		-- s.mytasklist = awful.widget.tasklist {
-		-- 	screen = s,
-		-- 	filter = awful.widget.tasklist.filter.currenttags,
-		-- 	buttons = awful.util.tasklist_buttons
+	-- Create a taglist widget
+	s.mytaglist = awful.widget.taglist {
+		screen = s,
+		filter = awful.widget.taglist.filter.all,
+		buttons = awful.util.taglist_buttons,
+		-- style   = {
+		--   shape = gears.shape.powerline
 		-- }
+	}
 
+	-- Menu
+	awful.util.mymainmenu.wibox.shape = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
+	local menulauncher = awful.widget.launcher({ image = theme.menu_launcher, menu = awful.util.mymainmenu })
 
-		s.mytaglist = awful.widget.taglist {
-			screen = s,
-			filter = awful.widget.taglist.filter.all,
-			buttons = awful.util.taglist_buttons,
-			-- style   = {
-      --   shape = gears.shape.powerline
-    	-- }
-		}
+	-- Hide the menu when the mouse leaves it
 
-		--Systray Container
-		function trayshape(cr, width, height) gears.shape.partially_rounded_rect(cr, width, height, true, false, false, true, 25) end
-		local mysystray = wibox.container.margin(wibox.widget {
-			{
-				wibox.widget.systray(),
-				left = 10,
-				top = 0,
-				bottom = 0,
-				right = 2,
-				widget = wibox.container.margin
+	local mouse_in_menu = false
+	-- when mouse leaves launcher icon without entering menu. close it
+	menulauncher:connect_signal("mouse::leave", function()
+			if awful.util.mymainmenu.wibox.visible then
+				gears.timer{
+					timeout = 0.1, 
+					autostart = true,
+					callback = function () if not mouse_in_menu then awful.util.mymainmenu:hide() end end,
+					single_shot = true
+				}
+			end
+		end
+	)
+	awful.util.mymainmenu.wibox:connect_signal("mouse::enter", function() mouse_in_menu = true end)
+	awful.util.mymainmenu.wibox:connect_signal("mouse::leave", function() 
+			awful.util.mymainmenu:hide()
+			mouse_in_menu = false
+		end
+	)
+
+	-- Create the wibox
+	s.mywibox = awful.wibar({ position = "top", screen = s, bg = theme.bg_wibar, fg = theme.fg_normal })
+
+	-- Add widgets to the wibox
+	s.mywibox:setup {
+			layout = wibox.layout.align.horizontal,
+			{ -- Left widgets
+					layout = wibox.layout.fixed.horizontal,
+					menulauncher,
+					s.mytaglist,
 			},
-			bg = theme.bg_systray,
-			shape = trayshape,
-			shape_clip = true,
-			widget = wibox.container.background
-		}, 6, 0, 3, 4)
-
-		-- Menu
-		awful.util.mymainmenu.wibox.shape = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
-		local menulauncher = awful.widget.launcher({ image = theme.menu_launcher, menu = awful.util.mymainmenu })
-
-		-- Hide the menu when the mouse leaves it
-		
-		local mouse_in_menu = false
-		-- when mouse leaves launcher icon without entering menu. close it
-		menulauncher:connect_signal("mouse::leave", function()
-				if awful.util.mymainmenu.wibox.visible then
-					gears.timer{
-						timeout = 0.1, 
-						autostart = true,
-						callback = function () if not mouse_in_menu then awful.util.mymainmenu:hide() end end,
-						single_shot = true
-					}
-				end
-			end
-		)
-		awful.util.mymainmenu.wibox:connect_signal("mouse::enter", function() mouse_in_menu = true end)
-		awful.util.mymainmenu.wibox:connect_signal("mouse::leave", function() 
-				awful.util.mymainmenu:hide()
-				mouse_in_menu = false
-			end
-		)
-		
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, bg = theme.bg_wibar, fg = theme.fg_normal })
-		
-    -- Add widgets to the wibox
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            menulauncher,
-            s.mytaglist,
-        },
-        -- s.mytasklist, -- Middle widget
-        nil,
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            -- netdownicon,
-            -- netdowninfo,
-            -- netupicon,
-            -- netupinfo.widget,
-						spotify_widget(),
-            volicon,
-            -- theme.volume.widget,
-            memicon,
-            memory.widget,
-            cpuicon,
-            cpu.widget,
-            tempicon,
-            temp.widget,
-            baticon,
-            bat.widget,
-            clockicon,
-            mytextclock,
-						mysystray,
-					},
-    }
-
+			-- s.mytasklist, -- Middle widget
+			nil,
+			{ -- Right widgets
+					layout = wibox.layout.fixed.horizontal,
+					-- netdownicon,
+					-- netdowninfo,
+					-- netupicon,
+					-- netupinfo.widget,
+					-- volicon,
+					-- theme.volume.widget,
+					my_spotify_widget,
+					memicon,
+					memory.widget,
+					cpuicon,
+					cpu.widget,
+					tempicon,
+					temp.widget,
+					baticon,
+					bat.widget,
+					clockicon,
+					mytextclock,
+					mysystray,
+				},
+	}
 end
-
-client.connect_signal("manage", function (c)
-    c.shape = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 6) end
-end)
 
 return theme

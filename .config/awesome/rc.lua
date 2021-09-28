@@ -502,22 +502,34 @@ awful.rules.rules = {
 		properties = {floating = true}
 	},
 
-	-- Set Spotify to always map on the tag named "two" on screen 1.
-	-- { rule = { class = "Firefox" },
-	--   properties = { screen = 1, tag = "2" } },
+	--Set Spotify to always map on the tag named "five" on screen 1.
+	{ rule = { class = "Spotify" }, properties = { screen = 1, tag = "five"} },
 }
 
 -- Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function(c)
-		-- Set the windows at the slave,
-		-- i.e. put it at the end of others instead of setting it master.
+		-- Set the windows at the slave
 		if not awesome.startup then awful.client.setslave(c) end
 
 		if awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
 			-- Prevent clients from being unreachable after screen count changes.
 			awful.placement.no_offscreen(c)
 		end
+
+		-- Windows like spotify only set class name after window opens. 
+		-- So add a listener for when it attains classname and then apply rules
+
+		if c.class == nil then 
+			c.minimized = true
+			c:connect_signal("property::class", function ()
+				c.minimized = false
+				awful.rules.apply(c)
+			end)
+		end
+
+		-- rounded corners for windows
+		c.shape = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 6) end
 	end
 )
 
