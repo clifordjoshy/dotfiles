@@ -224,7 +224,7 @@ function theme.at_screen_connect(s)
 		function trayshape(cr, width, height) gears.shape.partially_rounded_rect(cr, width, height, true, false, false, true, 25) end
 		local mysystray = wibox.container.margin(wibox.widget {
 			{
-				wibox.widget.systray(true),
+				wibox.widget.systray(),
 				left = 10,
 				top = 0,
 				bottom = 0,
@@ -264,7 +264,7 @@ function theme.at_screen_connect(s)
 		)
 		
     -- Create the wibox
-    s.mywibox = awful.wibox({ position = "top", screen = s, bg = theme.bg_wibar, fg = theme.fg_normal })
+    s.mywibox = awful.wibar({ position = "top", screen = s, bg = theme.bg_wibar, fg = theme.fg_normal })
 		
     -- Add widgets to the wibox
     s.mywibox:setup {
