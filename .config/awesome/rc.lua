@@ -88,6 +88,9 @@ awful.layout.layouts = {
 	-- awful.layout.suit.corner.se,
 }
 
+-- Active Screen Indicator
+awful.util.screen_indicator = awful.widget.only_on_screen (nil, 1)
+
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
@@ -260,16 +263,16 @@ globalkeys = gears.table.join(
 		function() awful.tag.incncol(-1, nil, true) end,
 		{ description = "decrease the number of columns", group = "layout" }
 	),
-	awful.key({modkey, "Control"}, "n",
-		function()
-			local c = awful.client.restore()
-			-- Focus restored client
-			if c then
-				c:emit_signal("request::activate", "key.unminimize", {raise = true})
-			end
-		end,
-		{ description = "restore minimized", group = "client" }
-	),
+	-- awful.key({modkey, "Control"}, "n",
+	-- 	function()
+	-- 		local c = awful.client.restore()
+	-- 		-- Focus restored client
+	-- 		if c then
+	-- 			c:emit_signal("request::activate", "key.unminimize", {raise = true})
+	-- 		end
+	-- 	end,
+	-- 	{ description = "restore minimized", group = "client" }
+	-- ),
 
 	--lock screen
 	awful.key({modkey}, "q",
@@ -338,10 +341,10 @@ clientkeys = gears.table.join(
 		function(c) c:move_to_screen() end,
 		{ description = "move to screen", group = "client" }
 	),
-	awful.key({modkey}, "t",
-		function(c) c.ontop = not c.ontop end,
-		{ description = "toggle keep on top", group = "client" }
-	),
+	-- awful.key({modkey}, "t",
+	-- 	function(c) c.ontop = not c.ontop end,
+	-- 	{ description = "toggle keep on top", group = "client" }
+	-- ),
 	-- awful.key({modkey}, "n",
 	-- 	function(c)
 	-- 		-- The client currently has the input focus, so it cannot be
@@ -541,5 +544,12 @@ client.connect_signal("manage", function(c)
 -- 	end
 -- )
 
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+client.connect_signal("focus", function(c) 
+		c.border_color = beautiful.border_focus
+		if awful.util.screen_indicator.screen ~= c.screen then
+			awful.util.screen_indicator.screen = c.screen
+			awful.util.screen_indicator:emit_signal("widget::redraw_needed")
+		end
+	end
+)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)

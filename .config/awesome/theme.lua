@@ -62,18 +62,15 @@ theme.menu_reboot_icon													=	icondir .. "refresh-cw.svg"
 theme.menu_power_icon														=	icondir .. "power.svg"
 
 theme.taglist_font 															= "sans-serif semi-bold italic 10"
--- theme.taglist_shape 													= function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
--- theme.taglist_shape 													= function(cr, w, h) gears.shape.parallelogram(cr, w, h, w*0.87) end
--- theme.taglist_shape_border_width 						= 5
--- theme.taglist_shape_border_color 						= "#00000000"
--- theme.taglist_bg_focus 											= "#185a7a"
--- theme.taglist_fg_focus 											= "#ffffff"
 theme.taglist_bg_focus 													= "#00000000"
 theme.taglist_bg_urgent		 											= "#00000000"
 theme.taglist_fg_focus 													= "#42adf0"
 theme.taglist_fg_occupied 											= "#a6a6a6"
 theme.taglist_fg_urgent		 											= theme.taglist_fg_occupied
 theme.taglist_fg_empty 													= "#555555"
+
+theme.screen_indicator_color 										= theme.taglist_fg_focus
+theme.screen_indicator_radius 									= 15
 
 -- theme.tasklist_plain_task_name               = true
 -- theme.tasklist_disable_icon                  = true
@@ -210,9 +207,24 @@ local mysystray = wibox.container.margin(wibox.widget {
 local my_spotify_widget = spotify_widget({icon = theme.widget_spotify, font=theme.font})
 
 
--- Active Screen Indicator
--- local screen_indicator = 
-
+-- Active Screen Indicator Widget
+awful.util.screen_indicator.widget = wibox.widget{
+	widget = wibox.container.background,
+    {
+			{
+				{widget = wibox.widget.textbox},
+				forced_height = theme.screen_indicator_radius,
+				forced_width = theme.screen_indicator_radius,
+				shape = function(cr, w, h) gears.shape.arc(cr, w, h, 2, 0, 2*math.pi) end,
+				shape_clip = true,
+				bg = theme.screen_indicator_color,
+				widget = wibox.container.background
+			},
+			top = 3,
+			left = 10,
+			layout = wibox.container.margin	
+    },
+}
 
 function theme.at_screen_connect(s)
 	gears.wallpaper.maximized(theme.wallpapers[s.index], s)
@@ -282,6 +294,7 @@ function theme.at_screen_connect(s)
 					layout = wibox.layout.fixed.horizontal,
 					menulauncher,
 					s.mytaglist,
+					awful.util.screen_indicator,
 			},
 			-- s.mytasklist, -- Middle widget
 			nil,
