@@ -8,87 +8,87 @@ local spotify_widget = require("widgets.spotify")
 
 local theme = {}
 
-theme.font														          = "sans-serif 9"
-theme.hotkeys_font															= "sans-serif bold 9"
-theme.hotkeys_description_font									= theme.font
+theme.font                       = "sans-serif 9"
+theme.hotkeys_font               = "sans-serif bold 9"
+theme.hotkeys_description_font   = theme.font
 
-theme.hotkeys_modifiers_fg											= "#dddddd"
-theme.hotkeys_fg																= "#cccccc"
+theme.hotkeys_modifiers_fg       = "#dddddd"
+theme.hotkeys_fg                 = "#cccccc"
 
-local walldir																		= "/usr/share/backgrounds/"
-theme.wallpapers																= {walldir .. "ign_waifu.png", walldir .. "scene.png"}
+local walldir                    = "/usr/share/backgrounds/"
+theme.wallpapers                 = {walldir .. "ign_waifu.png", walldir .. "scene.png"}
 
-theme.bg_normal                                 = "#101010"
-theme.bg_focus                                  = "#000000"
-theme.bg_urgent                                 = "#000000"
-theme.fg_normal                                 = "#aaaaaa"
-theme.fg_focus                                  = "#ff8c00"
-theme.fg_urgent                                 = "#af1d18"
-theme.fg_minimize                               = "#ffffff"
+theme.bg_normal                  = "#101010"
+theme.bg_focus                   = "#000000"
+theme.bg_urgent                  = "#000000"
+theme.fg_normal                  = "#aaaaaa"
+theme.fg_focus                   = "#ff8c00"
+theme.fg_urgent                  = "#af1d18"
+theme.fg_minimize                = "#ffffff"
 
-theme.bg_wibar 																	= "#000000aa"
-theme.bg_systray 																= "#272727"
+theme.bg_wibar                   = "#000000aa"
+theme.bg_systray                 = "#272727"
 
-theme.border_width                              = dpi(1.5)
-theme.border_normal                             = "#1c2022"
-theme.border_focus                              = "#32a2a8"
-theme.border_marked                             = "#3ca4d8"
+theme.border_width               = dpi(1.5)
+theme.border_normal              = "#1c2022"
+theme.border_focus               = "#32a2a8"
+theme.border_marked              = "#3ca4d8"
 
-theme.menu_height																= 34
-theme.menu_width													  	 	=	140
-theme.menu_font 																= "sans-serif 12"
-theme.menu_bg_normal                            = "#101010"
-theme.menu_bg_focus                             = "#444444"
-theme.menu_border_width                         = 5
-theme.menu_border_color                         = "#00000000"
-theme.menu_fg_normal                            = "#dddddd"
-theme.menu_fg_focus                             = theme.menu_fg_normal
+theme.menu_height                = 34
+theme.menu_width                 =  140
+theme.menu_font                  = "sans-serif 12"
+theme.menu_bg_normal             = "#101010"
+theme.menu_bg_focus              = "#444444"
+theme.menu_border_width          = 5
+theme.menu_border_color          = "#00000000"
+theme.menu_fg_normal             = "#dddddd"
+theme.menu_fg_focus              = theme.menu_fg_normal
 
-local icondir																		= gears.filesystem.get_configuration_dir() .. "icons/"
-theme.widget_cpu                                = icondir .. "cpu.png"
-theme.widget_mem                                = icondir .. "mem.png"
-theme.widget_spotify                            = icondir .. "spoti.png"
-theme.widget_batt                               = icondir .. "bat.png"
-theme.widget_clock                              = icondir .. "clock.png"
-theme.widget_temp                               = icondir .. "temp.png"
--- theme.widget_netdown                            = theme.icondir .. "net_down.png"
--- theme.widget_netup                              = theme.icondir .. "net_up.png"
--- theme.widget_vol                                = theme.icondir .. "spkr.png"
+local icondir                    = gears.filesystem.get_configuration_dir() .. "icons/"
+theme.widget_cpu                 = icondir .. "cpu.png"
+theme.widget_mem                 = icondir .. "mem.png"
+theme.widget_spotify             = icondir .. "spoti.png"
+theme.widget_batt                = icondir .. "bat.png"
+theme.widget_clock               = icondir .. "clock.png"
+theme.widget_temp                = icondir .. "temp.png"
+-- theme.widget_netdown             = theme.icondir .. "net_down.png"
+-- theme.widget_netup               = theme.icondir .. "net_up.png"
+-- theme.widget_vol                 = theme.icondir .. "spkr.png"
 
-theme.menu_launcher 														= icondir .. "arch.png"
-theme.menu_lock_icon														=	icondir .. "lock.svg" 
-theme.menu_logout_icon													=	icondir .. "log-out.svg"
-theme.menu_reboot_icon													=	icondir .. "refresh-cw.svg"
-theme.menu_power_icon														=	icondir .. "power.svg"
+theme.menu_launcher              = icondir .. "arch.png"
+theme.menu_lock_icon             =  icondir .. "lock.svg" 
+theme.menu_logout_icon           =  icondir .. "log-out.svg"
+theme.menu_reboot_icon           =  icondir .. "refresh-cw.svg"
+theme.menu_power_icon            =  icondir .. "power.svg"
 
-theme.taglist_font 															= "sans-serif semi-bold italic 10"
-theme.taglist_bg_focus 													= "#00000000"
-theme.taglist_bg_urgent		 											= "#00000000"
-theme.taglist_fg_focus 													= "#42adf0"
-theme.taglist_fg_occupied 											= "#a6a6a6"
-theme.taglist_fg_urgent		 											= theme.taglist_fg_occupied
-theme.taglist_fg_empty 													= "#555555"
+theme.taglist_font               = "sans-serif semi-bold italic 10"
+theme.taglist_bg_focus           = "#00000000"
+theme.taglist_bg_urgent          = "#00000000"
+theme.taglist_fg_focus           = "#42adf0"
+theme.taglist_fg_occupied        = "#a6a6a6"
+theme.taglist_fg_urgent          = theme.taglist_fg_occupied
+theme.taglist_fg_empty           = "#555555"
 
-theme.screen_indicator_color 										= theme.taglist_fg_focus
-theme.screen_indicator_radius 									= 15
+theme.screen_indicator_color     = theme.taglist_fg_focus
+theme.screen_indicator_radius    = 15
 
--- theme.tasklist_plain_task_name               = true
--- theme.tasklist_disable_icon                  = true
-theme.useless_gap                               = 5
+-- theme.tasklist_plain_task_name   = true
+-- theme.tasklist_disable_icon      = true
+theme.useless_gap                = 5
 
--- theme.layout_tile                            = icondir .. "tile.png"
--- theme.layout_tilegaps                        = icondir .. "tilegaps.png"
--- theme.layout_tileleft                        = icondir .. "tileleft.png"
--- theme.layout_tilebottom                      = icondir .. "tilebottom.png"
--- theme.layout_tiletop                         = icondir .. "tiletop.png"
--- theme.layout_fairv                           = icondir .. "fairv.png"
--- theme.layout_fairh                           = icondir .. "fairh.png"
--- theme.layout_spiral                          = icondir .. "spiral.png"
--- theme.layout_dwindle                         = icondir .. "dwindle.png"
--- theme.layout_max                             = icondir .. "max.png"
--- theme.layout_fullscreen                      = icondir .. "fullscreen.png"
--- theme.layout_magnifier                       = icondir .. "magnifier.png"
--- theme.layout_floating                        = icondir .. "floating.png"
+-- theme.layout_tile                = icondir .. "tile.png"
+-- theme.layout_tilegaps            = icondir .. "tilegaps.png"
+-- theme.layout_tileleft            = icondir .. "tileleft.png"
+-- theme.layout_tilebottom          = icondir .. "tilebottom.png"
+-- theme.layout_tiletop             = icondir .. "tiletop.png"
+-- theme.layout_fairv               = icondir .. "fairv.png"
+-- theme.layout_fairh               = icondir .. "fairh.png"
+-- theme.layout_spiral              = icondir .. "spiral.png"
+-- theme.layout_dwindle             = icondir .. "dwindle.png"
+-- theme.layout_max                 = icondir .. "max.png"
+-- theme.layout_fullscreen          = icondir .. "fullscreen.png"
+-- theme.layout_magnifier           = icondir .. "magnifier.png"
+-- theme.layout_floating            = icondir .. "floating.png"
 
 local markup = lain.util.markup
 
