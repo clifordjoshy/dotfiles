@@ -2,8 +2,10 @@ local gears = require("gears")
 local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
-local dpi   = require("beautiful.xresources").apply_dpi
+
 local spotify_widget = require("widgets.spotify")
+local volume_widget = require("widgets.pipewire")
+local wifi_widget = require("widgets.wifi")
 
 
 local theme = {}
@@ -29,7 +31,7 @@ theme.fg_minimize                = "#ffffff"
 theme.bg_wibar                   = "#000000aa"
 theme.bg_systray                 = "#272727"
 
-theme.border_width               = dpi(1.5)
+theme.border_width               = 3
 theme.border_normal              = "#1c2022"
 theme.border_focus               = "#32a2a8"
 theme.border_marked              = "#3ca4d8"
@@ -50,10 +52,8 @@ theme.widget_mem                 = icondir .. "mem.png"
 theme.widget_spotify             = icondir .. "spoti.png"
 theme.widget_batt                = icondir .. "bat.png"
 theme.widget_clock               = icondir .. "clock.png"
-theme.widget_temp                = icondir .. "temp.png"
--- theme.widget_netdown             = theme.icondir .. "net_down.png"
--- theme.widget_netup               = theme.icondir .. "net_up.png"
--- theme.widget_vol                 = theme.icondir .. "spkr.png"
+theme.widget_vol                 = icondir .. "spkr.png"
+theme.widget_net                 = {icondir.."wifi_bar_0.png", icondir.."wifi_bar_1.png", icondir.."wifi_bar_2.png", icondir.."wifi_bar_3.png", icondir.."wifi_bar_4.png"} 
 
 theme.menu_launcher              = icondir .. "arch.png"
 theme.menu_lock_icon             =  icondir .. "lock.svg" 
@@ -75,20 +75,6 @@ theme.screen_indicator_radius    = 15
 -- theme.tasklist_plain_task_name   = true
 -- theme.tasklist_disable_icon      = true
 theme.useless_gap                = 5
-
--- theme.layout_tile                = icondir .. "tile.png"
--- theme.layout_tilegaps            = icondir .. "tilegaps.png"
--- theme.layout_tileleft            = icondir .. "tileleft.png"
--- theme.layout_tilebottom          = icondir .. "tilebottom.png"
--- theme.layout_tiletop             = icondir .. "tiletop.png"
--- theme.layout_fairv               = icondir .. "fairv.png"
--- theme.layout_fairh               = icondir .. "fairh.png"
--- theme.layout_spiral              = icondir .. "spiral.png"
--- theme.layout_dwindle             = icondir .. "dwindle.png"
--- theme.layout_max                 = icondir .. "max.png"
--- theme.layout_fullscreen          = icondir .. "fullscreen.png"
--- theme.layout_magnifier           = icondir .. "magnifier.png"
--- theme.layout_floating            = icondir .. "floating.png"
 
 local markup = lain.util.markup
 
@@ -130,51 +116,19 @@ local cpu = lain.widget.cpu({
     end
 })
 
--- Coretemp
-local tempicon = wibox.widget.imagebox(theme.widget_temp)
-local temp = lain.widget.temp({
-    settings = function()
-        widget:set_markup(markup.fontfg(theme.font, "#f1af5f", coretemp_now .. "°C "))
-    end
-})
-
 -- Battery
 local baticon = wibox.widget.imagebox(theme.widget_batt)
 local bat = lain.widget.bat({
     settings = function()
-        local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or bat_now.perc
+        local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or "..."
 
         if bat_now.ac_status == 1 then
-            perc = perc .. " plug"
+            perc = perc .. " A/C"
         end
 
         widget:set_markup(markup.fontfg(theme.font, theme.fg_normal, perc .. " "))
     end
 })
-
--- -- ALSA volume
--- local volicon = wibox.widget.imagebox(theme.widget_vol)
--- theme.volume = lain.widget.alsa({
---     settings = function()
---         if volume_now.status == "off" then
---             volume_now.level = volume_now.level .. "M"
---         end
---         widget:set_markup(markup.fontfg(theme.font, "#7493d2", volume_now.level .. "% "))
---     end
--- })
-
-
--- Net
--- local netdownicon = wibox.widget.imagebox(theme.widget_netdown)
--- local netdowninfo = wibox.widget.textbox()
--- local netupicon = wibox.widget.imagebox(theme.widget_netup)
--- local netupinfo = lain.widget.net({
---     settings = function()
---         widget:set_markup(markup.fontfg(theme.font, "#e54c62", net_now.sent .. " "))
---         netdowninfo:set_markup(markup.fontfg(theme.font, "#87af5f", net_now.received .. " "))
---     end
--- })
-
 
 -- MEM
 local memicon = wibox.widget.imagebox(theme.widget_mem)
@@ -205,6 +159,12 @@ local mysystray = wibox.container.margin(wibox.widget {
 
 -- Spotify Widget
 local my_spotify_widget = spotify_widget({icon = theme.widget_spotify, font=theme.font})
+
+-- Volume Widget
+local my_volume_widget = volume_widget({icon = theme.widget_vol, font=theme.font})
+
+-- Wifi Widget
+local my_wifi_widget = wifi_widget({icons = theme.widget_net, font=theme.font})
 
 
 -- Active Screen Indicator Widget
@@ -300,21 +260,15 @@ function theme.at_screen_connect(s)
 			nil,
 			{ -- Right widgets
 					layout = wibox.layout.fixed.horizontal,
-					-- netdownicon,
-					-- netdowninfo,
-					-- netupicon,
-					-- netupinfo.widget,
-					-- volicon,
-					-- theme.volume.widget,
 					my_spotify_widget,
+					my_volume_widget,
 					memicon,
 					memory.widget,
 					cpuicon,
 					cpu.widget,
-					tempicon,
-					temp.widget,
 					baticon,
 					bat.widget,
+					my_wifi_widget,
 					clockicon,
 					mytextclock,
 					mysystray,
