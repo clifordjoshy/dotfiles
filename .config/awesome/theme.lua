@@ -32,12 +32,10 @@ theme.bg_wibar                   = "#000000aa"
 theme.bg_systray                 = "#272727"
 
 theme.border_width               = 3
-theme.border_normal              = "#1c2022"
 theme.border_focus               = "#32a2a8"
-theme.border_marked              = "#3ca4d8"
+theme.border_normal              = "#00000000"
+theme.border_marked              = theme.border_normal
 
-theme.menu_height                = 34
-theme.menu_width                 =  140
 theme.menu_font                  = "sans-serif 12"
 theme.menu_bg_normal             = "#101010"
 theme.menu_bg_focus              = "#444444"
@@ -56,10 +54,10 @@ theme.widget_vol                 = icondir .. "spkr.png"
 theme.widget_net                 = {icondir.."wifi_bar_0.png", icondir.."wifi_bar_1.png", icondir.."wifi_bar_2.png", icondir.."wifi_bar_3.png", icondir.."wifi_bar_4.png"} 
 
 theme.menu_launcher              = icondir .. "arch.png"
-theme.menu_lock_icon             =  icondir .. "lock.svg" 
-theme.menu_logout_icon           =  icondir .. "log-out.svg"
-theme.menu_reboot_icon           =  icondir .. "refresh-cw.svg"
-theme.menu_power_icon            =  icondir .. "power.svg"
+theme.menu_lock_icon             = icondir .. "lock.svg" 
+theme.menu_logout_icon           = icondir .. "log-out.svg"
+theme.menu_reboot_icon           = icondir .. "refresh-cw.svg"
+theme.menu_power_icon            = icondir .. "power.svg"
 
 theme.taglist_font               = "sans-serif semi-bold italic 10"
 theme.taglist_bg_focus           = "#00000000"
@@ -201,13 +199,6 @@ function theme.at_screen_connect(s)
 	-- 	awful.button({}, 3, function() awful.layout.inc(-1) end)
 	-- ))
 
-	-- -- Create a tasklist widget
-	-- s.mytasklist = awful.widget.tasklist {
-	-- 	screen = s,
-	-- 	filter = awful.widget.tasklist.filter.currenttags,
-	-- 	buttons = awful.util.tasklist_buttons
-	-- }
-
 	-- Create a taglist widget
 	s.mytaglist = awful.widget.taglist {
 		screen = s,
@@ -219,17 +210,20 @@ function theme.at_screen_connect(s)
 	}
 
 	-- Menu
-	awful.util.mymainmenu.wibox.shape = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
-	local menulauncher = awful.widget.launcher({ image = theme.menu_launcher, menu = awful.util.mymainmenu })
-
+	local menu_bg = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
+	awful.util.mymainmenu.wibox.shape = menu_bg
+	local menulauncher = wibox.widget.imagebox(theme.menu_launcher);
+	menulauncher:connect_signal("button::press", function(_, _, _, button)
+			awful.util.mymainmenu: show({coords = {x = 0, y = 32}})
+		end
+	)
 	-- Hide the menu when the mouse leaves it
-
 	local mouse_in_menu = false
 	-- when mouse leaves launcher icon without entering menu. close it
 	menulauncher:connect_signal("mouse::leave", function()
 			if awful.util.mymainmenu.wibox.visible then
 				gears.timer{
-					timeout = 0.1, 
+					timeout = 0.1,
 					autostart = true,
 					callback = function () if not mouse_in_menu then awful.util.mymainmenu:hide() end end,
 					single_shot = true
@@ -244,35 +238,99 @@ function theme.at_screen_connect(s)
 		end
 	)
 
-	-- Create the wibox
-	s.mywibox = awful.wibar({ position = "top", screen = s, bg = theme.bg_wibar, fg = theme.fg_normal })
+	-- s.mytasklist = awful.widget.tasklist {
+		-- 	screen = s,
+		-- 	filter = awful.widget.tasklist.filter.currenttags,
+		-- 	buttons = awful.util.tasklist_buttons
+		-- }
+		-- -- Running clients menu
+	local middle_box = wibox.container.place();
+	middle_box.content_fill_horizontal = true;
+	local mouse_in_client_menu = false
+
+	local client_menu = nil
+	
+	middle_box:connect_signal("button::press", function(_, _, _, button)
+			if button == 3 then
+				if(client_menu == nil) then
+					local client_list = {}
+					local max_len = 5
+					for _, c in ipairs(client.get()) do
+						table.insert(client_list, {c.class, function() c:jump_to(false) end})
+						max_len = math.max(max_len, #c.class)
+					end
+					if #client_list == 0 then
+						return
+					end
+					table.sort(client_list, function(a, b) return a[1] < b[1] end)
+					print(client_list[1][1])
+					client_menu = awful.menu({
+						items=client_list,
+						theme={font = "sans-serif 11", height = #client_list + 20, width = max_len*13 + 10}
+					})
+					client_menu.wibox.shape = menu_bg
+					client_menu.wibox:connect_signal("mouse::enter", function() mouse_in_client_menu = true end)
+					client_menu.wibox:connect_signal("mouse::leave", function() 
+							client_menu:hide()
+							client_menu = nil
+							mouse_in_client_menu = false
+						end
+					)
+					client_menu:show()
+				
+				else
+					client_menu:hide()
+					client_menu = nil
+				end	
+			end
+		end
+	)
+	middle_box:connect_signal("mouse::leave", function()
+			if client_menu ~= nil then
+				gears.timer{
+					timeout = 0.1,
+					autostart = true,
+					callback = function () 
+						if not mouse_in_client_menu then 
+							client_menu:hide()
+							client_menu = nil
+						end
+					end,
+					single_shot = true
+				}
+			end
+		end
+	)
+	
+
+	-- Create the wibar
+	s.mywibar = awful.wibar({ position = "top", screen = s, bg = theme.bg_wibar, fg = theme.fg_normal })
 
 	-- Add widgets to the wibox
-	s.mywibox:setup {
-			layout = wibox.layout.align.horizontal,
-			{ -- Left widgets
-					layout = wibox.layout.fixed.horizontal,
-					menulauncher,
-					s.mytaglist,
-					awful.util.screen_indicator,
-			},
-			-- s.mytasklist, -- Middle widget
-			nil,
-			{ -- Right widgets
-					layout = wibox.layout.fixed.horizontal,
-					my_spotify_widget,
-					my_volume_widget,
-					memicon,
-					memory.widget,
-					cpuicon,
-					cpu.widget,
-					baticon,
-					bat.widget,
-					my_wifi_widget,
-					clockicon,
-					mytextclock,
-					mysystray,
-				},
+	s.mywibar:setup {
+		layout = wibox.layout.align.horizontal,
+		{ -- Left widgets
+			layout = wibox.layout.fixed.horizontal,
+			menulauncher,
+			s.mytaglist,
+			awful.util.screen_indicator,
+		},
+		middle_box, -- Middle widget
+		{ -- Right widgets
+			layout = wibox.layout.fixed.horizontal,
+			my_spotify_widget,
+			my_volume_widget,
+			memicon,
+			memory.widget,
+			cpuicon,
+			cpu.widget,
+			baticon,
+			bat.widget,
+			my_wifi_widget,
+			clockicon,
+			mytextclock,
+			mysystray,
+		},
 	}
 end
 

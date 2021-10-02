@@ -1,0 +1,17 @@
+#!/bin/sh 
+
+alias config='/usr/bin/git --git-dir=/home/cliford/.cfg/ --work-tree=/home/cliford'
+
+# Verbosity and settings that you pretty much just always are going to want.
+alias \
+	cp="cp -iv" \
+	mv="mv -iv" \
+	rm="rm -vI" \
+	mkd="mkdir -pv"
+
+# Colorize commands when possible.
+alias \
+	ls="ls -hN --color=auto --group-directories-first" \
+	grep="grep --color=auto" \
+	diff="diff --color=auto" \
+	ccat="highlight --out-format=ansi"

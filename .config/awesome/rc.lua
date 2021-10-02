@@ -14,10 +14,6 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local hotkeys_popup = require("awful.hotkeys_popup")
 
--- Enable hotkeys help widget for VIM and other apps
--- when client with a matching name is opened:
--- require("awful.hotkeys_popup.keys")
-
 -- Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -141,12 +137,18 @@ awful.util.taglist_buttons = gears.table.join( -- move to tag on clicking the ti
 
 
 -- Main Menu
-awful.util.mymainmenu = awful.menu({items = {
-	{"lock", "slock", beautiful.menu_lock_icon},
-	{"log out", function() awesome.quit() end, beautiful.menu_logout_icon},
-	{"reboot", "reboot", beautiful.menu_reboot_icon},
-	{"power off", "shutdown now", beautiful.menu_power_icon},
-}})
+awful.util.mymainmenu = awful.menu({
+	items = {
+		{"lock", "slock", beautiful.menu_lock_icon},
+		{"log out", function() awesome.quit() end, beautiful.menu_logout_icon},
+		{"reboot", "reboot", beautiful.menu_reboot_icon},
+		{"power off", "shutdown now", beautiful.menu_power_icon},
+	},
+	theme = {
+		height = 34,
+		width = 140
+	}
+})
 
 
 -- Screen
@@ -281,7 +283,7 @@ globalkeys = gears.table.join(
 	
 	-- Prompt
 	awful.key({modkey}, "space",
-		function() awful.util.spawn("dmenu_run -h 32") end,
+		function() awful.util.spawn("dmenu_run -l 10 -p \'launch app: \'") end,
 		{ description = "run prompt", group = "apps" }
 	),
 	
@@ -340,10 +342,10 @@ clientkeys = gears.table.join(
 		function(c) c:move_to_screen() end,
 		{ description = "move to screen", group = "client" }
 	),
-	-- awful.key({modkey}, "t",
-	-- 	function(c) c.ontop = not c.ontop end,
-	-- 	{ description = "toggle keep on top", group = "client" }
-	-- ),
+	awful.key({modkey}, "t",
+		function(c) c.ontop = not c.ontop end,
+		{ description = "toggle keep on top", group = "client" }
+	),
 	-- awful.key({modkey}, "n",
 	-- 	function(c)
 	-- 		-- The client currently has the input focus, so it cannot be
@@ -373,8 +375,6 @@ clientkeys = gears.table.join(
 		end,
 		{ description = "(un)maximize horizontally", group = "client" }
 	)
-	-- awful.key({ altkey, "Shift"   }, "m", lain.util.magnify_client,
-	-- 				{description = "magnify client", group = "client"}),
 )
 
 -- Bind all key numbers to tags.
@@ -525,8 +525,7 @@ client.connect_signal("manage", function(c)
 			end)
 		end
 
-		-- rounded corners for windows
-		c.shape = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 6) end
+		c.shape = gears.shape.rounded_rect
 	end
 )
 
@@ -546,4 +545,4 @@ client.connect_signal("focus", function(c)
 		end
 	end
 )
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("unfocus", function(c) c.border_color= beautiful.border_normal end)

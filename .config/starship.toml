@@ -1,0 +1,6 @@
+# disable two line prompt
+[line_break]
+disabled = true
+
+[package]
+disabled = true
