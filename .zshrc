@@ -28,6 +28,9 @@ bindkey "^[[3~" delete-char
 
 setopt HIST_IGNORE_DUPS
 
+#fix visibility for files of ow type(usually in the windows partition)
+export LS_COLORS=$LS_COLORS:'ow=0;35:'
+
 colorscript -r
 
 eval "$(starship init zsh)"
