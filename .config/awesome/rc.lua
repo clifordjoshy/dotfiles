@@ -480,6 +480,7 @@ awful.rules.rules = {
 			},
 			class = {
 				"Pavucontrol",
+				"Xfce4-power-manager-settings",
 				-- "Arandr",
 				"Blueman-manager",
 				-- "Gpick",

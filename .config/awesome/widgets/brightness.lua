@@ -54,7 +54,9 @@ local worker = function(user_args)
 	--  - scroll down - brightness down
 	--  - right click - fix monitors script
 	brightness_widget:connect_signal("button::press", function(_, _, _, button)
-			if button == 4 then
+			if button == 1 then
+				awful.spawn("xfce4-power-manager-settings");
+			elseif button == 4 then
 				awful.spawn.with_shell("lux -a 5% >/dev/null");
 			elseif button == 5 then
 				awful.spawn.with_shell("lux -s 5% >/dev/null");
