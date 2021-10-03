@@ -23,6 +23,9 @@ _comp_options+=(globdots)
 # Enable searching through history
 bindkey '^R' history-incremental-pattern-search-backward
 
+# delete key
+bindkey "^[[3~" delete-char
+
 setopt HIST_IGNORE_DUPS
 
 colorscript -r

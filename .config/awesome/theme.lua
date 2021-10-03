@@ -6,6 +6,7 @@ local wibox = require("wibox")
 local spotify_widget = require("widgets.spotify")
 local volume_widget = require("widgets.pipewire")
 local wifi_widget = require("widgets.wifi")
+local brightness_widget = require("widgets.brightness")
 
 
 local theme = {}
@@ -51,6 +52,7 @@ theme.widget_spotify             = icondir .. "spoti.png"
 theme.widget_batt                = icondir .. "bat.png"
 theme.widget_clock               = icondir .. "clock.png"
 theme.widget_vol                 = icondir .. "spkr.png"
+theme.widget_brightness          = icondir .. "brightness.png"
 theme.widget_net                 = {icondir.."wifi_bar_0.png", icondir.."wifi_bar_1.png", icondir.."wifi_bar_2.png", icondir.."wifi_bar_3.png", icondir.."wifi_bar_4.png"} 
 
 theme.menu_launcher              = icondir .. "arch.png"
@@ -164,6 +166,9 @@ local my_volume_widget = volume_widget({icon = theme.widget_vol, font=theme.font
 -- Wifi Widget
 local my_wifi_widget = wifi_widget({icons = theme.widget_net, font=theme.font})
 
+-- Wifi Widget
+local my_brightness_widget = brightness_widget({icon = theme.widget_brightness, font=theme.font})
+
 
 -- Active Screen Indicator Widget
 awful.util.screen_indicator.widget = wibox.widget{
@@ -263,7 +268,6 @@ function theme.at_screen_connect(s)
 						return
 					end
 					table.sort(client_list, function(a, b) return a[1] < b[1] end)
-					print(client_list[1][1])
 					client_menu = awful.menu({
 						items=client_list,
 						theme={font = "sans-serif 11", height = #client_list + 20, width = max_len*13 + 10}
@@ -324,6 +328,7 @@ function theme.at_screen_connect(s)
 			memory.widget,
 			cpuicon,
 			cpu.widget,
+			my_brightness_widget,
 			baticon,
 			bat.widget,
 			my_wifi_widget,
