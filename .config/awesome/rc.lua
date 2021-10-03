@@ -277,43 +277,44 @@ globalkeys = gears.table.join(
 
 	--lock screen
 	awful.key({modkey}, "q",
-		function() awful.util.spawn("slock") end,
+		function() awful.spawn("slock", false) end,
 		{ description = "lock screen", group = "system" }
 	),
 	
 	-- Prompt
 	awful.key({modkey}, "space",
-		function() awful.util.spawn("dmenu_run -l 10 -p \'launch app: \'") end,
+		function() awful.spawn("dmenu_run -l 10 -p \'launch app: \'", false) end,
 		{ description = "run prompt", group = "apps" }
 	),
 	
+	-- pass false to awful.spawn for non window applications. otherwise loading cursor will show up
 	-- Apps
 	awful.key({modkey}, "b",
-		function() awful.util.spawn(browser) end,
+		function() awful.spawn(browser) end,
 		{ description = "launch browser", group = "apps" }
 	),
 	awful.key({modkey}, "c",
-		function() awful.util.spawn("spotify") end,
+		function() awful.spawn("spotify") end,
 		{ description = "launch spotify", group = "apps" }
 	),
 	awful.key({modkey}, "n",
-		function() awful.util.spawn(string.format("%s -e %s", terminal, editor)) end,
+		function() awful.spawn(string.format("%s -e %s", terminal, editor)) end,
 		{ description = "launch text editor", group = "apps" }
 	),
 	awful.key({modkey}, "v",
-		function() awful.util.spawn("code") end,
+		function() awful.spawn("code") end,
 		{ description = "launch vs code", group = "apps" }
 	),
 	awful.key({modkey}, "Print",
-		function() awful.util.spawn("flameshot screen -c") end,
+		function() awful.spawn("flameshot screen -c", false) end,
 		{ description = "screenshot to clipboard", group = "apps" }
 	),
 	awful.key({modkey, "Control"}, "Print",
-		function() awful.util.spawn("flameshot screen -p /home/cliford/Pictures/Screenshots") end,
+		function() awful.spawn.with_shell("flameshot screen -p ~/Pictures/Screenshots") end,
 		{ description = "save screenshot", group = "apps" }
 	),
 	awful.key({modkey, "Shift"}, "s",
-		function() awful.util.spawn("flameshot gui") end,
+		function() awful.spawn("flameshot gui", false) end,
 		{ description = "gui screenshot", group = "apps" }
 	)
 )
@@ -473,9 +474,9 @@ awful.rules.rules = {
 	{
 		rule_any = {
 			instance = {
-				-- "DTA", -- Firefox addon DownThemAll.
 				"copyq", -- Includes session name in class.
-				"pinentry"
+				"pinentry",
+				"nmtui",				-- set when launched from wifi widget
 			},
 			class = {
 				"Pavucontrol",
@@ -520,9 +521,10 @@ client.connect_signal("manage", function(c)
 		if c.class == nil then 
 			c.minimized = true
 			c:connect_signal("property::class", function ()
-				c.minimized = false
-				awful.rules.apply(c)
-			end)
+					c.minimized = false
+					awful.rules.apply(c)
+				end
+			)
 		end
 
 		c.shape = gears.shape.rounded_rect

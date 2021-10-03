@@ -64,7 +64,7 @@ local worker = function(user_args)
 	--  - right click - start noisetorch
 	volume_widget:connect_signal("button::press", function(_, _, _, button)
 			if button == 1 then
-				awful.spawn("pavucontrol", false);
+				awful.spawn("pavucontrol");
 				return
 				-- using amixer instead of pactl to limit volume to 100%
 			elseif button == 4 then
@@ -75,7 +75,7 @@ local worker = function(user_args)
 				awful.spawn("amixer set Master 5%-", false);
 			elseif button == 3 then
 				awful.spawn.easy_async(NOISETORCH_CMD, function(_, stderr, _, _)
-						awful.spawn("noisetorch -" .. (stderr=="" and "u" or "i"))
+						awful.spawn("noisetorch -" .. (stderr=="" and "u" or "i"), false)
 					end
 				)
 			end;
