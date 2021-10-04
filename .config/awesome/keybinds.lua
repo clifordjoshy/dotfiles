@@ -96,16 +96,15 @@ local globalkeys = gears.table.join(
 		function() awful.tag.incncol(-1, nil, true) end,
 		{ description = "decrease the number of columns", group = "layout" }
 	),
-	-- awful.key({modkey, "Control"}, "n",
-	-- 	function()
-	-- 		local c = awful.client.restore()
-	-- 		-- Focus restored client
-	-- 		if c then
-	-- 			c:emit_signal("request::activate", "key.unminimize", {raise = true})
-	-- 		end
-	-- 	end,
-	-- 	{ description = "restore minimized", group = "client" }
-	-- ),
+	awful.key({modkey, "Shift"}, "g",
+		function()
+			local c = awful.client.restore()
+			if c then
+				c.minimized = false
+			end
+		end,
+		{ description = "restore minimized", group = "client" }
+	),
 
 	--lock screen
 	awful.key({modkey}, "q",
@@ -179,14 +178,12 @@ local clientkeys = gears.table.join(
 		function(c) c.ontop = not c.ontop end,
 		{ description = "toggle keep on top", group = "client" }
 	),
-	-- awful.key({modkey}, "n",
-	-- 	function(c)
-	-- 		-- The client currently has the input focus, so it cannot be
-	-- 		-- minimized, since minimized clients can't have the focus.
-	-- 		c.minimized = true
-	-- 	end,
-	-- 	{ description = "minimize", group = "client" }
-	-- ),
+	awful.key({modkey}, "g",
+		function(c)
+			c.minimized = true
+		end,
+		{ description = "minimize", group = "client" }
+	),
 	awful.key({modkey}, "m",
 		function(c)
 			c.maximized = not c.maximized

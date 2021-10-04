@@ -53,66 +53,63 @@ mymainmenu.wibox:connect_signal("mouse::leave", function()
 -- ]]]
 
 
--- [[[ Middle Box [with client menu]
-local middle_box = wibox.container.place();
-middle_box.content_fill_horizontal = true;
+-- [[[ Middle Box
 local mouse_in_client_menu = false
 local client_menu = nil
 	
-middle_box:connect_signal("button::press", function(_, _, _, button)
-		if button == 3 then
-			-- if not currently visible
-			if(client_menu == nil) then
-				local client_list = {}
-				local max_len = 5			--biggest width. to set appropriate size for menu
+local on_middlebar_mouse_button = function(_, _, _, button)
+	if button == 3 then
+		-- if not currently visible
+		if(client_menu == nil) then
+			local client_list = {}
+			local max_len = 5			--biggest width. to set appropriate size for menu
 
-				for _, c in ipairs(client.get()) do
-					table.insert(client_list, {c.class, function() c:jump_to(false) end})
-					max_len = math.max(max_len, #c.class)
+			for _, c in ipairs(client.get()) do
+				table.insert(client_list, {c.class, function() c:jump_to(false) end})
+				max_len = math.max(max_len, #c.class)
+			end
+			if #client_list == 0 then return end
+
+			table.sort(client_list, function(a, b) return a[1] < b[1] end)
+
+			client_menu = awful.menu({
+				items=client_list,
+				theme={font = "sans-serif 11", height = #client_list + 20, width = max_len*13 + 10}
+			})
+			client_menu.wibox.shape = menu_bg
+			client_menu.wibox:connect_signal("mouse::enter", function() mouse_in_client_menu = true end)
+			client_menu.wibox:connect_signal("mouse::leave", function() 
+					client_menu:hide()
+					client_menu = nil
+					mouse_in_client_menu = false
 				end
-				if #client_list == 0 then return end
-
-				table.sort(client_list, function(a, b) return a[1] < b[1] end)
-
-				client_menu = awful.menu({
-					items=client_list,
-					theme={font = "sans-serif 11", height = #client_list + 20, width = max_len*13 + 10}
-				})
-				client_menu.wibox.shape = menu_bg
-				client_menu.wibox:connect_signal("mouse::enter", function() mouse_in_client_menu = true end)
-				client_menu.wibox:connect_signal("mouse::leave", function() 
-						client_menu:hide()
-						client_menu = nil
-						mouse_in_client_menu = false
-					end
-				)
-				client_menu:show()
-			
-			else
-				client_menu:hide()
-				client_menu = nil
-			end	
-		end
+			)
+			client_menu:show()
+		
+		else
+			client_menu:hide()
+			client_menu = nil
+		end	
 	end
-)
+end
 
-middle_box:connect_signal("mouse::leave", function()
-		if client_menu ~= nil then
-			gears.timer{
-				timeout = 0.1,
-				single_shot = true,
-				autostart = true,
-				callback = function () 
-					if not mouse_in_client_menu then 
-						client_menu:hide()
-						client_menu = nil
-					end
-				end,
-			}
-		end
+local on_middlebar_mouse_leave = function()
+	if client_menu ~= nil then
+		gears.timer{
+			timeout = 0.1,
+			single_shot = true,
+			autostart = true,
+			callback = function () 
+				if not mouse_in_client_menu then 
+					client_menu:hide()
+					client_menu = nil
+				end
+			end,
+		}
 	end
-)
+end
 -- ]]]
+
 
 -- [[[Taglist //tasklist
 local taglist_buttons = gears.table.join(
@@ -137,22 +134,10 @@ local taglist_buttons = gears.table.join(
 	awful.button({}, 5,	function(t)	awful.tag.viewprev(t.screen) end)
 )
 
--- awful.util.tasklist_buttons = gears.table.join(
--- 	-- minimises window if in focus, else activates(unminimise/focus) it
--- 	awful.button({}, 1, function(c)
--- 			if c == client.focus then
--- 				c.minimized = true
--- 			else
--- 				c:emit_signal("request::activate", "tasklist", {raise = true})
--- 			end
--- 		end
--- 	),
--- 	-- show list of all running windows
--- 	awful.button({}, 3, function() awful.menu.client_list({theme = {width = 250}}) end)
--- 	-- cycle focus between windows on screen
--- 	-- awful.button({}, 4, function() awful.client.focus.byidx(1) end),
--- 	-- awful.button({}, 5, function() awful.client.focus.byidx(-1) end))
--- )
+local tasklist_buttons = gears.table.join(
+	-- unminimise window
+	awful.button({}, 1, function(c)	c.minimized = false end)
+)
 
 -- ]]]
 
@@ -265,11 +250,28 @@ function generate_wibar(s)
 		buttons = taglist_buttons,
 	}
 
-	-- s.mytasklist = awful.widget.tasklist {
-	-- 	screen = s,
-	-- 	filter = awful.widget.tasklist.filter.currenttags,
-	-- 	buttons = awful.util.tasklist_buttons
-	-- }
+	s.mytasklist = awful.widget.tasklist {
+		screen = s,
+		filter = awful.widget.tasklist.filter.minimizedcurrenttags,
+		buttons = tasklist_buttons,
+		layout   = {
+			spacing = 5,
+			layout  = wibox.layout.fixed.horizontal
+    },
+		widget_template = {
+			id     = 'icon_role',
+			widget = wibox.widget.imagebox,
+			image = beautiful.minimise_def_icon			-- default icon for apps without icon(looking at you, Spotify)
+		}
+	}
+
+	local my_middle_widget = wibox.container.place(
+		wibox.container.margin(s.mytasklist, 15, 15, 5, 5),
+		"left"
+	)
+	my_middle_widget.fill_horizontal = true
+	my_middle_widget:connect_signal("button::press", on_middlebar_mouse_button);
+	my_middle_widget:connect_signal("mouse::leave", on_middlebar_mouse_leave);
 
 	s.mywibar = awful.wibar({ position = "top", screen = s, bg = beautiful.bg_wibar, fg = beautiful.fg_normal })
 
@@ -280,9 +282,7 @@ function generate_wibar(s)
 			menulauncher,
 			s.mytaglist,
 		},
-
-		middle_box, -- Middle widget
-
+		my_middle_widget,
 		{	-- Right widgets
 			layout = wibox.layout.fixed.horizontal,
 			my_spotify_widget,

@@ -52,6 +52,8 @@ theme.menu_logout_icon           = icondir .. "log-out.svg"
 theme.menu_reboot_icon           = icondir .. "refresh-cw.svg"
 theme.menu_power_icon            = icondir .. "power.svg"
 
+theme.minimise_def_icon          = icondir .. "minimise_def.png"
+
 theme.taglist_font               = "sans-serif semi-bold italic 10"
 theme.taglist_bg_focus           = "#00000000"
 theme.taglist_bg_urgent          = "#00000000"
@@ -60,11 +62,10 @@ theme.taglist_fg_occupied        = "#a6a6a6"
 theme.taglist_fg_urgent          = theme.taglist_fg_occupied
 theme.taglist_fg_empty           = "#555555"
 
-theme.screen_indicator_color     = theme.taglist_fg_focus
-theme.screen_indicator_radius    = 15
-
--- theme.tasklist_plain_task_name   = true
--- theme.tasklist_disable_icon      = true
+theme.tasklist_bg_normal         = "#00000000"
+theme.tasklist_disable_task_name = true
+theme.tasklist_plain_task_name   = true
+theme.tasklist_bg_normal         = "#dddddd"
 theme.useless_gap                = 5
 
 return theme

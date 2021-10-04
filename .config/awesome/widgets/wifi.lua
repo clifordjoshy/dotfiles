@@ -38,10 +38,10 @@ local worker = function(user_args)
 		widget:update_strength(tonumber(strength_string) or 0);
 	end;
 
-	local is_connected = false
+	local is_connected = nil
 	local update_conn = function(widget, stdout, stderr, _, _)
-		local is_limited = stdout:find("limited") and true or false;
-		if(is_connected == is_limited) then
+		local is_connected_now = stdout:find("limited") and false or true;
+		if(is_connected ~= is_connected_now) then
 			is_connected = not is_connected
 			widget:update_net(is_connected)
 		end
@@ -59,6 +59,7 @@ local worker = function(user_args)
 				-- without 0.1 delay, nmtui will not fill screen
 				awful.spawn.with_shell("nmcli device wifi rescan && alacritty --class nmtui -e nmtui", false);
 			elseif button == 3 then
+				print("here")
 				awful.spawn.easy_async("nmcli network connectivity check", function (stdout) update_conn(wifi_widget, stdout) end) 
 			end;
 		end
