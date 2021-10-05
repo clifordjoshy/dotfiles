@@ -20,7 +20,8 @@ local worker = function(user_args)
 	local timeout = 5;
 	
 	brightness_widget = wibox.widget{
-		layout = wibox.layout.align.horizontal,
+		layout = wibox.layout.fixed.horizontal,
+		spacing = args.space,
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,
@@ -34,7 +35,7 @@ local worker = function(user_args)
 
 		update_brightness = function(self, brightness)
 			
-			local brightness_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#9f4fff", brightness);
+			local brightness_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#b06eff", brightness);
 
 			if self.brightness:get_markup() ~= brightness_markup then
 				self.brightness:set_markup(brightness_markup);

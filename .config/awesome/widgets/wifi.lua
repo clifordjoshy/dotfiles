@@ -59,7 +59,6 @@ local worker = function(user_args)
 				-- without 0.1 delay, nmtui will not fill screen
 				awful.spawn.with_shell("nmcli device wifi rescan && alacritty --class nmtui -e nmtui", false);
 			elseif button == 3 then
-				print("here")
 				awful.spawn.easy_async("nmcli network connectivity check", function (stdout) update_conn(wifi_widget, stdout) end) 
 			end;
 		end

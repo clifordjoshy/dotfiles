@@ -24,7 +24,8 @@ local worker = function(user_args)
 	local timeout = 5;
 	
 	volume_widget = wibox.widget{
-		layout = wibox.layout.align.horizontal,
+		layout = wibox.layout.fixed.horizontal,
+		spacing = args.space,
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,
@@ -38,7 +39,7 @@ local worker = function(user_args)
 
 		update_volume = function(self, volume, is_noisetorch)
 			
-			local volume_text = string.format("%s%s ", volume, is_noisetorch and " N" or "");
+			local volume_text = string.format("%s%s", volume, is_noisetorch and " N" or "");
 			local volume_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#7493d2", volume_text);
 
 			if self.volume:get_markup() ~= volume_markup then

@@ -30,7 +30,8 @@ local worker = function(user_args)
 	local timeout = 5;
 	
 	spotify_widget = wibox.widget{
-		layout = wibox.layout.align.horizontal,
+		layout = wibox.layout.fixed.horizontal,
+		spacing = args.space,
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,
@@ -54,7 +55,7 @@ local worker = function(user_args)
 		set_text = function(self, artist, song)
 			local artist_to_display = ellipsize(artist, max_length);
 			local title_to_display = ellipsize(song, max_length);
-			local song_text = string.format("%s | %s ", title_to_display, artist_to_display);
+			local song_text = string.format("%s ► %s", title_to_display, artist_to_display);
 			local song_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#1db954", song_text);
 
 			if self.song_info:get_markup() ~= song_markup then

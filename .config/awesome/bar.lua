@@ -144,23 +144,27 @@ local tasklist_buttons = gears.table.join(
 -- [[[ Widgets
 
 -- Textclock
-local clockicon = wibox.widget.imagebox(beautiful.widget_clock)
-local mytextclock = wibox.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#ab7367", ">") .. markup("#de5e1e", " %I:%M %p "))
-mytextclock.font = beautiful.font
+-- mytextclock.font = beautiful.font
+local clock_widget = wibox.widget {
+	widget = wibox.layout.fixed.horizontal,
+	spacing = beautiful.widget_icon_gap,
+	wibox.widget.imagebox(beautiful.widget_clock),
+	wibox.widget.textclock(markup("#ff7730", "%a %d %b") .. markup("#ab7367", " > ") .. markup("#7788af", "%I:%M %p"))
+}
 
 -- Calendar
 beautiful.cal = lain.widget.cal({
-    attach_to = { mytextclock },
+    attach_to = { clock_widget },
 		followtag = true,
 		icons = "",
     notification_preset = {
         font = "monospace 10",
         fg   = beautiful.fg_normal,
-        bg   = beautiful.bg_normal
+        bg   = "#101010"
     }
 })
-mytextclock:disconnect_signal("mouse::enter", beautiful.cal.hover_on)
-mytextclock:buttons(awful.util.table.join(
+clock_widget:disconnect_signal("mouse::enter", beautiful.cal.hover_on)
+clock_widget:buttons(awful.util.table.join(
 	awful.button({}, 1, function() 
 			if beautiful.cal.notification then
 				beautiful.cal.hide()
@@ -174,63 +178,54 @@ mytextclock:buttons(awful.util.table.join(
 )
 
 -- CPU
-local cpuicon = wibox.widget.imagebox(beautiful.widget_cpu)
-local cpu = lain.widget.cpu({
-    settings = function()
-        widget:set_markup(markup.fontfg(beautiful.font, "#e33a6e", cpu_now.usage .. "% "))
-    end
-})
+local cpu_widget = {
+	widget = wibox.layout.fixed.horizontal,
+	spacing = beautiful.widget_icon_gap,
+	wibox.widget.imagebox(beautiful.widget_cpu),
+	lain.widget.cpu({settings = function() 
+		widget:set_markup(markup.fontfg(beautiful.font, "#e33a6e", cpu_now.usage .. "%"))
+	end}).widget,
+}
 
 -- Battery
-local baticon = wibox.widget.imagebox(beautiful.widget_batt)
-local bat = lain.widget.bat({
-    settings = function()
-        local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or "..."
+local battery_widget = {
+	widget = wibox.layout.fixed.horizontal,
+	spacing = beautiful.widget_icon_gap,
+	wibox.widget.imagebox(beautiful.widget_batt),
+	lain.widget.bat({settings = function()
+		local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or "..."
 
-        if bat_now.ac_status == 1 then
-            perc = perc .. " A/C"
-        end
+		if bat_now.ac_status == 1 then
+			perc = perc .. " A/C"
+		end
 
-        widget:set_markup(markup.fontfg(beautiful.font, beautiful.fg_normal, perc .. " "))
-    end
-})
+		widget:set_markup(markup.fontfg(beautiful.font, "#46fff6", percs))
+	end
+})}
 
 -- MEM
-local memicon = wibox.widget.imagebox(beautiful.widget_mem)
-local memory = lain.widget.mem({
-    settings = function()
-        widget:set_markup(markup.fontfg(beautiful.font, "#e0da37", mem_now.used .. "M "))
-    end
-})
+local memory_widget = {
+	widget = wibox.layout.fixed.horizontal,
+	spacing = beautiful.widget_icon_gap,
+	wibox.widget.imagebox(beautiful.widget_mem),
+	lain.widget.mem({settings = function() widget:set_markup(markup.fontfg(beautiful.font, "#e0da37", mem_now.used .. "M")) end}).widget,
+}
+
 
 -- Systray Container
-function trayshape(cr, width, height) gears.shape.partially_rounded_rect(cr, width, height, true, false, false, true, 25) end
-local mysystray = wibox.container.margin(wibox.widget {
-	{
-		wibox.widget.systray(),
-		left = 10,
-		top = 0,
-		bottom = 0,
-		right = 2,
-		widget = wibox.container.margin
-	},
-	bg = beautiful.bg_systray,
-	shape = trayshape,
-	shape_clip = true,
-	widget = wibox.container.background
-}, 6, 0, 3, 4)
+local mysystray = wibox.container.margin(wibox.widget.systray(), 0, beautiful.systray_icon_spacing, 4, 4)
 
 -- Spotify Widget
-local my_spotify_widget = spotify_widget({icon = beautiful.widget_spotify, font=beautiful.font})
+local my_spotify_widget = spotify_widget({icon = beautiful.widget_spotify, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- Volume Widget
-local my_volume_widget = volume_widget({icon = beautiful.widget_vol, font=beautiful.font})
+local my_volume_widget = volume_widget({icon = beautiful.widget_vol, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- Wifi Widget
-local my_wifi_widget = wifi_widget({icons = beautiful.widget_net, font=beautiful.font})
+local my_wifi_widget = wifi_widget({icons = beautiful.widget_net, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- Wifi Widget
-local my_brightness_widget = brightness_widget({icon = beautiful.widget_brightness, font=beautiful.font})
+local my_brightness_widget = brightness_widget({icon = beautiful.widget_brightness, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- ]]]
 
@@ -266,7 +261,7 @@ function generate_wibar(s)
 	}
 
 	local my_middle_widget = wibox.container.place(
-		wibox.container.margin(s.mytasklist, 15, 15, 5, 5),
+		wibox.container.margin(s.mytasklist, 7, 10, 5, 5),
 		"left"
 	)
 	my_middle_widget.fill_horizontal = true
@@ -281,23 +276,33 @@ function generate_wibar(s)
 			layout = wibox.layout.fixed.horizontal,
 			menulauncher,
 			s.mytaglist,
-			s.mylayoutbox
+			s.mylayoutbox,
+			{
+				widget = wibox.widget.separator,
+				span_ratio = 0.65,
+				color = beautiful.fg_normal,
+				orientation = 'vertical',
+				forced_width= 20
+			},
 		},
 		my_middle_widget,
 		{	-- Right widgets
 			layout = wibox.layout.fixed.horizontal,
+			spacing = beautiful.widget_gap,
+			spacing_widget = {
+				widget = wibox.widget.separator,
+				span_ratio = 0.65,
+				color = beautiful.fg_normal,
+			},
+			wibox.widget{},
 			my_spotify_widget,
 			my_volume_widget,
-			memicon,
-			memory.widget,
-			cpuicon,
-			cpu.widget,
+			memory_widget,
+			cpu_widget,
 			my_brightness_widget,
-			baticon,
-			bat.widget,
+			battery_widget,
 			my_wifi_widget,
-			clockicon,
-			mytextclock,
+			clock_widget,
 			mysystray,
 		},
 	}

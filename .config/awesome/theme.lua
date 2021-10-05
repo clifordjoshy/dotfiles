@@ -2,9 +2,9 @@ local gears = require("gears")
 
 local theme = {}
 
-theme.font                       = "sans-serif 9"
+theme.font                       = "JetBrainsMono 9"
 theme.hotkeys_font               = "sans-serif bold 9"
-theme.hotkeys_description_font   = theme.font
+theme.hotkeys_description_font   = "sans-serif 9"
 
 theme.hotkeys_modifiers_fg       = "#dddddd"
 theme.hotkeys_fg                 = "#cccccc"
@@ -21,7 +21,6 @@ theme.fg_urgent                  = "#af1d18"
 theme.fg_minimize                = "#ffffff"
 
 theme.bg_wibar                   = "#000000aa"
-theme.bg_systray                 = "#272727"
 
 theme.border_width               = 3
 theme.border_focus               = "#32a2a8"
@@ -45,6 +44,11 @@ theme.widget_clock               = icondir .. "clock.png"
 theme.widget_vol                 = icondir .. "spkr.png"
 theme.widget_brightness          = icondir .. "brightness.png"
 theme.widget_net                 = {icondir.."wifi_bar_0.png", icondir.."wifi_bar_1.png", icondir.."wifi_bar_2.png", icondir.."wifi_bar_3.png", icondir.."wifi_bar_4.png"} 
+
+theme.widget_icon_gap            = 8
+theme.widget_gap                 = 20
+theme.bg_systray                 = "#181818"
+theme.systray_icon_spacing       = 5
 
 theme.menu_launcher              = icondir .. "arch.png"
 theme.menu_lock_icon             = icondir .. "lock.svg" 
