@@ -199,7 +199,7 @@ local battery_widget = {
 			perc = perc .. " A/C"
 		end
 
-		widget:set_markup(markup.fontfg(beautiful.font, "#46fff6", percs))
+		widget:set_markup(markup.fontfg(beautiful.font, "#46fff6", perc))
 	end
 })}
 
