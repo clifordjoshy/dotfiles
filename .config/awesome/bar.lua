@@ -281,6 +281,7 @@ function generate_wibar(s)
 			layout = wibox.layout.fixed.horizontal,
 			menulauncher,
 			s.mytaglist,
+			s.mylayoutbox
 		},
 		my_middle_widget,
 		{	-- Right widgets

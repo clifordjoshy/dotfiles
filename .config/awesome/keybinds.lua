@@ -47,10 +47,10 @@ local globalkeys = gears.table.join(
 		function() awful.screen.focus_relative(-1) end,
 		{ description = "focus the previous screen", group = "screen" }
 	),
-	awful.key({modkey}, "u",
-		awful.client.urgent.jumpto,
-		{ description = "jump to urgent client", group = "client" }
-	),
+	-- awful.key({modkey}, "u",
+	-- 	awful.client.urgent.jumpto,
+	-- 	{ description = "jump to urgent client", group = "client" }
+	-- ),
 	awful.key({modkey}, "Tab",
 		function()
 			awful.client.focus.history.previous()
@@ -105,6 +105,14 @@ local globalkeys = gears.table.join(
 		end,
 		{ description = "restore minimized", group = "client" }
 	),
+	awful.key({modkey}, "a",
+		function() awful.layout.inc(-1) end,
+		{ description = "switch to previous layout", group = "layout" }
+	),
+	awful.key({modkey}, "d",
+		function() awful.layout.inc(1) end,
+		{ description = "switch to next layout", group = "layout" }
+	),
 
 	--lock screen
 	awful.key({modkey}, "q",
@@ -158,7 +166,7 @@ local clientkeys = gears.table.join(
 		end,
 		{ description = "toggle fullscreen", group = "client" }
 	),
-	awful.key({modkey, "Shift"}, "c",
+	awful.key({modkey, "Shift"}, "x",
 		function(c) c:kill() end,
 		{ description = "close", group = "client" }
 	),
@@ -232,8 +240,7 @@ for i = 1, #tagnames do
 			end,
 			{ description = "show windows from tag #" .. i, group = "tag" }
 		),
-		awful.key({modkey, "Shift"},
-			"#" .. i + 9,
+		awful.key({modkey, "Shift"}, "#" .. i + 9,
 			function()
 				if client.focus then
 					local tag = client.focus.screen.tags[i]
