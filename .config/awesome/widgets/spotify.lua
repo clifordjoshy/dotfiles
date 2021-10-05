@@ -32,6 +32,14 @@ local worker = function(user_args)
 	spotify_widget = wibox.widget{
 		layout = wibox.layout.fixed.horizontal,
 		spacing = args.space,
+		-- throwing in a separator here because i can't think of a better way to hide the sep when spotify is closed
+		{
+			widget = wibox.widget.separator,
+			span_ratio = 0.65,
+			color = "#aaaaaa",
+			orientation = 'vertical',
+			forced_width= 4
+		},
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,

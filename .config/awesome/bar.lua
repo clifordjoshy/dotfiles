@@ -294,7 +294,6 @@ function generate_wibar(s)
 				span_ratio = 0.65,
 				color = beautiful.fg_normal,
 			},
-			wibox.widget{},
 			my_spotify_widget,
 			my_volume_widget,
 			memory_widget,
