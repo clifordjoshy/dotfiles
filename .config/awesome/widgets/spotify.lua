@@ -13,8 +13,11 @@ local GET_SPOTIFY_STATUS_CMD = "sp status";
 local GET_CURRENT_SONG_CMD = "sp current";
 
 local ellipsize = function(text, length)
-	return text:len() > length and length > 0 and text:sub(0, length - 3) .. "..." or text;
-end;
+	if utf8.len(text) > length then
+		return text:sub(0, utf8.offset(text, length - 2) - 1) .. "..."
+	end
+	return text
+end
 
 local spotify_widget = {};
 
@@ -26,7 +29,7 @@ local worker = function(user_args)
 	local font = args.font or "sans-serif 9";
 	local dim_when_paused = true;
 	local dim_opacity = 0.5;
-	local max_length = 20;
+	local max_length = 15;
 	local timeout = 5;
 	
 	spotify_widget = wibox.widget{
@@ -83,10 +86,10 @@ local worker = function(user_args)
 			widget:set_visible(false);
 			return ;
 		end;
-
+		
 		local escaped = string.gsub(stdout, "&", "&amp;");
 		local album, _, artist, title = string.match(escaped, "Album%s*(.*)\nAlbumArtist%s*(.*)\nArtist%s*(.*)\nTitle%s*(.*)\n");
-
+		
 		if album ~= nil and title ~= nil and artist ~= nil then
 			widget:set_text(artist, title);
 			widget:set_visible(true);
