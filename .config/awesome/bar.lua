@@ -1,14 +1,15 @@
 local gears = require("gears")
-local lain  = require("lain")
+local lain_widget  = require("lain.widget")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local wibox = require("wibox")
-local markup = lain.util.markup
+local markup = require("lain.markup")
 
 local spotify_widget = require("widgets.spotify")
 local volume_widget = require("widgets.pipewire")
 local wifi_widget = require("widgets.wifi")
 local brightness_widget = require("widgets.brightness")
+local cal_task = require("widgets.cal_task")
 
 
 local menu_bg = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
@@ -153,36 +154,14 @@ local clock_widget = wibox.widget {
 }
 
 -- Calendar
-beautiful.cal = lain.widget.cal({
-    attach_to = { clock_widget },
-		followtag = true,
-		icons = "",
-    notification_preset = {
-        font = "monospace 10",
-        fg   = beautiful.fg_normal,
-        bg   = "#101010"
-    }
-})
-clock_widget:disconnect_signal("mouse::enter", beautiful.cal.hover_on)
-clock_widget:buttons(awful.util.table.join(
-	awful.button({}, 1, function() 
-			if beautiful.cal.notification then
-				beautiful.cal.hide()
-			else
-				beautiful.cal.hover_on()
-			end
-		end
-	),
-	awful.button({}, 5, beautiful.cal.prev),
-	awful.button({}, 4, beautiful.cal.next))
-)
+cal_task.attach(clock_widget)
 
 -- CPU
 local cpu_widget = {
 	widget = wibox.layout.fixed.horizontal,
 	spacing = beautiful.widget_icon_gap,
 	wibox.widget.imagebox(beautiful.widget_cpu),
-	lain.widget.cpu({settings = function() 
+	lain_widget.cpu({settings = function() 
 		widget:set_markup(markup.fontfg(beautiful.font, "#e33a6e", cpu_now.usage .. "%"))
 	end}).widget,
 }
@@ -192,7 +171,7 @@ local battery_widget = {
 	widget = wibox.layout.fixed.horizontal,
 	spacing = beautiful.widget_icon_gap,
 	wibox.widget.imagebox(beautiful.widget_batt),
-	lain.widget.bat({settings = function()
+	lain_widget.bat({settings = function()
 		local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or "..."
 
 		if bat_now.ac_status == 1 then
@@ -208,9 +187,8 @@ local memory_widget = {
 	widget = wibox.layout.fixed.horizontal,
 	spacing = beautiful.widget_icon_gap,
 	wibox.widget.imagebox(beautiful.widget_mem),
-	lain.widget.mem({settings = function() widget:set_markup(markup.fontfg(beautiful.font, "#e0da37", mem_now.used .. "M")) end}).widget,
+	lain_widget.mem({settings = function() widget:set_markup(markup.fontfg(beautiful.font, "#e0da37", mem_now.used .. "M")) end}).widget,
 }
-
 
 -- Systray Container
 local mysystray = wibox.container.margin(wibox.widget.systray(), 0, beautiful.systray_icon_spacing, 4, 4)
@@ -259,7 +237,7 @@ function generate_wibar(s)
 			image = beautiful.minimise_def_icon			-- default icon for apps without icon(looking at you, Spotify)
 		}
 	}
-
+	
 	local my_middle_widget = wibox.container.place(
 		wibox.container.margin(s.mytasklist, 7, 10, 5, 5),
 		"left"

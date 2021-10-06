@@ -29,7 +29,7 @@ local worker = function(user_args)
 	local font = args.font or "sans-serif 9";
 	local dim_when_paused = true;
 	local dim_opacity = 0.5;
-	local max_length = 15;
+	local max_length = 20;
 	local timeout = 5;
 	
 	spotify_widget = wibox.widget{

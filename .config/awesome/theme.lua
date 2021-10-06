@@ -72,4 +72,10 @@ theme.tasklist_plain_task_name   = true
 theme.tasklist_bg_normal         = "#dddddd"
 theme.useless_gap                = 5
 
+theme.notification_font          = "sans-serif 9"
+theme.notification_bg            = "#cdcdcd"
+theme.notification_fg            = "#202020"
+theme.notification_shape         = gears.shape.rounded_rect
+
+
 return theme
