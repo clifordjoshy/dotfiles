@@ -187,14 +187,3 @@ client.connect_signal("manage", function(c)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color= beautiful.border_normal end)
-
--- attempt at notification click focus
--- naughty.config.notify_callback = function(args)
--- 	args.run = function(n)
--- 		if n.clients then
--- 			n.clients[1]:jump_to(false)
--- 		end
--- 		n.die(naughty.notificationClosedReason.dismissedByUser)
--- 	end
--- 	return args
--- end

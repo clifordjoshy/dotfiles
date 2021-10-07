@@ -75,7 +75,10 @@ theme.useless_gap                = 5
 theme.notification_font          = "sans-serif 9"
 theme.notification_bg            = "#cdcdcd"
 theme.notification_fg            = "#202020"
-theme.notification_shape         = gears.shape.rounded_rect
+theme.notification_shape         = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 5) end
+theme.notification_max_width     = 500
+theme.notification_max_height    = 200
+theme.notification_icon_size     = 100
 
 
 return theme

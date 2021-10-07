@@ -142,6 +142,7 @@ function attach(widget)
 	widget:buttons(awful.util.table.join(
 		awful.button({}, 3, function()
 				cal.hide()
+				naughty.destroy_all_notifications ({awful.screen.focused()}, naughty.notificationClosedReason.dismissedByUser)
 				if task.notification then
 					task.hide()
 				else
@@ -151,6 +152,7 @@ function attach(widget)
 		),
 		awful.button({}, 1, function()
 				task.hide()
+				naughty.destroy_all_notifications ({awful.screen.focused()}, naughty.notificationClosedReason.dismissedByUser)
 				if cal.notification then
 					cal.hide()
 				else
