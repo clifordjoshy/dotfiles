@@ -8,28 +8,44 @@ local watch = require("awful.widget.watch");
 
 local NET_SIGNAL_CMD = "bash -c \"nmcli -t -f IN-USE,SIGNAL device wifi | grep \'*\'\""
 local NET_STATUS_CMD = "nmcli network connectivity"
+local NET_SPEED_CMD = "bash -c \"ifstat | awk \'/wlp1s0/ {print $6}\'\""
+local NET_INFO_CMD = "nmcli -t -f general.connection,ip4.address device show wlp1s0"
 
 local wifi_widget = {}
 
 local worker = function(user_args)
 
 	local icons = user_args.icons;
-	local font = user_args.font or "sans-serif 9";
+	local font = user_args.font or "monospace 9";
 	local timeout = 10;
+	local speed_timeout = 4;
+	local gap = user_args.space;
 	
 	wifi_widget = wibox.widget{
-		widget = wibox.widget.imagebox,
-		image = icons[2],
+		layout = wibox.layout.fixed.horizontal,
+		spacing = gap,
+		{
+			id = 'icon',
+			widget = wibox.widget.imagebox,
+			image = icons[2],
+		},
+		{
+			id = 'text',
+			widget = wibox.widget.textbox,
+		},
 
 		update_strength = function(self, strength)
 			local strength_icon = icons[math.ceil(strength/25) + 1]
-			if self.image ~= strength_icon then
-				self.image = strength_icon
+			if self.icon.image ~= strength_icon then
+				self.icon.image = strength_icon
 			end
 		end,
 		update_net = function(self, is_connected)
 			self:set_opacity(is_connected and 1 or 0.2)
 			self:emit_signal('widget::redraw_needed')
+		end,
+		update_speed = function(self, down_speed)
+			self.text:set_markup(string.format("<span font='%s' foreground='%s'>%s</span>", font, "#ec9e9e", down_speed));
 		end
 	}
 
@@ -41,28 +57,59 @@ local worker = function(user_args)
 	local is_connected = nil
 	local update_conn = function(widget, stdout, stderr, _, _)
 		local is_connected_now = stdout:find("limited") and false or true;
-		if(is_connected ~= is_connected_now) then
-			is_connected = not is_connected
+		if is_connected ~= is_connected_now then
+			is_connected = is_connected_now
 			widget:update_net(is_connected)
 		end
 	end
 
+	local update_speed = function(widget, stdout)
+		local speed;
+		local K_pos = stdout:find("K")
+		if K_pos then
+			local data = tonumber(stdout:sub(1, K_pos-1))/1024
+			speed = string.format("%.1f MB/s", data/speed_timeout)
+		else
+			local data = tonumber(stdout)/1024
+			speed = string.format("%.1f KB/s", data/speed_timeout)
+		end
+		widget:update_speed(speed)
+	end
 
 	watch(NET_SIGNAL_CMD, timeout, update_widget, wifi_widget);
 	watch(NET_STATUS_CMD, timeout, update_conn, wifi_widget);
+	watch(NET_SPEED_CMD, speed_timeout, update_speed, wifi_widget);
 
 	--- Adds mouse controls to the widget:
 	--  - left click - nmtui
 	--  - right click - refresh status
 	wifi_widget:connect_signal("button::press", function(_, _, _, button)
 			if button == 1 then
-				-- without 0.1 delay, nmtui will not fill screen
 				awful.spawn.with_shell("nmcli device wifi rescan && alacritty --class nmtui -e nmtui", false);
 			elseif button == 3 then
 				awful.spawn.easy_async("nmcli network connectivity check", function (stdout) update_conn(wifi_widget, stdout) end) 
 			end;
 		end
 	);
+
+	local last_result = ""
+	local info_tooltip;
+	info_tooltip = awful.tooltip{
+		objects = {wifi_widget},
+		timer_function = function()
+			 awful.spawn.easy_async_with_shell(NET_INFO_CMD, function(result)
+					local formatted = result:gsub("GENERAL.CONNECTION:", "ssid: "):gsub("IP4.ADDRESS....", "ip  : ")
+					last_result = formatted
+					info_tooltip:set_markup(last_result)
+				end)
+			return last_result
+		end,
+		delay_show = 1,
+		fg = "#cdcdcd",
+		bg = "#202020",
+		border_width = 1,
+		border_color = "#cdcdcd",
+	}
 
 	return wifi_widget;
 end;

@@ -56,10 +56,8 @@ local worker = function(user_args)
 
 		set_status = function(self, is_playing)
 			if dim_when_paused then
-				self.icon:set_opacity(is_playing and 1 or dim_opacity);
-				self.icon:emit_signal("widget::redraw_needed");
-				self.song_info:set_opacity(is_playing and 1 or dim_opacity);
-				self.song_info:emit_signal("widget::redraw_needed");
+				self:set_opacity(is_playing and 1 or dim_opacity);
+				self:emit_signal("widget::redraw_needed");
 			end;
 		end,
 

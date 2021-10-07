@@ -202,7 +202,7 @@ local my_volume_widget = volume_widget({icon = beautiful.widget_vol, font = beau
 -- Wifi Widget
 local my_wifi_widget = wifi_widget({icons = beautiful.widget_net, font = beautiful.font, space = beautiful.widget_icon_gap})
 
--- Wifi Widget
+-- Brightness Widget
 local my_brightness_widget = brightness_widget({icon = beautiful.widget_brightness, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- ]]]
