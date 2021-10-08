@@ -25,7 +25,9 @@ function task.show()
 			preset = task.notification_preset,
 			title  = task.show_cmd,
 			text   = markup.font(task.notification_preset.font, awful.util.escape(f:gsub("\n*$", ""))),
-			timeout = 0
+			timeout = 0,
+			max_height = 512,
+			max_width = 640
 		}
 	end
 	)

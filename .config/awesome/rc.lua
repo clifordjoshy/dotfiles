@@ -141,6 +141,7 @@ awful.rules.rules = {
 				"Pavucontrol",
 				"Xfce4-power-manager-settings",
 				"Blueman-manager",
+				"Qalculate-gtk"
 				-- "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
 			},
 			-- Note that the name property shown in xprop might be set slightly after creation of the client
