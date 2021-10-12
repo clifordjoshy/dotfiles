@@ -69,11 +69,11 @@ local worker = function(user_args)
 				return
 				-- using amixer instead of pactl to limit volume to 100%
 			elseif button == 4 then
-				-- awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false);
-				awful.spawn("amixer set Master 5%+", false);
+				awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false);
+				-- awful.spawn("amixer set Master 5%+", false);
 			elseif button == 5 then
-				-- awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
-				awful.spawn("amixer set Master 5%-", false);
+				awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
+				-- awful.spawn("amixer set Master 5%-", false);
 			elseif button == 3 then
 				awful.spawn.easy_async(NOISETORCH_CMD, function(_, stderr, _, _)
 						awful.spawn("noisetorch -" .. (stderr=="" and "u" or "i"), false)

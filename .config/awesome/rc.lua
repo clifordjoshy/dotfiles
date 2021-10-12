@@ -50,7 +50,7 @@ local function run_once(cmd_arr)
 		awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
 	end
 end
-run_once({"picom", "xfce4-power-manager"})
+run_once({"picom", "xfce4-power-manager", "clipster -d"})
 
 
 terminal = "alacritty"
@@ -133,7 +133,6 @@ awful.rules.rules = {
 	{
 		rule_any = {
 			instance = {
-				-- "copyq", -- Includes session name in class.
 				-- "pinentry",
 				"nmtui",				-- set when launched from wifi widget
 			},
@@ -141,7 +140,8 @@ awful.rules.rules = {
 				"Pavucontrol",
 				"Xfce4-power-manager-settings",
 				"Blueman-manager",
-				"Qalculate-gtk"
+				"Qalculate-gtk",
+				"Clipster",
 				-- "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
 			},
 			-- Note that the name property shown in xprop might be set slightly after creation of the client

@@ -31,7 +31,9 @@ setopt HIST_IGNORE_DUPS
 #fix visibility for files of ow type(usually in the windows partition)
 export LS_COLORS=$LS_COLORS:'ow=0;35:'
 
-colorscript -r
+if [ "$TERM" = "alacritty" ]; then
+	pokemon-colorscripts -r
+fi
 
 eval "$(starship init zsh)"
 

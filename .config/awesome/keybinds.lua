@@ -125,6 +125,11 @@ local globalkeys = gears.table.join(
 		function() awful.spawn("dmenu_run -l 10 -p \'launch app: \'", false) end,
 		{ description = "run prompt", group = "apps" }
 	),
+	awful.key({"Control", "Shift"}, "v",
+		function() awful.spawn("clipster -sp", true) end,
+		{ description = "show clipboard manager", group = "apps" }
+	),
+	
 	
 	-- pass false to awful.spawn for non window applications. otherwise loading cursor will show up
 	-- Apps
@@ -137,8 +142,8 @@ local globalkeys = gears.table.join(
 		{ description = "launch spotify", group = "apps" }
 	),
 	awful.key({modkey}, "n",
-		function() awful.spawn(string.format("%s -e %s", terminal, editor)) end,
-		{ description = "launch text editor", group = "apps" }
+		function() awful.spawn("leafpad") end,
+		{ description = "launch notepad", group = "apps" }
 	),
 	awful.key({modkey}, "v",
 		function() awful.spawn("code") end,
