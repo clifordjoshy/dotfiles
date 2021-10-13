@@ -122,11 +122,15 @@ local globalkeys = gears.table.join(
 	
 	-- Prompt
 	awful.key({modkey}, "space",
-		function() awful.spawn("dmenu_run -l 10 -p \'launch app: \'", false) end,
+		function() awful.spawn("rofi -show drun", false) end,
 		{ description = "run prompt", group = "apps" }
 	),
-	awful.key({"Control", "Shift"}, "v",
-		function() awful.spawn("clipster -sp", true) end,
+	awful.key({modkey}, "z",
+		function() awful.spawn("rofi -show window", false) end,
+		{ description = "window switcher", group = "apps" }
+	),
+	awful.key({modkey}, "x",
+		function() awful.spawn("clipster -sc", true) end,
 		{ description = "show clipboard manager", group = "apps" }
 	),
 	
