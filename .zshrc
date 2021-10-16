@@ -25,6 +25,10 @@ bindkey '^R' history-incremental-pattern-search-backward
 
 # delete key
 bindkey "^[[3~" delete-char
+# home key
+bindkey "^[[H"   beginning-of-line
+# end key
+bindkey "^[[F"   end-of-line
 
 setopt HIST_IGNORE_DUPS
 
@@ -39,4 +43,9 @@ eval "$(starship init zsh)"
 
 . ~/.config/aliasrc
 . /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+. /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+. ~/.zsh/sudo.plugin.zsh
+. /usr/share/autojump/autojump.zsh
 . /usr/share/doc/pkgfile/command-not-found.zsh
+
+bindkey '^[[Z' autosuggest-accept

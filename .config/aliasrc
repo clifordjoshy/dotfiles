@@ -7,11 +7,10 @@ alias \
 	cp="cp -iv" \
 	mv="mv -iv" \
 	rm="rm -vI" \
-	mkd="mkdir -pv"
+	mkdir="mkdir -pv"
 
 # Colorize commands when possible.
 alias \
 	ls="ls -hN --color=auto --group-directories-first" \
 	grep="grep --color=auto" \
-	diff="diff --color=auto" \
-	ccat="highlight --out-format=ansi"
+	diff="diff --color=auto"
