@@ -274,13 +274,13 @@ function generate_wibar(s)
 			},
 			my_spotify_widget,
 			my_volume_widget,
-			memory_widget,
-			cpu_widget,
-			my_brightness_widget,
+			s.index == 1 and memory_widget or nil,
+			s.index == 1 and cpu_widget or nil,
+			s.index == 1 and my_brightness_widget or nil,
 			battery_widget,
 			my_wifi_widget,
 			clock_widget,
-			mysystray,
+			s.index == 1 and mysystray or nil,
 		},
 	}
 end
