@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+
+import requests
+from subprocess import PIPE, run, Popen
+
+with open("/home/cliford/.config/apikeys/youtube") as key:
+    API_KEY = key.read().strip()
+
+RESULT_COUNT = 5
+TITLE_LENGTH = 40
+DURATION_LENGTH = 6
+CHANNEL_LENGTH = 20
+
+
+def make_search_request(query):
+    params = {
+        'part': 'snippet',
+        'q': query,
+        'maxResults': RESULT_COUNT,
+        'type': 'video',
+        'key': API_KEY
+    }
+    return requests.get('https://www.googleapis.com/youtube/v3/search', params=params, timeout=1).json()
+
+
+def make_details_request(ids_list):
+    ids_string = ",".join(ids_list)
+    params = {
+        'part': 'contentDetails',
+        'id': ids_string,
+        'key': API_KEY
+    }
+    return requests.get('https://www.googleapis.com/youtube/v3/videos', params=params, timeout=1).json()
+
+
+def get_videos(song_query):
+    videos_json = make_search_request(song_query)['items']
+    vid_ids = [v['id']['videoId'] for v in videos_json]
+    details_json = make_details_request(vid_ids)['items']
+    videos = []
+
+    for i, v in enumerate(videos_json):
+        title_encoded = v['snippet']['title']
+        title = title_encoded.replace('&#39;', "'").replace(
+            '&quot;', '"').replace('&amp;', '&')
+        channel = v['snippet']['channelTitle']
+
+        videos.append({
+            'title': title,
+            'channel': channel,
+            'duration': details_json[i]['contentDetails']['duration'][2:],
+            'url': f"https://www.youtube.com/watch?v={vid_ids[i]}"
+        })
+
+    return videos
+
+
+query = run(['rofi', '-dmenu', '-p', 'search youtube', '-l', '0'], stdout=PIPE).stdout[:-1].decode('utf-8')
+if not query:
+    quit()
+
+videos = get_videos(query)
+
+videos_formatted = "\n".join(
+    f"{i+1}.    {v['title'][:TITLE_LENGTH].ljust(TITLE_LENGTH)}    {v['channel'][:CHANNEL_LENGTH].ljust(CHANNEL_LENGTH)}    {v['duration'].ljust(DURATION_LENGTH)}" for i, v in enumerate(videos)
+)
+
+process = Popen(['rofi', '-dmenu', '-p', 'pick video', '-l', '5', '-width',
+                str(len(videos_formatted[0]))], stdout=PIPE, stdin=PIPE)
+process.stdin.write(videos_formatted.encode("UTF-8"))
+selected = process.communicate()[0][0] - 49         # will run into IndexOutOfBoundsError and quit if nothing selected
+
+video = videos[selected]
+
+run(["alacritty", "-e", "bash", "-c",
+    f"echo \"{video['title']}\n{video['url']}\n\" && mpv --no-video '{videos[selected]['url']}'"])

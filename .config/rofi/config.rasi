@@ -4,7 +4,7 @@ configuration {
 	show-icons: true;
 	terminal: "alacritty";
 	run-shell-command: "{terminal} -e {cmd}";
-	kb-cancel: "Escape,Super+space";
+	kb-cancel: "Escape,Super+space,Super+z,Super+X,Super+e";
 
 /*	window-format: "{w}    {c}   {t}";*/
 /*	font: "mono 12";*/

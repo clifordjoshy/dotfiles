@@ -133,6 +133,10 @@ local globalkeys = gears.table.join(
 		function() awful.spawn("clipster -sc", true) end,
 		{ description = "show clipboard manager", group = "apps" }
 	),
+	awful.key({modkey}, "e",
+		function() awful.spawn.with_shell("rofi-ytm") end,
+		{ description = "youtube music script", group = "apps" }
+	),
 	
 	
 	-- pass false to awful.spawn for non window applications. otherwise loading cursor will show up

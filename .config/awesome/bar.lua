@@ -150,7 +150,7 @@ local clock_widget = wibox.widget {
 	widget = wibox.layout.fixed.horizontal,
 	spacing = beautiful.widget_icon_gap,
 	wibox.widget.imagebox(beautiful.widget_clock),
-	wibox.widget.textclock(markup("#ff7730", "%a %d %b") .. markup("#ab7367", " > ") .. markup("#7788af", "%I:%M %p"))
+	wibox.widget.textclock(markup("#ff7730", "%a %d %b") .. markup("#ab7367", " > ") .. markup("#91c771", "%I:%M %p"))
 }
 
 -- Calendar

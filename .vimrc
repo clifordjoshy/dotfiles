@@ -24,3 +24,6 @@ call plug#end()
 colorscheme onedark
 
 hi normal guibg=NONE ctermbg=NONE
+
+vnoremap <C-c> "+y
+map <C-v> "+P
