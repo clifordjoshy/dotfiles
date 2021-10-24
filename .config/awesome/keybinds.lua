@@ -130,7 +130,7 @@ local globalkeys = gears.table.join(
 		{ description = "window switcher", group = "apps" }
 	),
 	awful.key({modkey}, "x",
-		function() awful.spawn("clipster -sc", true) end,
+		function() awful.spawn("rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'", false) end,
 		{ description = "show clipboard manager", group = "apps" }
 	),
 	awful.key({modkey}, "e",
