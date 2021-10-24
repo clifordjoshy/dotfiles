@@ -50,7 +50,7 @@ local function run_once(cmd_arr)
 		awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
 	end
 end
-run_once({"picom", "xfce4-power-manager", "greenclip daemon"})
+run_once({"picom", "xfce4-power-manager", "greenclip daemon", "playerctld daemon"})
 
 
 terminal = "alacritty"

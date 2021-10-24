@@ -131,7 +131,7 @@ local globalkeys = gears.table.join(
 	),
 	awful.key({modkey}, "x",
 		function() awful.spawn("rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'", false) end,
-		{ description = "show clipboard manager", group = "apps" }
+		{ description = "clipboard manager", group = "apps" }
 	),
 	awful.key({modkey}, "e",
 		function() awful.spawn.with_shell("rofi-ytm") end,
@@ -168,7 +168,23 @@ local globalkeys = gears.table.join(
 	awful.key({modkey, "Shift"}, "s",
 		function() awful.spawn("flameshot gui", false) end,
 		{ description = "gui screenshot", group = "apps" }
-	)
+	),
+
+	--Media Keys
+	awful.key({}, "XF86AudioLowerVolume", function() awful.spawn("amixer set Master 5%-", false) end),
+	awful.key({}, "XF86AudioRaiseVolume", function() awful.spawn("amixer set Master 5%+", false) end),
+	awful.key({}, "XF86AudioMute", function() awful.spawn("amixer set Master 0%", false) end),
+	
+	awful.key({}, "XF86AudioPlay", function() awful.spawn("playerctl play-pause", false) end),
+	awful.key({}, "XF86AudioPrev", function() awful.spawn("playerctl previous", false) end),
+	awful.key({}, "XF86AudioNext", function() awful.spawn("playerctl next", false) end),
+	awful.key({}, "XF86AudioStop", function() awful.spawn("playerctl stop", false) end),
+	
+	awful.key({}, "XF86MonBrightnessUp", function() awful.spawn("lux -a 10% >/dev/null", false) end),
+	awful.key({}, "XF86MonBrightnessDown", function() awful.spawn("lux -s 10% >/dev/null", false) end),
+	
+	awful.key({}, "XF86TouchpadToggle", function() awful.spawn("touchpad_toggle", false) end)
+
 )
 
 local clientkeys = gears.table.join(
