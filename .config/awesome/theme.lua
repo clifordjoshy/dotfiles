@@ -70,7 +70,7 @@ theme.tasklist_bg_normal         = "#00000000"
 theme.tasklist_disable_task_name = true
 theme.tasklist_plain_task_name   = true
 theme.tasklist_bg_normal         = "#dddddd"
-theme.useless_gap                = 5
+theme.useless_gap                = 4
 
 theme.notification_font          = "sans-serif 9"
 theme.notification_bg            = "#cdcdcd"

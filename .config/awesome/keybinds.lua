@@ -47,10 +47,10 @@ local globalkeys = gears.table.join(
 		function() awful.screen.focus_relative(-1) end,
 		{ description = "focus the previous screen", group = "screen" }
 	),
-	-- awful.key({modkey}, "u",
-	-- 	awful.client.urgent.jumpto,
-	-- 	{ description = "jump to urgent client", group = "client" }
-	-- ),
+	awful.key({modkey}, "u",
+		awful.client.urgent.jumpto,
+		{ description = "jump to urgent client", group = "client" }
+	),
 	awful.key({modkey}, "Tab",
 		function()
 			awful.client.focus.history.previous()
@@ -146,7 +146,13 @@ local globalkeys = gears.table.join(
 		{ description = "launch browser", group = "apps" }
 	),
 	awful.key({modkey}, "c",
-		function() awful.spawn("spotify") end,
+		function()
+			local spotify = function(c) return awful.rules.match(c, {class = "Spotify"}) end;
+			for c in awful.client.iterate(spotify) do
+				return;
+			end;
+			awful.spawn("spotify")
+		end,
 		{ description = "launch spotify", group = "apps" }
 	),
 	awful.key({modkey}, "n",
@@ -156,6 +162,10 @@ local globalkeys = gears.table.join(
 	awful.key({modkey}, "v",
 		function() awful.spawn("code") end,
 		{ description = "launch vs code", group = "apps" }
+	),
+	awful.key({modkey}, "w",
+		function() awful.spawn(browser.." --new-window web.whatsapp.com") end,
+		{ description = "launch whatsapp", group = "apps" }
 	),
 	awful.key({modkey}, "Print",
 		function() awful.spawn("flameshot screen -c", false) end,
@@ -180,8 +190,8 @@ local globalkeys = gears.table.join(
 	awful.key({}, "XF86AudioNext", function() awful.spawn("playerctl next", false) end),
 	awful.key({}, "XF86AudioStop", function() awful.spawn("playerctl stop", false) end),
 	
-	awful.key({}, "XF86MonBrightnessUp", function() awful.spawn("lux -a 10% >/dev/null", false) end),
-	awful.key({}, "XF86MonBrightnessDown", function() awful.spawn("lux -s 10% >/dev/null", false) end),
+	awful.key({}, "XF86MonBrightnessUp", function() awful.spawn("light -A 10", false) end),
+	awful.key({}, "XF86MonBrightnessDown", function() awful.spawn("light -U 10", false) end),
 	
 	awful.key({}, "XF86TouchpadToggle", function() awful.spawn("touchpad_toggle", false) end)
 

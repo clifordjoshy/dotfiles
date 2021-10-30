@@ -50,7 +50,7 @@ local function run_once(cmd_arr)
 		awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
 	end
 end
-run_once({"picom", "xfce4-power-manager", "greenclip daemon", "playerctld daemon"})
+run_once({"picom", "greenclip daemon", "playerctld daemon", "powerkit"})
 
 
 terminal = "alacritty"
@@ -138,8 +138,7 @@ awful.rules.rules = {
 			},
 			class = {
 				"Pavucontrol",
-				"Xfce4-power-manager-settings",
-				"Blueman-manager",
+				-- "Blueman-manager",
 				"Qalculate-gtk",
 				-- "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
 			},
