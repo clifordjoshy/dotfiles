@@ -1,7 +1,7 @@
 # dotfiles
 
-![image](screenshots/1.png)
-![image](screenshots/2.png)
+![image](.config/awesome/screenshots/1.png)
+![image](.config/awesome/screenshots/2.png)
 
 To migrate to these dotfiles,
 
