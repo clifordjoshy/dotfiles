@@ -145,16 +145,22 @@ local tasklist_buttons = gears.table.join(
 -- [[[ Widgets
 
 -- Textclock
+local mytextclock = wibox.widget.textclock(markup("#ff7730", "%a %d %b") .. markup("#ab7367", " > ") .. markup("#91c771", "%I:%M %p"));
 -- mytextclock.font = beautiful.font
 local clock_widget = wibox.widget {
 	widget = wibox.layout.fixed.horizontal,
 	spacing = beautiful.widget_icon_gap,
 	wibox.widget.imagebox(beautiful.widget_clock),
-	wibox.widget.textclock(markup("#ff7730", "%a %d %b") .. markup("#ab7367", " > ") .. markup("#91c771", "%I:%M %p"))
+	mytextclock
 }
 
 -- Calendar
 cal_task.attach(clock_widget)
+clock_widget:buttons(gears.table.join(
+	clock_widget:buttons(),
+	awful.button({}, 2, function() mytextclock:force_update() end)
+))
+
 
 -- CPU
 local cpu_widget = {

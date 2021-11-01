@@ -39,13 +39,9 @@ local globalkeys = gears.table.join(
 		function() awful.client.swap.byidx(-1) end,
 		{ description = "swap with previous client by index", group = "client" }
 	),
-	awful.key({modkey, "Control"}, "j",
+	awful.key({modkey}, "p",
 		function() awful.screen.focus_relative(1) end,
 		{ description = "focus the next screen", group = "screen" }
-	),
-	awful.key({modkey, "Control"}, "k",
-		function() awful.screen.focus_relative(-1) end,
-		{ description = "focus the previous screen", group = "screen" }
 	),
 	awful.key({modkey}, "u",
 		awful.client.urgent.jumpto,
@@ -125,11 +121,11 @@ local globalkeys = gears.table.join(
 		function() awful.spawn("rofi -show drun", false) end,
 		{ description = "run prompt", group = "apps" }
 	),
-	awful.key({modkey}, "z",
+	awful.key({modkey, "Shift"}, "z",
 		function() awful.spawn("rofi -show window", false) end,
 		{ description = "window switcher", group = "apps" }
 	),
-	awful.key({modkey}, "x",
+	awful.key({modkey}, "z",
 		function() awful.spawn("rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'", false) end,
 		{ description = "clipboard manager", group = "apps" }
 	),
