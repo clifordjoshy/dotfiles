@@ -11,9 +11,9 @@
 
 --]]
 
-local wrequire     = require("lain.helpers").wrequire
+local wrequire     = require("widgets.lain.helpers").wrequire
 local setmetatable = setmetatable
 
-local widget = { _NAME = "lain.widget" }
+local widget = { _NAME = "widgets.lain.widget" }
 
 return setmetatable(widget, { __index = wrequire })

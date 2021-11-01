@@ -4,7 +4,7 @@
 -- This just joins those together and removes some unneeded stuff
 -------------------------------------------------
 
-local markup  = require("lain.markup")
+local markup  = require("widgets.lain.markup")
 local awful   = require("awful")
 local naughty = require("naughty")
 local beautiful = require("beautiful")

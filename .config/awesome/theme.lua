@@ -9,8 +9,8 @@ theme.hotkeys_description_font   = "sans-serif 9"
 theme.hotkeys_modifiers_fg       = "#dddddd"
 theme.hotkeys_fg                 = "#cccccc"
 
-local walldir                    = "/usr/share/backgrounds/"
-theme.wallpapers                 = {walldir .. "ign_waifu.png", walldir .. "scene.png"}
+local walldir                    = gears.filesystem.get_configuration_dir() .. "wallpapers/"
+theme.wallpapers                 = {walldir .. "wall_1.png", walldir .. "wall_2.png"}
 
 theme.bg_normal                  = "#101010"
 theme.bg_focus                   = "#000000"

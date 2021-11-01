@@ -1,9 +1,9 @@
 local gears = require("gears")
-local lain_widget  = require("lain.widget")
+local lain_widget  = require("widgets.lain.widget")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local wibox = require("wibox")
-local markup = require("lain.markup")
+local markup = require("widgets.lain.markup")
 
 local spotify_widget = require("widgets.spotify")
 local volume_widget = require("widgets.pipewire")

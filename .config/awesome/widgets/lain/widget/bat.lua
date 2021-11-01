@@ -6,7 +6,7 @@
 
 --]]
 
-local helpers  = require("lain.helpers")
+local helpers  = require("widgets.lain.helpers")
 local fs       = require("gears.filesystem")
 local naughty  = require("naughty")
 local wibox    = require("wibox")

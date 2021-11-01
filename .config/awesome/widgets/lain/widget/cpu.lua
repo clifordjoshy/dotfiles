@@ -6,7 +6,7 @@
 
 --]]
 
-local helpers  = require("lain.helpers")
+local helpers  = require("widgets.lain.helpers")
 local wibox    = require("wibox")
 local math     = math
 local string   = string
