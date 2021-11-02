@@ -8,7 +8,7 @@ To migrate to these dotfiles,
 - Create the directory $HOME/.cfg and add a gitignore file (to avoid recursion issues)
 
 ```bash
-  echo .cfg >> .gitignore
+echo .cfg >> .gitignore
 ```
 
 - Clone this repo to the .cfg directory
