@@ -122,15 +122,19 @@ local globalkeys = gears.table.join(
 		{ description = "run prompt", group = "apps" }
 	),
 	awful.key({modkey, "Shift"}, "z",
-		function() awful.spawn("rofi -show window", false) end,
+		function() awful.spawn("rofi -modi window -show window", false) end,
 		{ description = "window switcher", group = "apps" }
+	),
+	awful.key({modkey, "Shift"}, "space",
+		function() awful.spawn("rofi -modi file-browser-extended -show file-browser-extended", false) end,
+		{ description = "rofi file browser", group = "apps" }
 	),
 	awful.key({modkey}, "z",
 		function() awful.spawn("rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'", false) end,
 		{ description = "clipboard manager", group = "apps" }
 	),
 	awful.key({modkey}, "e",
-		function() awful.spawn.with_shell("rofi-ytm") end,
+		function() awful.spawn.with_shell("rofi -modi blocks -show blocks -blocks-wrap ~/scripts/rofi-ytm/rofi-ytm.py -theme-str 'listview{lines:5;}'") end,
 		{ description = "youtube music script", group = "apps" }
 	),
 	

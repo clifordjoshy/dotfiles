@@ -1,0 +1,3 @@
+[submodule "scripts/rofi-ytm"]
+	path = scripts/rofi-ytm
+	url = https://github.com/clifordjoshy/rofi-ytm

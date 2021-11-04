@@ -151,7 +151,7 @@ awful.rules.rules = {
 				"pop-up" -- e.g. Google Chrome's (detached) Developer Tools.
 			}
 		},
-		properties = {floating = true, placement = awful.placement.centered}
+		properties = {floating = true, placement = awful.placement.centered, ontop = true}
 	},
 
 	--Set Spotify to always map on the tag named "five" on screen 1.
@@ -171,7 +171,7 @@ client.connect_signal("manage", function(c)
 
 		-- Windows like spotify only set class name after window opens. 
 		-- So add a listener for when it attains classname and then apply rules
-		if c.class == nil then 
+		if c.name == nil then 
 			c.minimized = true
 			c:connect_signal("property::class", function ()
 					c.minimized = false

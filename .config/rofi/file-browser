@@ -1,0 +1,5 @@
+show-hidden
+oc-cmd "code;icon:visual-studio-code"
+oc-cmd "sxiv;icon:sxiv"
+dir "~"
+open-parent-as-self
