@@ -5,7 +5,7 @@ local beautiful = require("beautiful")
 local wibox = require("wibox")
 local markup = require("widgets.lain.markup")
 
-local spotify_widget = require("widgets.spotify")
+local media_widget = require("widgets.media")
 local volume_widget = require("widgets.pipewire")
 local wifi_widget = require("widgets.wifi")
 local brightness_widget = require("widgets.brightness")
@@ -199,8 +199,8 @@ local memory_widget = {
 -- Systray Container
 local mysystray = wibox.container.margin(wibox.widget.systray(), 0, beautiful.systray_icon_spacing, 4, 4)
 
--- Spotify Widget
-local my_spotify_widget = spotify_widget({icon = beautiful.widget_spotify, font = beautiful.font, space = beautiful.widget_icon_gap})
+-- Media Widget
+local my_media_widget = media_widget({icons = beautiful.widget_media, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- Volume Widget
 local my_volume_widget = volume_widget({icon = beautiful.widget_vol, font = beautiful.font, space = beautiful.widget_icon_gap})
@@ -278,7 +278,7 @@ function generate_wibar(s)
 				span_ratio = 0.65,
 				color = beautiful.fg_normal,
 			},
-			my_spotify_widget,
+			my_media_widget,
 			my_volume_widget,
 			s.index == 1 and memory_widget or nil,
 			s.index == 1 and cpu_widget or nil,

@@ -154,8 +154,14 @@ awful.rules.rules = {
 		properties = {floating = true, placement = awful.placement.centered, ontop = true}
 	},
 
-	--Set Spotify to always map on the tag named "five" on screen 1.
-	{ rule = { class = "Spotify" }, properties = { screen = 1, tag = "five"} },
+	--Set music stuff to always map on the tag named "five" on screen 1.
+	{ 
+		rule_any = {
+			instance = { "mpv-ytm" }, 
+			class = { "Spotify" }
+		},
+		properties = { screen = 1, tag = "five"}
+	},
 }
 
 -- Signals
@@ -171,7 +177,7 @@ client.connect_signal("manage", function(c)
 
 		-- Windows like spotify only set class name after window opens. 
 		-- So add a listener for when it attains classname and then apply rules
-		if c.name == nil then 
+		if c.name == nil and c.class == nil then 
 			c.minimized = true
 			c:connect_signal("property::class", function ()
 					c.minimized = false

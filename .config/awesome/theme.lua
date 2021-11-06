@@ -38,7 +38,7 @@ theme.menu_fg_focus              = theme.menu_fg_normal
 local icondir                    = gears.filesystem.get_configuration_dir() .. "icons/"
 theme.widget_cpu                 = icondir .. "cpu.png"
 theme.widget_mem                 = icondir .. "mem.png"
-theme.widget_spotify             = icondir .. "spoti.png"
+theme.widget_media               = {spotify = icondir .. "spoti.png", default = icondir .. "media.png"}
 theme.widget_batt                = icondir .. "bat.png"
 theme.widget_clock               = icondir .. "clock.png"
 theme.widget_vol                 = icondir .. "spkr.png"
@@ -73,10 +73,10 @@ theme.tasklist_bg_normal         = "#dddddd"
 theme.useless_gap                = 4
 
 theme.notification_font          = "sans-serif 9"
-theme.notification_bg            = "#cdcdcd"
-theme.notification_fg            = "#202020"
+theme.notification_bg            = "#303030"
+theme.notification_fg            = "#fafafa"
 theme.notification_shape         = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 5) end
-theme.notification_max_width     = 500
+theme.notification_border_color  = theme.notification_fg
 theme.notification_max_height    = 200
 theme.notification_icon_size     = 100
 

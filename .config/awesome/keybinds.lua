@@ -186,6 +186,7 @@ local globalkeys = gears.table.join(
 	awful.key({}, "XF86AudioMute", function() awful.spawn("amixer set Master 0%", false) end),
 	
 	awful.key({}, "XF86AudioPlay", function() awful.spawn("playerctl play-pause", false) end),
+	awful.key({}, "XF86AudioPause", function() awful.spawn("playerctl play-pause", false) end),
 	awful.key({}, "XF86AudioPrev", function() awful.spawn("playerctl previous", false) end),
 	awful.key({}, "XF86AudioNext", function() awful.spawn("playerctl next", false) end),
 	awful.key({}, "XF86AudioStop", function() awful.spawn("playerctl stop", false) end),
