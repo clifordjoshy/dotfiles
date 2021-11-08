@@ -11,6 +11,7 @@ set smartcase
 set noswapfile
 set nobackup
 set undodir=~/.vim/undodir
+set viminfo+=n~/.vim/viminfo
 set undofile
 set incsearch
 

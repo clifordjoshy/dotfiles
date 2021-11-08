@@ -7,7 +7,7 @@ local awful = require("awful");
 local wibox = require("wibox");
 local watch = require("awful.widget.watch");
 
-local GET_PLAYER_INFO = "playerctl metadata -af '{{playerName}}/{{title}}/{{artist}}/{{status}}'"
+local GET_PLAYER_INFO = "playerctl metadata -af '{{playerName}}/#/{{title}}/#/{{artist}}/#/{{status}}'"
 
 local ellipsize = function(text, length)
 	if utf8.len(text) > length then
@@ -93,7 +93,7 @@ local worker = function(user_args)
 		local escaped = string.gsub(stdout, "&", "&amp;");
 
 		for p in string.gmatch(escaped, "([^\n]*)\n") do
-			local player, title, artist, status = string.match(p, "(.*)/(.*)/(.*)/(.*)")
+			local player, title, artist, status = string.match(p, "(.*)/#/(.*)/#/(.*)/#/(.*)")
 			local song_text;
 			if artist == '' then
 				song_text = ellipsize(title, 2*max_length)
@@ -143,8 +143,10 @@ local worker = function(user_args)
 				awful.spawn("playerctl next --player=" .. current_player, false);
 			elseif button == 3 then
 				if current_player == "spotify" then
-					awful.spawn("wmctrl -a spotify", false);
-				elseif current_player == "mpv" then
+					for c in awful.client.iterate(function(c) return awful.rules.match(c, {class = "Spotify"}) end) do
+						c:jump_to(false);
+					end;
+				elseif string.find(current_player, "mpv") then
 					awful.spawn("wmctrl -xa mpv", false);
 				end
 			elseif button == 2 then
