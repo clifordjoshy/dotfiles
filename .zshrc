@@ -44,7 +44,7 @@ eval "$(starship init zsh)"
 . ~/.config/aliasrc
 . /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 . /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-. ~/.zsh/sudo.plugin.zsh
+. /usr/share/zsh/plugins/zsh-sudo/sudo.plugin.zsh
 . /usr/share/autojump/autojump.zsh
 . /usr/share/doc/pkgfile/command-not-found.zsh
 
