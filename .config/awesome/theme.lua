@@ -78,6 +78,7 @@ theme.notification_fg            = "#fafafa"
 theme.notification_shape         = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 5) end
 theme.notification_border_color  = theme.notification_fg
 theme.notification_max_height    = 200
+theme.notification_max_width     = 500
 theme.notification_icon_size     = 100
 
 

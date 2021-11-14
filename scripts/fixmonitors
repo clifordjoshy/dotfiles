@@ -1,6 +1,6 @@
 #!/bin/bash
 
-xrdb -merge ~/.Xresources
+xrdb -merge /home/cliford/.Xresources
 
 xrandr --output HDMI-A-0 --mode 1280x1024  --scale 1.25x1.25 --right-of eDP --output eDP --scale 0.9999x0.9999
 xrandr --output HDMI-1 --mode 1280x1024  --scale 1.25x1.25 --right-of eDP-1 --output eDP-1 --scale 0.9999x0.9999 

@@ -41,7 +41,7 @@ local worker = function(user_args)
 			end
 		end,
 		update_net = function(self, is_connected)
-			self:set_opacity(is_connected and 1 or 0.2)
+			self:set_opacity(is_connected and 1 or 0.5)
 			self:emit_signal('widget::redraw_needed')
 		end,
 		update_speed = function(self, down_speed)
@@ -56,7 +56,7 @@ local worker = function(user_args)
 
 	local is_connected = nil
 	local update_conn = function(widget, stdout, stderr, _, _)
-		local is_connected_now = stdout:find("limited") and false or true;
+		local is_connected_now = stdout:find("limited") == nil
 		if is_connected ~= is_connected_now then
 			is_connected = is_connected_now
 			widget:update_net(is_connected)
@@ -85,6 +85,11 @@ local worker = function(user_args)
 	--  - right click - refresh status
 	wifi_widget:connect_signal("button::press", function(_, _, _, button)
 			if button == 1 then
+				local nmtui_window = function(c) return awful.rules.match(c, {instance = "nmtui"}) end;
+				for c in awful.client.iterate(nmtui_window) do
+					c:jump_to(false);
+					return;
+				end;
 				awful.spawn.with_shell("nmcli device wifi rescan && alacritty --class nmtui -e nmtui", false);
 			elseif button == 3 then
 				awful.spawn.easy_async("nmcli network connectivity check", function (stdout) update_conn(wifi_widget, stdout) end) 
