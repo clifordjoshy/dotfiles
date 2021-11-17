@@ -90,7 +90,13 @@ local on_middlebar_mouse_button = function(_, _, _, button)
 		else
 			client_menu:hide()
 			client_menu = nil
-		end	
+		end
+	elseif button == 4 then
+		if mouse.screen ~= awful.screen.focused({client = true, mouse = false})	then awful.screen.focus(mouse.screen) end
+		awful.client.focus.byidx(-1)
+	elseif button == 5 then
+		if mouse.screen ~= awful.screen.focused({client = true, mouse = false})	then awful.screen.focus(mouse.screen) end
+		awful.client.focus.byidx(1)
 	end
 end
 

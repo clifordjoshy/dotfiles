@@ -62,9 +62,9 @@ tagnames = { "one", "two", "three", "four", "five" }
 awful.layout.layouts = {
 	awful.layout.suit.tile,
 	awful.layout.suit.tile.bottom,
-	awful.layout.suit.magnifier,
+	-- awful.layout.suit.magnifier,
 	-- awful.layout.suit.spiral.dwindle,
-	-- awful.layout.suit.max,
+	awful.layout.suit.max,
 }
 
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")

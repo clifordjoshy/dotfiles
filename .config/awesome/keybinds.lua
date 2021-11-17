@@ -181,9 +181,9 @@ local globalkeys = gears.table.join(
 	),
 
 	--Media Keys
-	awful.key({}, "XF86AudioLowerVolume", function() awful.spawn("amixer set Master 5%-", false) end),
-	awful.key({}, "XF86AudioRaiseVolume", function() awful.spawn("amixer set Master 5%+", false) end),
-	awful.key({}, "XF86AudioMute", function() awful.spawn("amixer set Master 0%", false) end),
+	awful.key({}, "XF86AudioLowerVolume", function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end),
+	awful.key({}, "XF86AudioRaiseVolume", function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end),
+	awful.key({}, "XF86AudioMute", function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 0%", false) end),
 	
 	awful.key({}, "XF86AudioPlay", function() awful.spawn("playerctl play-pause", false) end),
 	awful.key({}, "XF86AudioPause", function() awful.spawn("playerctl play-pause", false) end),
