@@ -240,13 +240,20 @@ function generate_wibar(s)
 		filter = awful.widget.tasklist.filter.minimizedcurrenttags,
 		buttons = tasklist_buttons,
 		layout   = {
-			spacing = 5,
+			spacing = 10,
 			layout  = wibox.layout.fixed.horizontal
     },
 		widget_template = {
-			id     = 'icon_role',
-			widget = wibox.widget.imagebox,
-			image = beautiful.minimise_def_icon			-- default icon for apps without icon(looking at you, Spotify)
+			{
+				id     = 'icon_role',
+				widget = wibox.widget.imagebox,
+				image = beautiful.minimise_def_icon			-- default icon for apps without icon(looking at you, Spotify)
+			},
+			widget = wibox.container.background,
+			bg = "#ffffff30",
+			shape = gears.shape.circle,
+			shape_border_width = 5,
+			shape_border_color = "#00000000"
 		}
 	}
 	
