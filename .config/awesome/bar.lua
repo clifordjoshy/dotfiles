@@ -54,65 +54,16 @@ mymainmenu.wibox:connect_signal("mouse::leave", function()
 -- ]]]
 
 
--- [[[ Middle Box
-local mouse_in_client_menu = false
-local client_menu = nil
-	
+-- [[[ Middle Box	
 local on_middlebar_mouse_button = function(_, _, _, button)
 	if button == 3 then
-		-- if not currently visible
-		if(client_menu == nil) then
-			local client_list = {}
-			local max_len = 5			--biggest width. to set appropriate size for menu
-
-			for _, c in ipairs(client.get()) do
-				table.insert(client_list, {c.class, function() c:jump_to(false) end})
-				max_len = math.max(max_len, #c.class)
-			end
-			if #client_list == 0 then return end
-
-			table.sort(client_list, function(a, b) return a[1] < b[1] end)
-
-			client_menu = awful.menu({
-				items=client_list,
-				theme={font = "sans-serif 11", height = #client_list + 20, width = max_len*13 + 10}
-			})
-			client_menu.wibox.shape = menu_bg
-			client_menu.wibox:connect_signal("mouse::enter", function() mouse_in_client_menu = true end)
-			client_menu.wibox:connect_signal("mouse::leave", function() 
-					client_menu:hide()
-					client_menu = nil
-					mouse_in_client_menu = false
-				end
-			)
-			client_menu:show()
-		
-		else
-			client_menu:hide()
-			client_menu = nil
-		end
+		awful.spawn("rofi -modi window -show window", false)
 	elseif button == 4 then
 		if mouse.screen ~= awful.screen.focused({client = true, mouse = false})	then awful.screen.focus(mouse.screen) end
 		awful.client.focus.byidx(-1)
 	elseif button == 5 then
 		if mouse.screen ~= awful.screen.focused({client = true, mouse = false})	then awful.screen.focus(mouse.screen) end
 		awful.client.focus.byidx(1)
-	end
-end
-
-local on_middlebar_mouse_leave = function()
-	if client_menu ~= nil then
-		gears.timer{
-			timeout = 0.1,
-			single_shot = true,
-			autostart = true,
-			callback = function () 
-				if not mouse_in_client_menu then 
-					client_menu:hide()
-					client_menu = nil
-				end
-			end,
-		}
 	end
 end
 -- ]]]
@@ -247,7 +198,7 @@ function generate_wibar(s)
 			{
 				id     = 'icon_role',
 				widget = wibox.widget.imagebox,
-				image = beautiful.minimise_def_icon			-- default icon for apps without icon(looking at you, Spotify)
+				image = beautiful.minimise_def_icon			-- default icon for apps without icon
 			},
 			widget = wibox.container.background,
 			bg = "#ffffff30",
@@ -263,7 +214,6 @@ function generate_wibar(s)
 	)
 	my_middle_widget.fill_horizontal = true
 	my_middle_widget:connect_signal("button::press", on_middlebar_mouse_button);
-	my_middle_widget:connect_signal("mouse::leave", on_middlebar_mouse_leave);
 
 	s.mywibar = awful.wibar({ position = "top", screen = s, bg = beautiful.bg_wibar, fg = beautiful.fg_normal })
 

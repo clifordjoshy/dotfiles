@@ -21,7 +21,7 @@ local worker = function(user_args)
 
 	local icon = args.icon;
 	local font = args.font or "sans-serif 9";
-	local timeout = 5;
+	local timeout = 2;
 	
 	volume_widget = wibox.widget{
 		layout = wibox.layout.fixed.horizontal,

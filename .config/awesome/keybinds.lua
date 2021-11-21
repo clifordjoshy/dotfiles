@@ -194,7 +194,29 @@ local globalkeys = gears.table.join(
 	awful.key({}, "XF86MonBrightnessUp", function() awful.spawn("light -A 10", false) end),
 	awful.key({}, "XF86MonBrightnessDown", function() awful.spawn("light -U 10", false) end),
 	
-	awful.key({}, "XF86TouchpadToggle", function() awful.spawn("touchpad_toggle", false) end)
+	awful.key({}, "XF86TouchpadToggle", function() awful.spawn("touchpad_toggle", false) end),
+
+	--Alternative Media Keys
+	awful.key({modkey}, "[",
+		function() awful.spawn("playerctl previous", false) end,
+		{ description = "previous track", group = "functions" }
+	),
+	awful.key({modkey}, "]",
+		function() awful.spawn("playerctl next", false) end,
+		{ description = "next track", group = "functions" }
+	),
+	awful.key({modkey}, "'",
+		function() awful.spawn("playerctl play-pause", false) end,
+		{ description = "pause/play track", group = "functions" }
+	),
+	awful.key({modkey, "Shift"}, "[",
+		function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end,
+		{ description = "volume down", group = "functions" }
+	),
+	awful.key({modkey, "Shift"}, "]",
+		function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end,
+		{ description = "volume up", group = "functions" }
+	)
 
 )
 
