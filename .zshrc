@@ -1,6 +1,9 @@
 autoload -U colors && colors
+PS1=$'%B%{\x1b[38;2;251;73;52m%}[%{\x1b[38;2;250;189;47m%}%n%{\x1b[38;2;184;187;38m%}@%{\x1b[38;2;131;165;152m%}%M %{\x1b[38;2;211;134;155m%}%~%{\x1b[38;2;251;73;52m%}]%{\e[0m%}$%b '
+stty stop undef # Disable ctrl-s to freeze terminal.
+precmd() { print "" } # start prompt in newline
 
-HISTFILE=~/.cache/.histfilel
+HISTFILE=~/.cache/histfile
 HISTSIZE=1000
 SAVEHIST=1000
 
@@ -22,13 +25,12 @@ _comp_options+=(globdots)
 
 # Enable searching through history
 bindkey '^R' history-incremental-pattern-search-backward
-
 # delete key
 bindkey "^[[3~" delete-char
 # home key
-bindkey "^[[H"   beginning-of-line
+bindkey "^[[H" beginning-of-line
 # end key
-bindkey "^[[F"   end-of-line
+bindkey "^[[F" end-of-line
 
 setopt HIST_IGNORE_DUPS
 
@@ -38,8 +40,6 @@ export LS_COLORS=$LS_COLORS:'ow=0;35:'
 if [ "$TERM" = "alacritty" ]; then
 	pokemon-colorscripts -r
 fi
-
-eval "$(starship init zsh)"
 
 . ~/.config/aliasrc
 . /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
