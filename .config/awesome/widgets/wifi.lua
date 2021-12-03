@@ -67,11 +67,13 @@ local worker = function(user_args)
 		local speed;
 		local K_pos = stdout:find("K")
 		if K_pos then
-			local data = tonumber(stdout:sub(1, K_pos-1))/1024
-			speed = string.format("%.1f MB/s", data/speed_timeout)
+			local data = tonumber(stdout:sub(1, K_pos-1))
+			if data == nil then return end
+			speed = string.format("%.1f MB/s", data/(1024 * speed_timeout))
 		else
-			local data = tonumber(stdout)/1024
-			speed = string.format("%.1f KB/s", data/speed_timeout)
+			local data = tonumber(stdout)
+			if data == nil then return end
+			speed = string.format("%.1f KB/s", data/(1024 * speed_timeout))
 		end
 		widget:update_speed(speed)
 	end

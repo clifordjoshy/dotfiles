@@ -101,6 +101,16 @@ local globalkeys = gears.table.join(
 		end,
 		{ description = "restore minimized", group = "client" }
 	),
+	awful.key({modkey, "Control"}, "g",
+		function()
+			for s in screen do
+				for _,c in pairs(s.clients) do
+					c.minimized = true
+				end
+			end
+		end,
+		{ description = "minimize all windows", group = "client" }
+	),
 	awful.key({modkey}, "a",
 		function() awful.layout.inc(-1) end,
 		{ description = "switch to previous layout", group = "layout" }

@@ -145,7 +145,7 @@ local worker = function(user_args)
 				if current_player == "spotify" then
 					for c in awful.client.iterate(function(c) return awful.rules.match(c, {class = "Spotify"}) end) do
 						c:jump_to(false);
-						break
+						return
 					end;
 				elseif string.find(current_player, "mpv") then
 					awful.spawn("wmctrl -xa mpv", false);

@@ -20,7 +20,7 @@ theme.fg_focus                   = "#ff8c00"
 theme.fg_urgent                  = "#af1d18"
 theme.fg_minimize                = "#ffffff"
 
-theme.bg_wibar                   = "#000000aa"
+theme.bg_wibar                   = "#1e2127"
 
 theme.border_width               = 3
 theme.border_focus               = "#32a2a8"
@@ -47,7 +47,7 @@ theme.widget_net                 = {icondir.."wifi_bar_0.png", icondir.."wifi_ba
 
 theme.widget_icon_gap            = 8
 theme.widget_gap                 = 20
-theme.bg_systray                 = "#181818"
+theme.bg_systray                 = "#1e2127"
 theme.systray_icon_spacing       = 5
 
 theme.menu_launcher              = icondir .. "arch.png"

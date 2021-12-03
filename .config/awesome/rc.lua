@@ -162,6 +162,14 @@ awful.rules.rules = {
 		},
 		properties = { screen = 1, tag = "five"}
 	},
+
+	--Stuff that needs to launch in the second monitor
+		{ 
+		rule_any = {
+			class = { "discord" }
+		},
+		properties = { screen = 2}
+	},
 }
 
 -- Signals

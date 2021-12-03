@@ -1,6 +1,5 @@
 configuration {
 	modi: "run,drun";
-	theme: "theme";
 	show-icons: true;
 	terminal: "alacritty";
 	run-shell-command: "{terminal} -e {cmd}";
@@ -146,3 +145,5 @@ configuration {
       sorting-method:    "name";
   }
 }
+
+@theme "theme"
