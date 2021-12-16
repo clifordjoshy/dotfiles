@@ -1,5 +1,7 @@
 show-hidden
 oc-cmd "code;icon:visual-studio-code"
 oc-cmd "sxiv;icon:sxiv"
+oc-cmd "pcmanfm;icon:user-desktop"
 dir "~"
 open-parent-as-self
+depth 3

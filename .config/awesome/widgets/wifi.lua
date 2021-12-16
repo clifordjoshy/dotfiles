@@ -105,7 +105,7 @@ local worker = function(user_args)
 		objects = {wifi_widget},
 		timer_function = function()
 			 awful.spawn.easy_async_with_shell(NET_INFO_CMD, function(result)
-					local formatted = result:gsub("GENERAL.CONNECTION:", "ssid: "):gsub("IP4.ADDRESS....", "ip  : ")
+					local formatted = result:gsub("GENERAL.CONNECTION:", "ssid: "):gsub("IP4.ADDRESS....", "ip  : "):sub(0, -2)
 					last_result = formatted
 					info_tooltip:set_markup(last_result)
 				end)

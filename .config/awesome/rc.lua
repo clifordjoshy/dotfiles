@@ -57,6 +57,7 @@ terminal = "alacritty"
 editor = "vim"
 modkey = "Mod4" -- Super Key
 browser = "brave"
+screen_lock = "dm-tool lock"
 tagnames = { "one", "two", "three", "four", "five" }
 
 awful.layout.layouts = {
@@ -92,6 +93,14 @@ local keybinds = require("keybinds")
 
 clientbuttons = gears.table.join(
 	awful.button({}, 1, function(c) 
+			c:emit_signal("request::activate", "mouse_click", {raise = true})
+		end
+	),
+	awful.button({}, 2, function(c) 
+			c:emit_signal("request::activate", "mouse_click", {raise = true})
+		end
+	),
+	awful.button({}, 3, function(c) 
 			c:emit_signal("request::activate", "mouse_click", {raise = true})
 		end
 	),

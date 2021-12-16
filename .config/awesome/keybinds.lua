@@ -101,7 +101,7 @@ local globalkeys = gears.table.join(
 		end,
 		{ description = "restore minimized", group = "client" }
 	),
-	awful.key({modkey, "Control"}, "g",
+	awful.key({modkey}, "t",
 		function()
 			for s in screen do
 				for _,c in pairs(s.clients) do
@@ -122,7 +122,7 @@ local globalkeys = gears.table.join(
 
 	--lock screen
 	awful.key({modkey}, "q",
-		function() awful.spawn("slock", false) end,
+		function() awful.spawn(screen_lock, false) end,
 		{ description = "lock screen", group = "system" }
 	),
 	

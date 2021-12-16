@@ -1,7 +1,11 @@
 #!/bin/sh
 
-export PATH="$HOME/.local/bin:$PATH"
-setxkbmap -option caps:swapescape -option altwin:menu_win
+export PATH="$HOME/.local/bin:$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+
+# keyboard setup
+setxkbmap -option caps:none -option altwin:menu_win
+xmodmap -e "keycode 66 = Escape Caps_Lock"
+
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export EDITOR="vim"
 export VISUAL="vim"
