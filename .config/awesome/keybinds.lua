@@ -166,7 +166,7 @@ local globalkeys = gears.table.join(
 		{ description = "launch spotify", group = "apps" }
 	),
 	awful.key({modkey}, "n",
-		function() awful.spawn("leafpad") end,
+		function() awful.spawn("vnote") end,
 		{ description = "launch notepad", group = "apps" }
 	),
 	awful.key({modkey}, "v",
@@ -254,7 +254,7 @@ local clientkeys = gears.table.join(
 		function(c) c:move_to_screen() end,
 		{ description = "move to screen", group = "client" }
 	),
-	awful.key({modkey}, "t",
+	awful.key({modkey, "Control"}, "t",
 		function(c) c.ontop = not c.ontop end,
 		{ description = "toggle keep on top", group = "client" }
 	),

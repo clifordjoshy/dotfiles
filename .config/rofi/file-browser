@@ -1,4 +1,5 @@
 show-hidden
+exclude *cache*
 oc-cmd "code;icon:visual-studio-code"
 oc-cmd "sxiv;icon:sxiv"
 oc-cmd "pcmanfm;icon:user-desktop"

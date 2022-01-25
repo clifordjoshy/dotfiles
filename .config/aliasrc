@@ -14,3 +14,5 @@ alias \
 	ls="ls -hN --color=auto --group-directories-first" \
 	grep="grep --color=auto" \
 	diff="diff --color=auto"
+
+alias mntwin="sudo mount /dev/nvme0n1p3 /media/windows"

@@ -1,6 +1,9 @@
 #!/bin/sh
 
-export PATH="$HOME/.local/bin:$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+export PATH="$HOME/.local/bin\
+:$(ruby -e 'puts Gem.user_dir')/bin\
+:$HOME/.ghcup/bin\
+:$PATH"
 
 # keyboard setup
 setxkbmap -option caps:none -option altwin:menu_win

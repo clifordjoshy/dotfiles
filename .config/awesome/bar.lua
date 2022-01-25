@@ -86,10 +86,7 @@ local taglist_buttons = gears.table.join(
 				client.focus:toggle_tag(t)
 			end
 		end
-	),
-	-- moves between tags on scroll wheel
-	awful.button({}, 4, function(t) awful.tag.viewnext(t.screen) end),
-	awful.button({}, 5,	function(t)	awful.tag.viewprev(t.screen) end)
+	)
 )
 
 local tasklist_buttons = gears.table.join(
@@ -244,9 +241,9 @@ function generate_wibar(s)
 			my_media_widget,
 			my_volume_widget,
 			s.index == 1 and memory_widget or nil,
-			s.index == 1 and cpu_widget or nil,
+			cpu_widget,
 			s.index == 1 and my_brightness_widget or nil,
-			battery_widget,
+			s.index == 1 and battery_widget or nil,
 			my_wifi_widget,
 			clock_widget,
 			s.index == 1 and mysystray or nil,
