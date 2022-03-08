@@ -57,6 +57,8 @@ mymainmenu.wibox:connect_signal("mouse::leave", function()
 -- [[[ Middle Box	
 local on_middlebar_mouse_button = function(_, _, _, button)
 	if button == 3 then
+		awful.spawn("rofi -show drun", false)
+	elseif button == 2 then
 		awful.spawn("rofi -modi window -show window", false)
 	elseif button == 4 then
 		if mouse.screen ~= awful.screen.focused({client = true, mouse = false})	then awful.screen.focus(mouse.screen) end

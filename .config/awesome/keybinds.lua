@@ -166,7 +166,7 @@ local globalkeys = gears.table.join(
 		{ description = "launch spotify", group = "apps" }
 	),
 	awful.key({modkey}, "n",
-		function() awful.spawn("vnote") end,
+		function() awful.spawn("gedit") end,
 		{ description = "launch notepad", group = "apps" }
 	),
 	awful.key({modkey}, "v",

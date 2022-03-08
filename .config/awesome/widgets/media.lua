@@ -27,7 +27,7 @@ local worker = function(user_args)
 	local dim_when_paused = true;
 	local dim_opacity = 0.5;
 	local max_length = 20;
-	local timeout = 2.5;
+	local timeout = 1;
 	
 	local player_info = {}
 	local current_player = nil

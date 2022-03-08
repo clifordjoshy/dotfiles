@@ -16,3 +16,7 @@ alias \
 	diff="diff --color=auto"
 
 alias mntwin="sudo mount /dev/nvme0n1p3 /media/windows"
+
+alias rm="echo \"Don't you mean trash-put?\"; false"
+
+alias tp="trash-put"

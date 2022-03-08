@@ -1,8 +1,13 @@
 show-hidden
 exclude *cache*
+exclude .android
+exclude .arduino15
+exclude node_modules
+exclude .git
+exclude .cfg
 oc-cmd "code;icon:visual-studio-code"
 oc-cmd "sxiv;icon:sxiv"
-oc-cmd "pcmanfm;icon:user-desktop"
+oc-cmd "nautilus;icon:user-desktop"
 dir "~"
 open-parent-as-self
 depth 3
