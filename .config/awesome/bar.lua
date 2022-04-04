@@ -162,7 +162,7 @@ local my_media_widget = media_widget({icons = beautiful.widget_media, font = bea
 local my_volume_widget = volume_widget({icon = beautiful.widget_vol, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- Wifi Widget
-local my_wifi_widget = wifi_widget({icons = beautiful.widget_net, font = beautiful.font, space = beautiful.widget_icon_gap})
+local my_wifi_widget = wifi_widget({wifi_icons = beautiful.widget_wifi, eth_icon = beautiful.widget_eth, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- Brightness Widget
 local my_brightness_widget = brightness_widget({icon = beautiful.widget_brightness, font = beautiful.font, space = beautiful.widget_icon_gap})

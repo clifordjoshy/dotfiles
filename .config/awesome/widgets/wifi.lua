@@ -1,21 +1,24 @@
 -------------------------------------------------
--- Wifi Signal Widget
+-- Wifi/Ethernet Widget
 -------------------------------------------------
 
 local awful = require("awful");
 local wibox = require("wibox");
 local watch = require("awful.widget.watch");
+local gears = require("gears")
 
 local NET_SIGNAL_CMD = "bash -c \"nmcli -t -f IN-USE,SIGNAL device wifi | grep \'*\'\""
 local NET_STATUS_CMD = "nmcli network connectivity"
-local NET_SPEED_CMD = "bash -c \"ifstat | awk \'/wlp1s0/ {print $6}\'\""
-local NET_INFO_CMD = "nmcli -t -f general.connection,ip4.address device show wlp1s0"
+local NET_TYPE_CMD = "bash -c \"nmcli -f TYPE,DEVICE con show --active | awk 'NR==2 {printf \\\"%s:%s\\\",\\$1,\\$2 }'\""
+local NET_SPEED_CMD = "ifstat %s | awk 'NR==4 {printf $6}'"
+local NET_INFO_CMD = "nmcli -t -f general.connection,ip4.address device show %s"
 
 local wifi_widget = {}
 
 local worker = function(user_args)
 
-	local icons = user_args.icons;
+	local wifi_icons = user_args.wifi_icons;
+	local eth_icon = user_args.eth_icon;
 	local font = user_args.font or "monospace 9";
 	local timeout = 10;
 	local speed_timeout = 4;
@@ -27,7 +30,7 @@ local worker = function(user_args)
 		{
 			id = 'icon',
 			widget = wibox.widget.imagebox,
-			image = icons[2],
+			image = wifi_icons[2],
 		},
 		{
 			id = 'text',
@@ -35,7 +38,11 @@ local worker = function(user_args)
 		},
 
 		update_strength = function(self, strength)
-			local strength_icon = icons[math.ceil(strength/25) + 1]
+			
+			local strength_icon = eth_icon;
+			if strength >= 0 then 
+				strength_icon = wifi_icons[math.ceil(strength/25) + 1]
+			end
 			if self.icon.image ~= strength_icon then
 				self.icon.image = strength_icon
 			end
@@ -48,11 +55,6 @@ local worker = function(user_args)
 			self.text:set_markup(string.format("<span font='%s' foreground='%s'>%s</span>", font, "#ec9e9e", down_speed));
 		end
 	}
-
-	local update_widget = function(widget, stdout, stderr, _, _)
-		local strength_string = string.match(stdout, ":(%d*)");
-		widget:update_strength(tonumber(strength_string) or 0);
-	end;
 
 	local is_connected = nil
 	local update_conn = function(widget, stdout, stderr, _, _)
@@ -71,16 +73,44 @@ local worker = function(user_args)
 			if data == nil then return end
 			speed = string.format("%.1f MB/s", data/(1024 * speed_timeout))
 		else
-			local data = tonumber(stdout)
+			local data = tonumber(stdout) or 0
 			if data == nil then return end
 			speed = string.format("%.1f KB/s", data/(1024 * speed_timeout))
 		end
 		widget:update_speed(speed)
 	end
 
-	watch(NET_SIGNAL_CMD, timeout, update_widget, wifi_widget);
+	local conn_type = "";
+	local interface = "";
+
+	local update_type = function(widget, stdout, _, _, _)
+		local newtype, newifc = stdout:match('(.*):(.*)\n')
+		if conn_type ~= newtype then
+			conn_type = newtype
+			interface = newifc
+			if newtype == "ethernet" then
+				widget:update_strength(-1)
+			end
+		end
+		if newtype ~= "ethernet" then
+			awful.spawn.easy_async(NET_SIGNAL_CMD, function(stdout, _, _, _)
+				local strength_string = string.match(stdout, ":(%d*)");
+				wifi_widget:update_strength(tonumber(strength_string) or 0);
+			end)
+		end
+	end
+	
 	watch(NET_STATUS_CMD, timeout, update_conn, wifi_widget);
-	watch(NET_SPEED_CMD, speed_timeout, update_speed, wifi_widget);
+	watch(NET_TYPE_CMD, timeout, update_type, wifi_widget);
+	-- watch(NET_SPEED_CMD, speed_timeout, update_speed, wifi_widget);
+	gears.timer {
+    timeout   = speed_timeout,
+    call_now  = true,
+    autostart = true,
+    callback  = function()
+			awful.spawn.easy_async_with_shell(NET_SPEED_CMD:format(interface), function(out) update_speed(wifi_widget, out) end)
+    end
+	}
 
 	--- Adds mouse controls to the widget:
 	--  - left click - nmtui
@@ -104,7 +134,7 @@ local worker = function(user_args)
 	info_tooltip = awful.tooltip{
 		objects = {wifi_widget},
 		timer_function = function()
-			 awful.spawn.easy_async_with_shell(NET_INFO_CMD, function(result)
+			 awful.spawn.easy_async_with_shell(NET_INFO_CMD:format(interface), function(result)
 					local formatted = result:gsub("GENERAL.CONNECTION:", "ssid: "):gsub("IP4.ADDRESS....", "ip  : "):sub(0, -2)
 					last_result = formatted
 					info_tooltip:set_markup(last_result)

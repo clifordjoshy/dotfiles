@@ -5,9 +5,7 @@ export PATH="$HOME/.local/bin\
 :$HOME/.ghcup/bin\
 :$PATH"
 
-# keyboard setup
-setxkbmap -option caps:none -option altwin:menu_win
-xmodmap -e "keycode 66 = Escape Caps_Lock"
+fixkeyboard
 
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export EDITOR="vim"

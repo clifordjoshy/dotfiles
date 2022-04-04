@@ -177,7 +177,7 @@ awful.rules.rules = {
 		rule_any = {
 			class = { "discord" }
 		},
-		properties = { screen = 2}
+		-- properties = { screen = 2}
 	},
 }
 

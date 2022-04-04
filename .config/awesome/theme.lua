@@ -43,7 +43,8 @@ theme.widget_batt                = icondir .. "bat.png"
 theme.widget_clock               = icondir .. "clock.png"
 theme.widget_vol                 = icondir .. "spkr.png"
 theme.widget_brightness          = icondir .. "brightness.png"
-theme.widget_net                 = {icondir.."wifi_bar_0.png", icondir.."wifi_bar_1.png", icondir.."wifi_bar_2.png", icondir.."wifi_bar_3.png", icondir.."wifi_bar_4.png"} 
+theme.widget_wifi                = {icondir.."wifi_bar_0.png", icondir.."wifi_bar_1.png", icondir.."wifi_bar_2.png", icondir.."wifi_bar_3.png", icondir.."wifi_bar_4.png"} 
+theme.widget_eth                 = icondir .. "ethernet.png" 
 
 theme.widget_icon_gap            = 8
 theme.widget_gap                 = 20
