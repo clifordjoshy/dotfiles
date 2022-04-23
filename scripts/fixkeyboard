@@ -1,5 +1,5 @@
 #!/bin/bash
 
-setxkbmap -option caps:none -option altwin:menu_win
-xmodmap -e "keycode 66 = Escape Caps_Lock"
-
+setxkbmap -option caps:escape -option altwin:menu_win
+# xmodmap -e "keycode 66 = Escape Caps_Lock"
+xmodmap -e "keycode 9 = Escape Caps_Lock"

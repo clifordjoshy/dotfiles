@@ -9,7 +9,7 @@ local watch = require("awful.widget.watch");
 
 local GET_SINK_VOL_CMD = "pactl get-sink-volume @DEFAULT_SINK@";
 -- local GET_SOURCE_VOL_CMD = "pactl get-source-volume @DEFAULT_SOURCE@";
-local NOISETORCH_CMD = "pactl get-source-volume \'NoiseTorch Microphone\'"
+local NOISETORCH_CMD = "pactl get-source-volume \'NoiseTorch Microphone for Family 17h (Models 10h-1fh) HD Audio Controller Analog Stereo\'"
 
 local UPDATE_CMD = string.format("bash -c \"%s && %s\"", GET_SINK_VOL_CMD, NOISETORCH_CMD)
 
