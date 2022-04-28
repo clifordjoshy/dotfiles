@@ -201,8 +201,9 @@ local globalkeys = gears.table.join(
 	awful.key({}, "XF86AudioNext", function() awful.spawn("playerctl next", false) end),
 	awful.key({}, "XF86AudioStop", function() awful.spawn("playerctl stop", false) end),
 	
-	awful.key({}, "XF86MonBrightnessUp", function() awful.spawn("light -A 10", false) end),
-	awful.key({}, "XF86MonBrightnessDown", function() awful.spawn("light -U 10", false) end),
+	-- outside xorg. managed with acpid
+	-- awful.key({}, "XF86MonBrightnessUp", function() awful.spawn("light -A 10", false) end),
+	-- awful.key({}, "XF86MonBrightnessDown", function() awful.spawn("light -U 10", false) end),
 	
 	awful.key({}, "XF86TouchpadToggle", function() awful.spawn("touchpad_toggle", false) end),
 
