@@ -7,11 +7,11 @@ local awful = require("awful");
 local wibox = require("wibox");
 local watch = require("awful.widget.watch");
 
-local GET_SINK_VOL_CMD = "pactl get-sink-volume @DEFAULT_SINK@";
+-- local GET_SINK_VOL_CMD = "pactl get-sink-volume @DEFAULT_SINK@";
 -- local GET_SOURCE_VOL_CMD = "pactl get-source-volume @DEFAULT_SOURCE@";
-local NOISETORCH_CMD = "pactl get-source-volume \'NoiseTorch Microphone for Family 17h (Models 10h-1fh) HD Audio Controller Analog Stereo\'"
+local NOISETORCH_STATUS_CMD = "pactl get-default-source | grep -q NoiseTorch"
 
-local UPDATE_CMD = string.format("bash -c \"%s && %s\"", GET_SINK_VOL_CMD, NOISETORCH_CMD)
+local UPDATE_CMD = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{printf \\\"%s\\\",\\$5}' && pactl get-default-source | grep -q NoiseTorch && echo -n ' N'\""
 
 local volume_widget = {}
 
@@ -37,10 +37,9 @@ local worker = function(user_args)
 			widget = wibox.widget.textbox
 		},
 
-		update_volume = function(self, volume, is_noisetorch)
+		update_volume = function(self, text)
 			
-			local volume_text = string.format("%s%s", volume, is_noisetorch and " N" or "");
-			local volume_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#7493d2", volume_text);
+			local volume_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#7493d2", text);
 
 			if self.volume:get_markup() ~= volume_markup then
 				self.volume:set_markup(volume_markup);
@@ -49,10 +48,8 @@ local worker = function(user_args)
 	}
 
 	local update_widget = function(widget, stdout, stderr, _, _)
-		local is_noisetorch = stderr == ''
-		local vol_left, vol_right = string.match(stdout, "/ *(%S+)");
 		-- if album ~= nil and title ~= nil and artist ~= nil then
-			widget:update_volume(vol_left, is_noisetorch);
+			widget:update_volume(stdout);
 		-- end;
 	end;
 
@@ -75,8 +72,8 @@ local worker = function(user_args)
 				awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
 				-- awful.spawn("amixer set Master 5%-", false);
 			elseif button == 3 then
-				awful.spawn.easy_async(NOISETORCH_CMD, function(_, stderr, _, _)
-						awful.spawn("noisetorch -" .. (stderr=="" and "u" or "i"), false)
+				awful.spawn.easy_async_with_shell(NOISETORCH_STATUS_CMD, function(_, _, _, exitcode)
+						awful.spawn("noisetorch -" .. (exitcode == 0 and "u" or "i"), false)
 					end
 				)
 			end;
