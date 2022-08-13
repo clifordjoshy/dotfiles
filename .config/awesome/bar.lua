@@ -9,6 +9,7 @@ local media_widget = require("widgets.media")
 local volume_widget = require("widgets.pipewire")
 local wifi_widget = require("widgets.wifi")
 local brightness_widget = require("widgets.brightness")
+local battery_widget = require("widgets.battery")
 local cal_task = require("widgets.cal_task")
 
 
@@ -117,7 +118,6 @@ clock_widget:buttons(gears.table.join(
 	awful.button({}, 2, function() mytextclock:force_update() end)
 ))
 
-
 -- CPU
 local cpu_widget = {
 	widget = wibox.layout.fixed.horizontal,
@@ -127,22 +127,6 @@ local cpu_widget = {
 		widget:set_markup(markup.fontfg(beautiful.font, "#e33a6e", cpu_now.usage .. "%"))
 	end}).widget,
 }
-
--- Battery
-local battery_widget = {
-	widget = wibox.layout.fixed.horizontal,
-	spacing = beautiful.widget_icon_gap,
-	wibox.widget.imagebox(beautiful.widget_batt),
-	lain_widget.bat({settings = function()
-		local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or "..."
-
-		if bat_now.ac_status == 1 then
-			perc = perc .. " A/C"
-		end
-
-		widget:set_markup(markup.fontfg(beautiful.font, "#46fff6", perc))
-	end
-})}
 
 -- MEM
 local memory_widget = {
@@ -166,6 +150,9 @@ local my_wifi_widget = wifi_widget({wifi_icons = beautiful.widget_wifi, eth_icon
 
 -- Brightness Widget
 local my_brightness_widget = brightness_widget({icon = beautiful.widget_brightness, font = beautiful.font, space = beautiful.widget_icon_gap})
+
+-- Battery
+local my_battery_widget = battery_widget({icon = beautiful.widget_batt, font = beautiful.font, space = beautiful.widget_icon_gap})
 
 -- ]]]
 
@@ -206,7 +193,7 @@ function generate_wibar(s)
 			shape_border_color = "#00000000"
 		}
 	}
-	
+
 	local my_middle_widget = wibox.container.place(
 		wibox.container.margin(s.mytasklist, 7, 10, 5, 5),
 		"left"
@@ -245,7 +232,7 @@ function generate_wibar(s)
 			s.index == 1 and memory_widget or nil,
 			cpu_widget,
 			s.index == 1 and my_brightness_widget or nil,
-			s.index == 1 and battery_widget or nil,
+			s.index == 1 and my_battery_widget or nil,
 			my_wifi_widget,
 			clock_widget,
 			s.index == 1 and mysystray or nil,

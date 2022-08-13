@@ -1,6 +1,7 @@
 #!/bin/bash
 # Default acpi script that takes an entry for all actions
 
+# run command in x session context
 runcmd() {
     command="$1"
     shift 1
@@ -26,18 +27,18 @@ button/power)
         ;;
     esac
     ;;
-ac_adapter)
-    case "$2" in
-    ACPI0003:00)
-        case "$4" in
-        00000001)
-            logger 'AC plugged'
-            runcmd notify-send Power 'Charger plugged in'
-            ;;
-        esac
-        ;;
-    esac
-    ;;
+#ac_adapter)
+#    case "$2" in
+#    ACPI0003:00)
+#        case "$4" in
+#        00000001)
+#            logger 'AC plugged'
+#            runcmd notify-send Power 'Charger plugged in'
+#            ;;
+#        esac
+#        ;;
+#    esac
+#    ;;
 jack/headphone)
     case "$2" in
     HEADPHONE)
