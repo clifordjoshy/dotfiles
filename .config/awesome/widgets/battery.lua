@@ -9,6 +9,24 @@ local upower   = require("lgi").require("UPowerGlib")
 
 local battery_widget = {}
 
+function update_widget (device)
+	local perc = math.floor(device.percentage) .. "%"
+
+	if device.state == upower.DeviceState.PENDING_CHARGE or
+		device.state == upower.DeviceState.FULLY_CHARGED or
+		device.state == upower.DeviceState.CHARGING
+	then
+		perc = perc .. " A/C"
+	end
+
+	battery_widget:update_battery(perc)
+end
+
+-- get current battery device
+local display_device = upower.Client():get_display_device()
+-- callback for when device updates
+display_device.on_notify = update_widget
+
 local worker = function(user_args)
 
 	local args = user_args or {}
@@ -39,26 +57,7 @@ local worker = function(user_args)
 			end
 		end
 	}
-
-	local update_widget = function(device)
-		local perc = math.floor(device.percentage) .. "%"
-
-		if device.state == upower.DeviceState.PENDING_CHARGE or
-			 device.state == upower.DeviceState.FULLY_CHARGED or
-			 device.state == upower.DeviceState.CHARGING
-		then
-			perc = perc .. " A/C"
-		end
-
-		battery_widget:update_battery(perc)
-	end;
-
-	-- get current battery device
-	local display_device = upower.Client():get_display_device()
 	update_widget(display_device)
-	-- callback for when device updates
-	display_device.on_notify = update_widget
-
 	return battery_widget;
 end;
 
