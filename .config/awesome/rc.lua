@@ -92,15 +92,15 @@ awful.screen.connect_for_each_screen(function(s)
 local keybinds = require("keybinds")
 
 clientbuttons = gears.table.join(
-	awful.button({}, 1, function(c) 
+	awful.button({}, 1, function(c)
 			c:emit_signal("request::activate", "mouse_click", {raise = true})
 		end
 	),
-	awful.button({}, 2, function(c) 
+	awful.button({}, 2, function(c)
 			c:emit_signal("request::activate", "mouse_click", {raise = true})
 		end
 	),
-	awful.button({}, 3, function(c) 
+	awful.button({}, 3, function(c)
 			c:emit_signal("request::activate", "mouse_click", {raise = true})
 		end
 	),
@@ -137,7 +137,7 @@ awful.rules.rules = {
 			screen = awful.screen.preferred,
 			placement = awful.placement.no_overlap + awful.placement.no_offscreen
 		}
-	}, 
+	},
 	-- Floating clients.
 	{
 		rule_any = {
@@ -164,21 +164,21 @@ awful.rules.rules = {
 	},
 
 	--Set music stuff to always map on the tag named "five" on screen 1.
-	{ 
+	{
 		rule_any = {
-			instance = { "mpv-ytm" }, 
+			instance = { "mpv-ytm" },
 			class = { "Spotify" }
 		},
 		properties = { screen = 1, tag = "five"}
 	},
 
 	--Stuff that needs to launch in the second monitor
-		{ 
-		rule_any = {
-			class = { "discord" }
-		},
-		-- properties = { screen = 2}
-	},
+	-- {
+	-- 	rule_any = {
+	-- 		class = { "discord" }
+	-- 	},
+	-- 	properties = { screen = 2}
+	-- },
 }
 
 -- Signals
@@ -192,9 +192,9 @@ client.connect_signal("manage", function(c)
 			awful.placement.no_offscreen(c)
 		end
 
-		-- Windows like spotify only set class name after window opens. 
+		-- Windows like spotify only set class name after window opens.
 		-- So add a listener for when it attains classname and then apply rules
-		if c.name == nil and c.class == nil then 
+		if c.name == nil and c.class == nil then
 			c.minimized = true
 			c:connect_signal("property::class", function ()
 					c.minimized = false
@@ -208,4 +208,12 @@ client.connect_signal("manage", function(c)
 )
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color= beautiful.border_normal end)
+client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+client.connect_signal("property::maximized", function(c)
+	if c.maximized then
+		c.shape = nil
+	else
+		c.shape =  gears.shape.rounded_rect;
+	end
+end);
