@@ -191,9 +191,10 @@ local globalkeys = gears.table.join(
 	),
 
 	--Media Keys
-	awful.key({}, "XF86AudioLowerVolume", function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end),
-	awful.key({}, "XF86AudioRaiseVolume", function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end),
-	awful.key({}, "XF86AudioMute", function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 0%", false) end),
+	awful.key({}, "XF86AudioLowerVolume", function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end),
+	awful.key({}, "XF86AudioRaiseVolume", function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end),
+	awful.key({}, "XF86AudioMute", function() awful.spawn.with_shell("pactl set-sink-mute @DEFAULT_SINK@ toggle", false) end),
+	awful.key({}, "XF86AudioMicMute", function() awful.spawn.with_shell("pactl set-source-mute @DEFAULT_SOURCE@ toggle", false) end),
 	
 	awful.key({}, "XF86AudioPlay", function() awful.spawn("playerctl play-pause", false) end),
 	awful.key({}, "XF86AudioPause", function() awful.spawn("playerctl play-pause", false) end),
@@ -206,6 +207,8 @@ local globalkeys = gears.table.join(
 	-- awful.key({}, "XF86MonBrightnessDown", function() awful.spawn("light -U 10", false) end),
 	
 	awful.key({}, "XF86TouchpadToggle", function() awful.spawn("touchpad_toggle", false) end),
+	-- not the actual binding
+	awful.key({}, "XF86Display", function() awful.spawn("touchpad_toggle", false) end),
 
 	--Alternative Media Keys
 	awful.key({modkey}, "[",
@@ -221,11 +224,11 @@ local globalkeys = gears.table.join(
 		{ description = "pause/play track", group = "functions" }
 	),
 	awful.key({modkey, "Shift"}, "[",
-		function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end,
+		function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end,
 		{ description = "volume down", group = "functions" }
 	),
 	awful.key({modkey, "Shift"}, "]",
-		function() awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end,
+		function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end,
 		{ description = "volume up", group = "functions" }
 	)
 
