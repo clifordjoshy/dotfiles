@@ -29,8 +29,34 @@ local mymainmenu = awful.menu({
 })
 mymainmenu.wibox.shape = menu_bg
 
-local menulauncher = wibox.widget.imagebox(beautiful.menu_launcher);
-menulauncher:connect_signal("button::press", function(_, _, _, button) mymainmenu:show({coords = {x = 0, y = 32}}) end)
+-- if we're in kill mode (kill apps with left click)
+local kill_switch = false
+
+local menulauncher = wibox.container.background(wibox.widget.imagebox(beautiful.menu_launcher));
+
+local toggle_kill_switch = function()
+	kill_switch = not kill_switch
+	menulauncher.bg = kill_switch and '#ff4040' or nil
+end
+
+-- a function that will either call a kill_fn or a default depending on the kill switch
+handle_kill_switch = function(kill_fn, default_fn)
+	if kill_switch then
+		kill_switch = false
+		menulauncher.bg = nil
+		kill_fn()
+	else
+		default_fn()
+	end
+end
+
+menulauncher:connect_signal("button::press", function(_, _, _, button)
+	if button == 1 then
+		 mymainmenu:show({coords = {x = 0, y = 32}})
+	elseif button == 2 then
+		toggle_kill_switch()
+	end
+end)
 
 -- Hide the menu when the mouse leaves it
 local mouse_in_main = false
@@ -187,10 +213,10 @@ function generate_wibar(s)
 				image = beautiful.minimise_def_icon			-- default icon for apps without icon
 			},
 			widget = wibox.container.background,
-			bg = "#ffffff30",
-			shape = gears.shape.circle,
-			shape_border_width = 5,
-			shape_border_color = "#00000000"
+			-- bg = "#ffffff30",
+			-- shape = gears.shape.circle,
+			-- shape_border_width = 5,
+			-- shape_border_color = "#00000000"
 		}
 	}
 

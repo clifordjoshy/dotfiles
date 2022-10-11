@@ -91,33 +91,44 @@ awful.screen.connect_for_each_screen(function(s)
 -- Set keys
 local keybinds = require("keybinds")
 
+-- mouse functionality
+
+local mouse_functions = {
+	activate = function(c)
+		c:emit_signal("request::activate", "mouse_click", {raise = true})
+	end
+}
+
+mouse_functions.left_click_elevated = function(c)
+	mouse_functions.activate(c)
+	awful.mouse.client.move(c)
+end
+
+mouse_functions.right_click_elevated = function(c)
+	mouse_functions.activate(c)
+	awful.mouse.client.resize(c)
+end
+
+mouse_functions.middle_click_elevated = function(c)
+	c:kill()
+end
+
+mouse_functions.left_click = function(c)
+	-- a function from bar.lua. the kill switch is tied to the arch logo
+	handle_kill_switch(function() c:kill() end, function() mouse_functions.activate(c) end)
+end
+
+mouse_functions.right_click = mouse_functions.activate
+mouse_functions.middle_click = mouse_functions.activate
+
+
 clientbuttons = gears.table.join(
-	awful.button({}, 1, function(c)
-			c:emit_signal("request::activate", "mouse_click", {raise = true})
-		end
-	),
-	awful.button({}, 2, function(c)
-			c:emit_signal("request::activate", "mouse_click", {raise = true})
-		end
-	),
-	awful.button({}, 3, function(c)
-			c:emit_signal("request::activate", "mouse_click", {raise = true})
-		end
-	),
-	awful.button({modkey}, 1, function(c)
-			c:emit_signal("request::activate", "mouse_click", {raise = true})
-			awful.mouse.client.move(c)
-		end
-	),
-	awful.button({modkey}, 3, function(c)
-			c:emit_signal("request::activate", "mouse_click", {raise = true})
-			awful.mouse.client.resize(c)
-		end
-	),
-	awful.button({modkey}, 2, function(c)
-			c:kill()
-		end
-	)
+	awful.button({}, 1, mouse_functions.left_click),
+	awful.button({}, 2, mouse_functions.middle_click),
+	awful.button({}, 3, mouse_functions.right_click),
+	awful.button({modkey}, 1, mouse_functions.left_click_elevated),
+	awful.button({modkey}, 3, mouse_functions.right_click_elevated),
+	awful.button({modkey}, 2, mouse_functions.middle_click_elevated)
 )
 
 root.keys(keybinds.globalkeys)
