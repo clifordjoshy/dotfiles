@@ -153,22 +153,20 @@ awful.rules.rules = {
 	{
 		rule_any = {
 			instance = {
-				-- "pinentry",
 				"nmtui",				-- set when launched from wifi widget
+				"blueberry.py"
 			},
 			class = {
 				"Pavucontrol",
-				-- "Blueman-manager",
 				"Qalculate-gtk",
-				-- "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
 			},
 			-- Note that the name property shown in xprop might be set slightly after creation of the client
 			-- and the name shown there might not match defined rules here.
-			name = {
-				"Event Tester" -- xev.
-			},
 			role = {
 				"pop-up" -- e.g. Google Chrome's (detached) Developer Tools.
+			},
+			type = {
+				"dialog"
 			}
 		},
 		properties = {floating = true, placement = awful.placement.centered, ontop = true}
