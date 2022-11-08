@@ -9,7 +9,7 @@ local gears = require("gears")
 
 local NET_SIGNAL_CMD = "bash -c \"nmcli -t -f IN-USE,SIGNAL device wifi | grep \'*\'\""
 local NET_STATUS_CMD = "nmcli network connectivity"
-local NET_TYPE_CMD = "bash -c \"nmcli -f TYPE,DEVICE con show --active | awk 'NR==2 {printf \\\"%s:%s\\\",\\$1,\\$2 }'\""
+local NET_TYPE_CMD = "bash -c \"nmcli -f TYPE,DEVICE,STATE con show --active | awk '\\$3 == \\\"activated\\\" {printf \\\"%s:%s\\\",\\$1,\\$2; exit }'\""
 local NET_SPEED_CMD = "ifstat %s | awk 'NR==4 {printf $6}'"
 local NET_INFO_CMD = "nmcli -t -f general.connection,ip4.address device show %s"
 
@@ -23,7 +23,7 @@ local worker = function(user_args)
 	local timeout = 10;
 	local speed_timeout = 4;
 	local gap = user_args.space;
-	
+
 	wifi_widget = wibox.widget{
 		layout = wibox.layout.fixed.horizontal,
 		spacing = gap,
@@ -38,9 +38,9 @@ local worker = function(user_args)
 		},
 
 		update_strength = function(self, strength)
-			
+
 			local strength_icon = eth_icon;
-			if strength >= 0 then 
+			if strength >= 0 then
 				strength_icon = wifi_icons[math.ceil(strength/25) + 1]
 			end
 			if self.icon.image ~= strength_icon then
@@ -99,7 +99,7 @@ local worker = function(user_args)
 			end)
 		end
 	end
-	
+
 	watch(NET_STATUS_CMD, timeout, update_conn, wifi_widget);
 	watch(NET_TYPE_CMD, timeout, update_type, wifi_widget);
 	-- watch(NET_SPEED_CMD, speed_timeout, update_speed, wifi_widget);
