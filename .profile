@@ -12,6 +12,7 @@ export EDITOR="vim"
 export VISUAL="vim"
 export TERMINAL="alacritty"
 export BROWSER="brave"
+export GTK_THEME="Catppuccin-Mocha"
 
 # ~/ Clean-up:
 export XDG_CONFIG_HOME="$HOME/.config"
