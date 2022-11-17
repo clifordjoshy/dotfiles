@@ -174,7 +174,7 @@ local globalkeys = gears.table.join(
 		{ description = "launch vs code", group = "apps" }
 	),
 	awful.key({modkey}, "w",
-		function() awful.spawn(browser.." --new-window web.whatsapp.com") end,
+		function() awful.spawn("whatsie") end,
 		{ description = "launch whatsapp", group = "apps" }
 	),
 	awful.key({modkey}, "Print",

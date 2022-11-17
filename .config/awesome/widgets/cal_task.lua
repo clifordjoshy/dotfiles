@@ -27,7 +27,7 @@ function task.show()
 			text   = markup.font(task.notification_preset.font, awful.util.escape(f:gsub("\n*$", ""))),
 			timeout = 0,
 			max_height = 512,
-			max_width = 640
+			max_width = 1000
 		}
 	end
 	)
