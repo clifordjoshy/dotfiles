@@ -1,5 +1,5 @@
 configuration {
-	modi: "run,drun";
+	modi: "drun";
 	show-icons: true;
 	terminal: "alacritty";
 	run-shell-command: "{terminal} -e {cmd}";
@@ -139,10 +139,6 @@ configuration {
   timeout {
       action: "kb-cancel";
       delay:  0;
-  }
-  filebrowser {
-      directories-first: true;
-      sorting-method:    "name";
   }
 }
 
