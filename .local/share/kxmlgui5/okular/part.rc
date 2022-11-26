@@ -115,8 +115,9 @@
   <Action name="annotation_favorites"/>
   <Spacer name="spacer_0"/>
   <Action name="page_number"/>
-  <Action name="zoom_to"/>
   <Separator name="separator_1"/>
+  <Action name="zoom_to"/>
+  <Separator name="separator_2"/>
   <Action name="color_mode_inverted"/>
   <Action name="edit_find"/>
   <Action name="hamburger_menu"/>

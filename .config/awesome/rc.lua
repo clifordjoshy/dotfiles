@@ -74,13 +74,13 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 -- Screen
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", function(s)
-		gears.wallpaper.maximized(beautiful.wallpapers[s.index], s, true)
+		gears.wallpaper.maximized(beautiful.wallpapers, s, true)
 	end
 )
 
 local generate_wibar = require("bar")
 awful.screen.connect_for_each_screen(function(s)
-		gears.wallpaper.maximized(beautiful.wallpapers[s.index], s, true)
+		gears.wallpaper.maximized(beautiful.wallpapers, s, true)
 			-- Tags
 		awful.tag(tagnames, s, awful.layout.layouts[1])
 
@@ -226,3 +226,12 @@ client.connect_signal("property::maximized", function(c)
 		c.shape =  gears.shape.rounded_rect;
 	end
 end);
+
+client.connect_signal("property::urgent", function(c)
+	if c.class ~= "Spotify" then
+		c.minimized = false
+		c:jump_to()
+	else
+		c.urgent = false
+	end
+end)

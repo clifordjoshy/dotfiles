@@ -10,7 +10,7 @@ theme.hotkeys_modifiers_fg       = "#dddddd"
 theme.hotkeys_fg                 = "#cccccc"
 
 local walldir                    = gears.filesystem.get_configuration_dir() .. "wallpapers/"
-theme.wallpapers                 = {walldir .. "wall_1.png", walldir .. "wall_2.png"}
+theme.wallpapers                 = walldir .. "wall.jpg"  -- can be made an array if multiple screens
 
 theme.bg_normal                  = "#101010"
 theme.bg_focus                   = "#000000"
@@ -20,7 +20,7 @@ theme.fg_focus                   = "#ff8c00"
 theme.fg_urgent                  = "#af1d18"
 theme.fg_minimize                = "#ffffff"
 
-theme.bg_wibar                   = "#1e2127"
+theme.bg_wibar                   = "#1e2127ec"
 
 theme.border_width               = 2.5
 theme.border_focus               = "#32a2a8"
