@@ -4,8 +4,8 @@ stty stop undef # Disable ctrl-s to freeze terminal.
 precmd() { print "" } # start prompt in newline
 
 HISTFILE=~/.cache/histfile
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=100000
 
 bindkey -e
 # export KEYTIMEOUT=1

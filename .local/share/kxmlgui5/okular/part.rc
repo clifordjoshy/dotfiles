@@ -111,13 +111,16 @@
   <Action name="show_leftpanel"/>
   <Separator name="separator_0"/>
   <Action name="mouse_drag"/>
-  <Action name="mouse_selecttools"/>
+  <Action name="mouse_textselect"/>
+  <Action name="mouse_select"/>
+  <Action name="mouse_tableselect"/>
+  <Separator name="separator_1"/>
   <Action name="annotation_favorites"/>
   <Spacer name="spacer_0"/>
   <Action name="page_number"/>
-  <Separator name="separator_1"/>
-  <Action name="zoom_to"/>
   <Separator name="separator_2"/>
+  <Action name="zoom_to"/>
+  <Separator name="separator_3"/>
   <Action name="color_mode_inverted"/>
   <Action name="edit_find"/>
   <Action name="hamburger_menu"/>
@@ -128,8 +131,11 @@
   <Action priority="0" name="mouse_selecttools"/>
   <Action priority="0" name="edit_find"/>
   <Action priority="0" name="color_mode_inverted"/>
+  <Action priority="0" name="mouse_textselect"/>
+  <Action priority="0" name="mouse_select"/>
+  <Action priority="0" name="mouse_tableselect"/>
  </ActionProperties>
- <ToolBar newline="true" iconText="icononly" hidden="true" name="annotationToolBar">
+ <ToolBar iconText="icononly" newline="true" hidden="true" name="annotationToolBar">
   <text translationDomain="okular">Annotation Toolbar</text>
   <Action name="annotation_highlighter"/>
   <Action name="annotation_underline"/>
@@ -154,7 +160,7 @@
   <Spacer name="spacer_0"/>
   <Action name="hide_annotation_toolbar"/>
  </ToolBar>
- <ToolBar newline="true" iconText="icononly" iconSize="32" hidden="true" position="right" name="quickAnnotationToolBar">
+ <ToolBar iconSize="32" iconText="icononly" newline="true" position="right" hidden="true" name="quickAnnotationToolBar">
   <text translationDomain="okular">Quick Annotation Toolbar</text>
   <Action name="quick_annotation_action_bar"/>
  </ToolBar>

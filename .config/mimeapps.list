@@ -8,6 +8,8 @@ image/webp=sxiv.desktop;
 image/jpeg=brave-browser.desktop;
 image/png=gimp.desktop;brave-browser.desktop;
 text/csv=libreoffice-calc.desktop;
+application/x-shellscript=org.gnome.gedit.desktop;
+
 [Removed Associations]
 
 [Default Applications]
@@ -21,7 +23,7 @@ application/x-spkac+base64=visual-studio-code.desktop
 application/x-desktop=visual-studio-code.desktop
 application/rtf=visual-studio-code.desktop
 application/xml=visual-studio-code.desktop
-application/x-shellscript=visual-studio-code.desktop
+application/x-shellscript=org.gnome.gedit.desktop
 application/x-cmakecache=visual-studio-code.desktop
 application/postscript=visual-studio-code.desktop
 application/sdp=visual-studio-code.desktop
