@@ -101,14 +101,14 @@ local worker = function(user_args)
 				song_text = string.format("%s ► %s", ellipsize(title,max_length), ellipsize(artist, max_length));
 			end;
 
-			local song_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, player == "spotify" and "#1db954" or "#f542e3", song_text);
+			local song_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, player == "spotify" and "#1db954" or "#b5bfe2", song_text);
 			while player_info[player] ~= nil do
 				player = player .. ' '
 			end
 			player_info[player] = {text = song_markup, playing = status == "Playing"};
-			
+
 			-- find highest priority player [first in list]
-			if top_player == nil then 
+			if top_player == nil then
 				top_player = player
 			end
 			-- if player override, check if the current_player still exists

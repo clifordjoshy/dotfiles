@@ -150,7 +150,7 @@ local cpu_widget = {
 	spacing = beautiful.widget_icon_gap,
 	wibox.widget.imagebox(beautiful.widget_cpu),
 	lain_widget.cpu({settings = function() 
-		widget:set_markup(markup.fontfg(beautiful.font, "#e33a6e", cpu_now.usage .. "%"))
+		widget:set_markup(markup.fontfg(beautiful.font, "#ff6363", cpu_now.usage .. "%"))
 	end}).widget,
 }
 

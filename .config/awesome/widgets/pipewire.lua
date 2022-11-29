@@ -39,7 +39,7 @@ local worker = function(user_args)
 
 		update_volume = function(self, text)
 			
-			local volume_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#7493d2", text);
+			local volume_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#04a5e5", text);
 
 			if self.volume:get_markup() ~= volume_markup then
 				self.volume:set_markup(volume_markup);

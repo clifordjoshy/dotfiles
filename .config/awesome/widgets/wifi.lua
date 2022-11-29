@@ -52,7 +52,7 @@ local worker = function(user_args)
 			self:emit_signal('widget::redraw_needed')
 		end,
 		update_speed = function(self, down_speed)
-			self.text:set_markup(string.format("<span font='%s' foreground='%s'>%s</span>", font, "#ec9e9e", down_speed));
+			self.text:set_markup(string.format("<span font='%s' foreground='%s'>%s</span>", font, "#ea76cb", down_speed));
 		end
 	}
 
