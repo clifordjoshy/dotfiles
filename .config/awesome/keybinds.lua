@@ -234,6 +234,8 @@ local globalkeys = gears.table.join(
 
 )
 
+manual_maximise = false
+
 local clientkeys = gears.table.join(
 	awful.key({modkey}, "f",
 		function(c)
@@ -270,6 +272,7 @@ local clientkeys = gears.table.join(
 	),
 	awful.key({modkey}, "m",
 		function(c)
+			manual_maximise = true
 			c.maximized = not c.maximized
 			c:raise()
 		end,

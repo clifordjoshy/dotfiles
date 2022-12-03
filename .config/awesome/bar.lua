@@ -1,16 +1,17 @@
 local gears = require("gears")
-local lain_widget  = require("widgets.lain.widget")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local wibox = require("wibox")
-local markup = require("widgets.lain.markup")
 
 local media_widget = require("widgets.media")
 local volume_widget = require("widgets.pipewire")
 local wifi_widget = require("widgets.wifi")
 local brightness_widget = require("widgets.brightness")
+local memory_widget = require("widgets.memory")
+local cpu_widget = require("widgets.cpu")
 local battery_widget = require("widgets.battery")
 local cal_task = require("widgets.cal_task")
+local menubar_utils = require("menubar.utils")
 
 
 local menu_bg = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
@@ -128,7 +129,12 @@ local tasklist_buttons = gears.table.join(
 -- [[[ Widgets
 
 -- Textclock
-local mytextclock = wibox.widget.textclock(markup("#ff7730", "%a %d %b") .. markup("#ab7367", " > ") .. markup("#91c771", "%I:%M %p"));
+local mytextclock = wibox.widget.textclock(string.format(
+	"<span foreground='%s'>%%a %%d %%b</span>" ..
+	"<span foreground='%s'> &gt; </span>" ..
+	"<span foreground='%s'>%%I:%%M %%p</span>",
+	"#ff7730", "#ab7367", "#91c771"
+));
 -- mytextclock.font = beautiful.font
 local clock_widget = wibox.widget {
 	widget = wibox.layout.fixed.horizontal,
@@ -143,24 +149,6 @@ clock_widget:buttons(gears.table.join(
 	clock_widget:buttons(),
 	awful.button({}, 2, function() mytextclock:force_update() end)
 ))
-
--- CPU
-local cpu_widget = {
-	widget = wibox.layout.fixed.horizontal,
-	spacing = beautiful.widget_icon_gap,
-	wibox.widget.imagebox(beautiful.widget_cpu),
-	lain_widget.cpu({settings = function() 
-		widget:set_markup(markup.fontfg(beautiful.font, "#ff6363", cpu_now.usage .. "%"))
-	end}).widget,
-}
-
--- MEM
-local memory_widget = {
-	widget = wibox.layout.fixed.horizontal,
-	spacing = beautiful.widget_icon_gap,
-	wibox.widget.imagebox(beautiful.widget_mem),
-	lain_widget.mem({settings = function() widget:set_markup(markup.fontfg(beautiful.font, "#e0da37", mem_now.used .. "M")) end}).widget,
-}
 
 -- Systray Container
 local mysystray = wibox.container.margin(wibox.widget.systray(), 0, beautiful.systray_icon_spacing, 4, 4)
@@ -180,10 +168,16 @@ local my_brightness_widget = brightness_widget({icon = beautiful.widget_brightne
 -- Battery
 local my_battery_widget = battery_widget({icon = beautiful.widget_batt, font = beautiful.font, space = beautiful.widget_icon_gap})
 
+-- Memory Widget
+local my_memory_widget = memory_widget({icon = beautiful.widget_mem, font = beautiful.font, space = beautiful.widget_icon_gap})
+
+-- CPU Widget
+local my_cpu_widget = cpu_widget({icon = beautiful.widget_cpu, font = beautiful.font, space = beautiful.widget_icon_gap})
+
 -- ]]]
 
 
-function generate_wibar(s)
+local function generate_wibar(s)
 	-- layout indicator
 	-- s.mylayoutbox = awful.widget.layoutbox(s)
 	-- s.mylayoutbox:buttons(gears.table.join(
@@ -208,15 +202,18 @@ function generate_wibar(s)
     },
 		widget_template = {
 			{
-				id     = 'icon_role',
+				id     = 'appicon',
 				widget = wibox.widget.imagebox,
-				image = beautiful.minimise_def_icon			-- default icon for apps without icon
+				-- image = beautiful.minimise_def_icon			-- default icon for apps without icon
 			},
 			widget = wibox.container.background,
 			-- bg = "#ffffff30",
 			-- shape = gears.shape.circle,
 			-- shape_border_width = 5,
 			-- shape_border_color = "#00000000"
+			create_callback = function(self, c)
+				self.appicon.image = menubar_utils.lookup_icon(string.lower(c.class)) or c.icon or beautiful.minimise_def_icon
+			end
 		}
 	}
 
@@ -255,10 +252,10 @@ function generate_wibar(s)
 			},
 			my_media_widget,
 			my_volume_widget,
-			s.index == 1 and memory_widget or nil,
-			cpu_widget,
+			my_memory_widget,
+			my_cpu_widget,
 			s.index == 1 and my_brightness_widget or nil,
-			s.index == 1 and my_battery_widget or nil,
+			my_battery_widget or nil,
 			my_wifi_widget,
 			clock_widget,
 			s.index == 1 and mysystray or nil,

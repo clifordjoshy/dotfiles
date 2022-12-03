@@ -4,9 +4,8 @@
 -- This just joins those together and removes some unneeded stuff
 -------------------------------------------------
 
-local markup  = require("widgets.lain.markup")
-local awful   = require("awful")
-local naughty = require("naughty")
+local awful     = require("awful")
+local naughty   = require("naughty")
 local beautiful = require("beautiful")
 
 -- Taskwarrior stuff
@@ -20,14 +19,14 @@ end
 function task.show()
 	if task.notification then return end
 
-	awful.spawn.easy_async(task.show_cmd , function(f)
+	awful.spawn.easy_async(task.show_cmd, function(f)
 		task.notification = naughty.notify {
-			preset = task.notification_preset,
-			title  = task.show_cmd,
-			text   = markup.font(task.notification_preset.font, awful.util.escape(f:gsub("\n*$", ""))),
-			timeout = 0,
+			preset     = task.notification_preset,
+			title      = task.show_cmd,
+			text       = awful.util.escape(f:gsub("\n*$", "")),
+			timeout    = 0,
 			max_height = 512,
-			max_width = 1000
+			max_width  = 1000
 		}
 	end
 	)
@@ -40,21 +39,24 @@ function cal.build(month, year)
 	local current_month, current_year = tonumber(os.date("%m")), tonumber(os.date("%Y"))
 	local is_current_month = (not month or not year) or (month == current_month and year == current_year)
 	local today = is_current_month and tonumber(os.date("%d")) -- otherwise nil and not highlighted
-	local t = os.time { year = year or current_year, month = month and month+1 or current_month+1, day = 0 }
+	local t = os.time { year = year or current_year, month = month and month + 1 or current_month + 1, day = 0 }
 	local d = os.date("*t", t)
-	local mth_days, st_day, this_month = d.day, (d.wday-d.day-cal.week_start+1)%7, os.date("%B %Y", t)
-	local notifytable = { [1] = string.format("%s%s\n", string.rep(" ", math.floor((28 - this_month:len())/2)), markup.bold(this_month)) }
-	for x = 0,6 do notifytable[#notifytable+1] = os.date("%a", os.time { year=2006, month=1, day=x+cal.week_start }):sub(1, utf8.offset(1, 3)) .. " " end
-	notifytable[#notifytable] = string.format("%s\n%s", notifytable[#notifytable]:sub(1, -2), string.rep(" ", st_day*4))
+	local mth_days, st_day, this_month = d.day, (d.wday - d.day - cal.week_start + 1) % 7, os.date("%B %Y", t)
+	local notifytable = { [1] = string.format("%s%s\n", string.rep(" ", math.floor((28 - this_month:len()) / 2)),
+		"<b>" .. this_month .. "</b>") }
+	for x = 0, 6 do notifytable[#notifytable + 1] = os.date("%a", os.time { year = 2006, month = 1, day = x + cal.week_start })
+			:sub(1, utf8.offset(1, 3)) .. " " end
+	notifytable[#notifytable] = string.format("%s\n%s", notifytable[#notifytable]:sub(1, -2), string.rep(" ", st_day * 4))
 	local strx
-	for x = 1,mth_days do
+	for x = 1, mth_days do
 		strx = x
 		if x == today then
 			if x < 10 then x = " " .. x end
-			strx = markup.bold(markup.color(beautiful.notification_bg, beautiful.notification_fg, x) .. " ")
+			strx = string.format("<span background='%s' foreground='%s'><b>%s</b></span>", beautiful.notification_fg,
+				beautiful.notification_bg, x .. " ")
 		end
 		strx = string.format("%s%s", string.rep(" ", 3 - tostring(x):len()), strx)
-		notifytable[#notifytable+1] = string.format("%-4s%s", strx, (x+st_day)%7==0 and x ~= mth_days and "\n" or "")
+		notifytable[#notifytable + 1] = string.format("%-4s%s", strx, (x + st_day) % 7 == 0 and x ~= mth_days and "\n" or "")
 	end
 	if string.len(cal.icons or "") > 0 and today then cal.icon = cal.icons .. today .. ".png" end
 	cal.month, cal.year = d.month, d.year
@@ -108,47 +110,49 @@ function cal.show(month, year, scr)
 end
 
 function cal.move(offset)
-		offset = offset or 0
-		cal.month, cal.year = cal.getdate(cal.month, cal.year, offset)
-		cal.show(cal.month, cal.year)
+	offset = offset or 0
+	cal.month, cal.year = cal.getdate(cal.month, cal.year, offset)
+	cal.show(cal.month, cal.year)
 end
+
 function cal.prev() cal.move(-1) end
-function cal.next() cal.move( 1) end
+
+function cal.next() cal.move(1) end
 
 function attach(widget)
 	task.show_cmd            = "task next"
 	task.followtag           = true
-	task.notification_preset = {font = "monospace 10"}
+	task.notification_preset = { font = "monospace 10" }
 
-	cal.week_start           = 2		--monday
-	cal.followtag            = true
-	cal.notification_preset  = {font = "monospace 10"}
+	cal.week_start          = 2 --monday
+	cal.followtag           = true
+	cal.notification_preset = { font = "monospace 10" }
 
 	widget:connect_signal("mouse::leave", function()
-			cal.hide()
-			task.hide()
-		end
+		cal.hide()
+		task.hide()
+	end
 	)
 	widget:buttons(awful.util.table.join(
 		awful.button({}, 3, function()
-				cal.hide()
-				naughty.destroy_all_notifications ({awful.screen.focused()}, naughty.notificationClosedReason.dismissedByUser)
-				if task.notification then
-					task.hide()
-				else
-					task.show()
-				end
+			cal.hide()
+			naughty.destroy_all_notifications({ awful.screen.focused() }, naughty.notificationClosedReason.dismissedByUser)
+			if task.notification then
+				task.hide()
+			else
+				task.show()
 			end
+		end
 		),
 		awful.button({}, 1, function()
-				task.hide()
-				naughty.destroy_all_notifications ({awful.screen.focused()}, naughty.notificationClosedReason.dismissedByUser)
-				if cal.notification then
-					cal.hide()
-				else
-					cal.show()
-				end
+			task.hide()
+			naughty.destroy_all_notifications({ awful.screen.focused() }, naughty.notificationClosedReason.dismissedByUser)
+			if cal.notification then
+				cal.hide()
+			else
+				cal.show()
 			end
+		end
 		),
 		awful.button({}, 5, function() if cal.notification then cal.prev() end end),
 		awful.button({}, 4, function() if cal.notification then cal.next() end end))
@@ -159,4 +163,4 @@ return {
 	attach = attach,
 	task = task,
 	cal = cal
-}	
+}

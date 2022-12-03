@@ -28,19 +28,19 @@ end
 do
 	local in_error = false
 	awesome.connect_signal("debug::error", function(err)
-			-- Make sure we don't go into an endless error loop
-			if in_error then
-				return
-			end
-			in_error = true
-
-			naughty.notify({
-				preset = naughty.config.presets.critical,
-				title = "Oops, an error happened!",
-				text = tostring(err)
-			})
-			in_error = false
+		-- Make sure we don't go into an endless error loop
+		if in_error then
+			return
 		end
+		in_error = true
+
+		naughty.notify({
+			preset = naughty.config.presets.critical,
+			title = "Oops, an error happened!",
+			text = tostring(err)
+		})
+		in_error = false
+	end
 	)
 end
 
@@ -50,7 +50,8 @@ local function run_once(cmd_arr)
 		awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
 	end
 end
-run_once({"picom", "greenclip daemon", "playerctld daemon", "powerkit", "libinput-gestures&"})
+
+run_once({ "picom", "greenclip daemon", "playerctld daemon", "libinput-gestures", "lxqt-powermanagement" })
 
 
 terminal = "alacritty"
@@ -74,18 +75,18 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 -- Screen
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", function(s)
-		gears.wallpaper.maximized(beautiful.wallpapers, s, true)
-	end
+	gears.wallpaper.maximized(beautiful.wallpapers, s, true)
+end
 )
 
 local generate_wibar = require("bar")
 awful.screen.connect_for_each_screen(function(s)
-		gears.wallpaper.maximized(beautiful.wallpapers, s, true)
-			-- Tags
-		awful.tag(tagnames, s, awful.layout.layouts[1])
+	gears.wallpaper.maximized(beautiful.wallpapers, s, true)
+	-- Tags
+	awful.tag(tagnames, s, awful.layout.layouts[1])
 
-		generate_wibar(s)
-	end
+	generate_wibar(s)
+end
 )
 
 -- Set keys
@@ -95,7 +96,7 @@ local keybinds = require("keybinds")
 
 local mouse_functions = {
 	activate = function(c)
-		c:emit_signal("request::activate", "mouse_click", {raise = true})
+		c:emit_signal("request::activate", "mouse_click", { raise = true })
 	end
 }
 
@@ -126,9 +127,9 @@ clientbuttons = gears.table.join(
 	awful.button({}, 1, mouse_functions.left_click),
 	awful.button({}, 2, mouse_functions.middle_click),
 	awful.button({}, 3, mouse_functions.right_click),
-	awful.button({modkey}, 1, mouse_functions.left_click_elevated),
-	awful.button({modkey}, 3, mouse_functions.right_click_elevated),
-	awful.button({modkey}, 2, mouse_functions.middle_click_elevated)
+	awful.button({ modkey }, 1, mouse_functions.left_click_elevated),
+	awful.button({ modkey }, 3, mouse_functions.right_click_elevated),
+	awful.button({ modkey }, 2, mouse_functions.middle_click_elevated)
 )
 
 root.keys(keybinds.globalkeys)
@@ -153,7 +154,7 @@ awful.rules.rules = {
 	{
 		rule_any = {
 			instance = {
-				"nmtui",				-- set when launched from wifi widget
+				"nmtui", -- set when launched from wifi widget
 				"blueberry.py"
 			},
 			class = {
@@ -169,7 +170,7 @@ awful.rules.rules = {
 				"dialog"
 			}
 		},
-		properties = {floating = true, placement = awful.placement.centered, ontop = true}
+		properties = { floating = true, placement = awful.placement.centered, ontop = true }
 	},
 
 	--Set music stuff to always map on the tag named "five" on screen 1.
@@ -178,7 +179,7 @@ awful.rules.rules = {
 			instance = { "mpv-ytm" },
 			class = { "Spotify" }
 		},
-		properties = { screen = 1, tag = "five"}
+		properties = { screen = 1, tag = "five" }
 	},
 
 	--Stuff that needs to launch in the second monitor
@@ -193,38 +194,42 @@ awful.rules.rules = {
 -- Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function(c)
-		-- Set new windows at the slave
-		if not awesome.startup then awful.client.setslave(c) end
+	-- Set new windows at the slave
+	if not awesome.startup then awful.client.setslave(c) end
 
-		if awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
-			-- Prevent clients from being unreachable after screen count changes.
-			awful.placement.no_offscreen(c)
-		end
-
-		-- Windows like spotify only set class name after window opens.
-		-- So add a listener for when it attains classname and then apply rules
-		if c.name == nil and c.class == nil then
-			c.minimized = true
-			c:connect_signal("property::class", function ()
-					c.minimized = false
-					awful.rules.apply(c)
-				end
-			)
-		end
-
-		c.shape = gears.shape.rounded_rect
+	if awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
+		-- Prevent clients from being unreachable after screen count changes.
+		awful.placement.no_offscreen(c)
 	end
+
+	-- Windows like spotify only set class name after window opens.
+	-- So add a listener for when it attains classname and then apply rules
+	if c.name == nil and c.class == nil then
+		c.minimized = true
+		c:connect_signal("property::class", function()
+			c.minimized = false
+			awful.rules.apply(c)
+		end
+		)
+	end
+
+	c.shape = gears.shape.rounded_rect
+end
 )
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
 client.connect_signal("property::maximized", function(c)
-	if c.maximized then
+	-- manual maximise set in keybinds.lua
+	-- to prevent auto maximising by browsers and such
+	if manual_maximise and c.maximized then
 		c.shape = nil
 	else
-		c.shape =  gears.shape.rounded_rect;
+		c.shape = gears.shape.rounded_rect;
+		c.maximized = false
 	end
+	manual_maximise = false
 end);
 
 client.connect_signal("property::urgent", function(c)

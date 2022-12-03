@@ -5,6 +5,7 @@ local theme = {}
 theme.font                       = "JetBrainsMono 9"
 theme.hotkeys_font               = "sans-serif bold 9"
 theme.hotkeys_description_font   = "sans-serif 9"
+theme.icon_theme                 = "Papirus-Dark"
 
 theme.hotkeys_modifiers_fg       = "#dddddd"
 theme.hotkeys_fg                 = "#cccccc"
