@@ -2,7 +2,7 @@
 <!DOCTYPE gui>
 <gui version="51" name="okular_part">
  <MenuBar>
-  <Menu noMerge="1" name="file">
+  <Menu name="file" noMerge="1">
    <text translationDomain="okular">&amp;File</text>
    <Action group="file_open" name="get_new_stuff"/>
    <Action group="file_open" name="import_ps"/>
@@ -17,7 +17,7 @@
    <Action group="file_print" name="file_export_as"/>
    <Action group="file_print" name="file_share"/>
   </Menu>
-  <Menu noMerge="1" name="edit">
+  <Menu name="edit" noMerge="1">
    <text translationDomain="okular">&amp;Edit</text>
    <Action name="edit_undo"/>
    <Action name="edit_redo"/>
@@ -31,7 +31,7 @@
    <Action name="edit_find_next"/>
    <Action name="edit_find_prev"/>
   </Menu>
-  <Menu noMerge="1" name="view">
+  <Menu name="view" noMerge="1">
    <text translationDomain="okular">&amp;View</text>
    <Action name="presentation"/>
    <Separator/>
@@ -44,7 +44,7 @@
    <Separator/>
    <Action name="view_render_mode"/>
    <Separator/>
-   <Menu noMerge="1" name="view_orientation">
+   <Menu name="view_orientation" noMerge="1">
     <text translationDomain="okular">&amp;Orientation</text>
     <Action name="view_orientation_rotate_ccw"/>
     <Action name="view_orientation_rotate_cw"/>
@@ -54,7 +54,7 @@
    <Separator/>
    <Action name="view_toggle_forms"/>
   </Menu>
-  <Menu noMerge="1" name="go">
+  <Menu name="go" noMerge="1">
    <text translationDomain="okular">&amp;Go</text>
    <Action name="go_previous"/>
    <Action name="go_next"/>
@@ -67,7 +67,7 @@
    <Separator/>
    <Action name="go_goto_page"/>
   </Menu>
-  <Menu noMerge="1" name="bookmarks">
+  <Menu name="bookmarks" noMerge="1">
    <text translationDomain="okular">&amp;Bookmarks</text>
    <Action name="bookmark_add"/>
    <Action name="rename_bookmark"/>
@@ -76,7 +76,7 @@
    <Separator/>
    <ActionList name="bookmarks_currentdocument"/>
   </Menu>
-  <Menu noMerge="1" name="tools">
+  <Menu name="tools" noMerge="1">
    <text translationDomain="okular">&amp;Tools</text>
    <Action name="mouse_drag"/>
    <Action name="mouse_zoom"/>
@@ -94,19 +94,19 @@
    <Action name="speak_stop_all"/>
    <Action name="speak_pause_resume"/>
   </Menu>
-  <Menu noMerge="1" name="settings">
+  <Menu name="settings" noMerge="1">
    <text translationDomain="okular">&amp;Settings</text>
    <Action group="show_merge" name="show_leftpanel"/>
    <Action group="show_merge" name="show_bottombar"/>
    <Action group="configure_merge" name="options_configure_generators"/>
    <Action group="configure_merge" name="options_configure"/>
   </Menu>
-  <Menu noMerge="1" name="help">
+  <Menu name="help" noMerge="1">
    <text translationDomain="okular">&amp;Help</text>
    <Action group="about_merge" name="help_about_backend"/>
   </Menu>
  </MenuBar>
- <ToolBar noMerge="1" name="mainToolBar">
+ <ToolBar name="mainToolBar" noMerge="1">
   <text translationDomain="okular">Main Toolbar</text>
   <Action name="show_leftpanel"/>
   <Separator name="separator_0"/>
@@ -122,7 +122,7 @@
   <Action name="zoom_to"/>
   <Separator name="separator_3"/>
   <Action name="color_mode_inverted"/>
-  <Action name="edit_find"/>
+  <Action name="view_render_mode"/>
   <Action name="hamburger_menu"/>
  </ToolBar>
  <ActionProperties scheme="Default">
@@ -134,8 +134,10 @@
   <Action priority="0" name="mouse_textselect"/>
   <Action priority="0" name="mouse_select"/>
   <Action priority="0" name="mouse_tableselect"/>
+  <Action priority="0" name="view_render_mode"/>
+  <Action priority="128" name="quick_annotation_action_bar"/>
  </ActionProperties>
- <ToolBar iconText="icononly" newline="true" hidden="true" name="annotationToolBar">
+ <ToolBar hidden="true" iconText="icononly" newline="true" name="annotationToolBar">
   <text translationDomain="okular">Annotation Toolbar</text>
   <Action name="annotation_highlighter"/>
   <Action name="annotation_underline"/>
@@ -160,8 +162,8 @@
   <Spacer name="spacer_0"/>
   <Action name="hide_annotation_toolbar"/>
  </ToolBar>
- <ToolBar iconSize="32" iconText="icononly" newline="true" position="right" hidden="true" name="quickAnnotationToolBar">
-  <text translationDomain="okular">Quick Annotation Toolbar</text>
+ <ToolBar hidden="true" iconText="icononly" position="right" iconSize="32" newline="true" name="quickAnnotationToolBar" noMerge="1">
   <Action name="quick_annotation_action_bar"/>
+  <text translationDomain="okular">Quick Annotation Toolbar</text>
  </ToolBar>
 </gui>
