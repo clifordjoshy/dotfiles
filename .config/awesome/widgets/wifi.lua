@@ -6,6 +6,7 @@ local awful = require("awful");
 local wibox = require("wibox");
 local watch = require("awful.widget.watch");
 local gears = require("gears")
+local beautiful = require("beautiful")
 
 local NET_SIGNAL_CMD = "bash -c \"nmcli -t -f IN-USE,SIGNAL device wifi | grep \'*\'\""
 local NET_STATUS_CMD = "nmcli network connectivity"
@@ -15,18 +16,16 @@ local NET_INFO_CMD = "nmcli -t -f general.connection,ip4.address device show %s"
 
 local wifi_widget = {}
 
-local worker = function(user_args)
+local worker = function()
 
-	local wifi_icons = user_args.wifi_icons;
-	local eth_icon = user_args.eth_icon;
-	local font = user_args.font or "monospace 9";
+	local wifi_icons = beautiful.widget_wifi;
+	local eth_icon = beautiful.widget_eth;
 	local timeout = 10;
 	local speed_timeout = 4;
-	local gap = user_args.space;
 
 	wifi_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
-		spacing = gap,
+		spacing = beautiful.widget_icon_gap,
 		{
 			id = 'icon',
 			widget = wibox.widget.imagebox,
@@ -52,7 +51,7 @@ local worker = function(user_args)
 			self:emit_signal('widget::redraw_needed')
 		end,
 		update_speed = function(self, down_speed)
-			self.text:set_markup(string.format("<span font='%s' foreground='%s'>%s</span>", font, "#ea76cb", down_speed));
+			self.text:set_markup(string.format("<span foreground='%s'>%s</span>", "#ea76cb", down_speed));
 		end
 	}
 

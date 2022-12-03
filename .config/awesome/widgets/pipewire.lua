@@ -6,6 +6,7 @@
 local awful = require("awful");
 local wibox = require("wibox");
 local watch = require("awful.widget.watch");
+local beautiful = require("beautiful")
 
 -- local GET_SINK_VOL_CMD = "pactl get-sink-volume @DEFAULT_SINK@";
 -- local GET_SOURCE_VOL_CMD = "pactl get-source-volume @DEFAULT_SOURCE@";
@@ -15,17 +16,14 @@ local UPDATE_CMD = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{print
 
 local volume_widget = {}
 
-local worker = function(user_args)
+local worker = function()
 
-	local args = user_args or {}
-
-	local icon = args.icon;
-	local font = args.font or "sans-serif 9";
+	local icon = beautiful.widget_vol;
 	local timeout = 2;
 
 	volume_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
-		spacing = args.space,
+		spacing = beautiful.widget_icon_gap,
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,
@@ -33,13 +31,12 @@ local worker = function(user_args)
 		},
 		{
 			id = "volume",
-			font = font,
 			widget = wibox.widget.textbox
 		},
 
 		update_volume = function(self, text)
 
-			local volume_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#04a5e5", text);
+			local volume_markup = string.format("<span foreground='%s'>%s</span>", "#04a5e5", text);
 
 			if self.volume:get_markup() ~= volume_markup then
 				self.volume:set_markup(volume_markup);

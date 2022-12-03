@@ -5,20 +5,18 @@
 local awful = require("awful");
 local wibox = require("wibox");
 local gears = require("gears");
+local beautiful = require("beautiful")
 
 local memory_widget = {}
 
-local worker = function(user_args)
+local worker = function()
 
-	local args = user_args or {}
-
-	local icon = args.icon;
-	local font = args.font or "sans-serif 9";
+	local icon = beautiful.widget_mem;
 	local timeout = 2;
 
 	memory_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
-		spacing = args.space,
+		spacing = beautiful.widget_icon_gap,
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,
@@ -26,12 +24,11 @@ local worker = function(user_args)
 		},
 		{
 			id = "memory",
-			font = font,
 			widget = wibox.widget.textbox
 		},
 
 		update_memory = function(self, memory)
-			local memory_markup = string.format("<span font='%s' foreground='%s'>%dM</span>", font, "#e0da37", memory);
+			local memory_markup = string.format("<span foreground='%s'>%dM</span>", "#e0da37", memory);
 
 			if self.memory:get_markup() ~= memory_markup then
 				self.memory:set_markup(memory_markup);

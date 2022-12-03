@@ -4,13 +4,14 @@
 -- Based off of https://github.com/berlam/awesome-upower-battery
 -------------------------------------------------
 
-local wibox   = require("wibox");
-local upower  = require("lgi").require("UPowerGlib")
-local naughty = require("naughty")
+local wibox     = require("wibox");
+local upower    = require("lgi").require("UPowerGlib")
+local naughty   = require("naughty")
+local beautiful = require("beautiful")
 
 local battery_widget = {}
 
-function update_widget(device)
+local function update_widget(device)
 
 	local is_charging = device.state == upower.DeviceState.PENDING_CHARGE or
 			device.state == upower.DeviceState.FULLY_CHARGED or
@@ -24,16 +25,13 @@ local display_device = upower.Client():get_display_device()
 -- callback for when device updates
 display_device.on_notify = update_widget
 
-local worker = function(user_args)
+local worker = function()
 
-	local args = user_args or {}
-
-	local icon = args.icon;
-	local font = args.font or "sans-serif 9";
+	local icon = beautiful.widget_batt;
 
 	battery_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
-		spacing = args.space,
+		spacing = beautiful.widget_icon_gap,
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,
@@ -41,7 +39,6 @@ local worker = function(user_args)
 		},
 		{
 			id = "percentage",
-			font = font,
 			widget = wibox.widget.textbox
 		},
 
@@ -52,7 +49,7 @@ local worker = function(user_args)
 				perc_str = perc_str .. " A/C"
 			end
 
-			local battery_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#46fff6", perc_str);
+			local battery_markup = string.format("<span foreground='%s'>%s</span>", "#46fff6", perc_str);
 
 			if self.percentage:get_markup() ~= battery_markup then
 				if percentage <= 10 and not is_charging then

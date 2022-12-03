@@ -5,20 +5,18 @@
 local awful = require("awful");
 local wibox = require("wibox");
 local gears = require("gears");
+local beautiful = require("beautiful")
 
 local cpu_widget = {}
 
-local worker = function(user_args)
+local worker = function()
 
-	local args = user_args or {}
-
-	local icon = args.icon;
-	local font = args.font or "sans-serif 9";
+	local icon = beautiful.widget_cpu;
 	local timeout = 2;
 
 	cpu_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
-		spacing = args.space,
+		spacing = beautiful.widget_icon_gap,
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,
@@ -31,7 +29,7 @@ local worker = function(user_args)
 		},
 
 		update_cpu_usage = function(self, usage)
-			local memory_markup = string.format("<span font='%s' foreground='%s'>%d%%</span>", font, "#ff6363", usage);
+			local memory_markup = string.format("<span foreground='%s'>%d%%</span>", "#ff6363", usage);
 
 			if self.memory:get_markup() ~= memory_markup then
 				self.memory:set_markup(memory_markup);

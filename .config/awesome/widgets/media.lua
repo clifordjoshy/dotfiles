@@ -6,6 +6,7 @@
 local awful = require("awful");
 local wibox = require("wibox");
 local watch = require("awful.widget.watch");
+local beautiful = require("beautiful");
 
 local GET_PLAYER_INFO = "playerctl metadata -af '{{playerName}}/#/{{title}}/#/{{artist}}/#/{{status}}'"
 
@@ -18,13 +19,11 @@ end
 
 local media_widget = {};
 
-local worker = function(user_args)
+local worker = function()
 
-	local spotify_icon = user_args.icons.spotify;
-	local default_icon = user_args.icons.default;
-	local font = user_args.font or "sans-serif 9";
+	local spotify_icon = beautiful.widget_media.spotify;
+	local default_icon = beautiful.widget_media.default;
 
-	local dim_when_paused = true;
 	local dim_opacity = 0.5;
 	local max_length = 20;
 	local timeout = 1;
@@ -37,7 +36,7 @@ local worker = function(user_args)
 
 	media_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
-		spacing = user_args.space,
+		spacing = beautiful.widget_icon_gap,
 		-- throwing in a separator here because i can't think of a better way to hide the sep when spotify is closed
 		{
 			widget = wibox.widget.separator,
@@ -53,7 +52,6 @@ local worker = function(user_args)
 		},
 		{
 			id = "song_info",
-			font = font,
 			widget = wibox.widget.textbox
 		},
 
@@ -101,7 +99,7 @@ local worker = function(user_args)
 				song_text = string.format("%s ► %s", ellipsize(title, max_length), ellipsize(artist, max_length));
 			end
 
-			local song_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font,
+			local song_markup = string.format("<span foreground='%s'>%s</span>",
 				player == "spotify" and "#1db954" or "#b5bfe2", song_text);
 			while player_info[player] ~= nil do
 				player = player .. ' '

@@ -6,22 +6,20 @@
 local awful = require("awful");
 local wibox = require("wibox");
 local watch = require("awful.widget.watch");
+local beautiful = require("beautiful")
 
 local GET_BRIGHTNESS_CMD = "bash -c 'light -G | cut -d. -f1'";
 
 local brightness_widget = {}
 
-local worker = function(user_args)
+local worker = function()
 
-	local args = user_args or {}
-
-	local icon = args.icon;
-	local font = args.font or "sans-serif 9";
+	local icon = beautiful.widget_brightness;
 	local timeout = 5;
 
 	brightness_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
-		spacing = args.space,
+		spacing = beautiful.widget_icon_gap,
 		{
 			id = "icon",
 			widget = wibox.widget.imagebox,
@@ -29,13 +27,12 @@ local worker = function(user_args)
 		},
 		{
 			id = "brightness",
-			font = font,
 			widget = wibox.widget.textbox
 		},
 
 		update_brightness = function(self, brightness)
 
-			local brightness_markup = string.format("<span font='%s' foreground='%s'>%s%%</span>", font, "#c782ff", brightness);
+			local brightness_markup = string.format("<span foreground='%s'>%s%%</span>", "#c782ff", brightness);
 
 			if self.brightness:get_markup() ~= brightness_markup then
 				self.brightness:set_markup(brightness_markup);

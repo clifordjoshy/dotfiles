@@ -154,31 +154,25 @@ clock_widget:buttons(gears.table.join(
 local mysystray = wibox.container.margin(wibox.widget.systray(), 0, beautiful.systray_icon_spacing, 4, 4)
 
 -- Media Widget
-local my_media_widget = media_widget({ icons = beautiful.widget_media, font = beautiful.font,
-	space = beautiful.widget_icon_gap })
+local my_media_widget = media_widget()
 
 -- Volume Widget
-local my_volume_widget = volume_widget({ icon = beautiful.widget_vol, font = beautiful.font,
-	space = beautiful.widget_icon_gap })
+local my_volume_widget = volume_widget()
 
 -- Wifi Widget
-local my_wifi_widget = wifi_widget({ wifi_icons = beautiful.widget_wifi, eth_icon = beautiful.widget_eth,
-	font = beautiful.font, space = beautiful.widget_icon_gap })
+local my_wifi_widget = wifi_widget()
 
 -- Brightness Widget
-local my_brightness_widget = brightness_widget({ icon = beautiful.widget_brightness, font = beautiful.font,
-	space = beautiful.widget_icon_gap })
+local my_brightness_widget = brightness_widget()
 
 -- Battery
-local my_battery_widget = battery_widget({ icon = beautiful.widget_batt, font = beautiful.font,
-	space = beautiful.widget_icon_gap })
+local my_battery_widget = battery_widget()
 
 -- Memory Widget
-local my_memory_widget = memory_widget({ icon = beautiful.widget_mem, font = beautiful.font,
-	space = beautiful.widget_icon_gap })
+local my_memory_widget = memory_widget()
 
 -- CPU Widget
-local my_cpu_widget = cpu_widget({ icon = beautiful.widget_cpu, font = beautiful.font, space = beautiful.widget_icon_gap })
+local my_cpu_widget = cpu_widget()
 
 -- ]]]
 
