@@ -18,8 +18,8 @@ local worker = function(user_args)
 	local icon = args.icon;
 	local font = args.font or "sans-serif 9";
 	local timeout = 5;
-	
-	brightness_widget = wibox.widget{
+
+	brightness_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
 		spacing = args.space,
 		{
@@ -55,24 +55,25 @@ local worker = function(user_args)
 	--  - scroll down - brightness down
 	--  - right click - fix monitors script
 	brightness_widget:connect_signal("button::press", function(_, _, _, button)
-			if button == 1 then
-				awful.spawn.with_shell("light -S 100");
-			elseif button == 4 then
-				awful.spawn.with_shell("light -A 5");
-			elseif button == 5 then
-				awful.spawn.with_shell("light -U 5");
-			elseif button == 3 then
-				awful.spawn("fixmonitors", false)
-				return
-			end;
-			awful.spawn.easy_async(GET_BRIGHTNESS_CMD, function(stdout, stderr, _, _) update_widget(brightness_widget, stdout, stderr) end)
+		if button == 1 then
+			awful.spawn.with_shell("light -S 100");
+		elseif button == 4 then
+			awful.spawn.with_shell("light -A 5");
+		elseif button == 5 then
+			awful.spawn.with_shell("light -U 5");
+		elseif button == 3 then
+			awful.spawn("fixmonitors", false)
+			return
 		end
+		awful.spawn.easy_async(GET_BRIGHTNESS_CMD,
+			function(stdout, stderr, _, _) update_widget(brightness_widget, stdout, stderr) end)
+	end
 	);
 
 	return brightness_widget;
 end;
 
-return setmetatable(brightness_widget, {	__call = function(_, ...)
-		return worker(...);
-	end
+return setmetatable(brightness_widget, { __call = function(_, ...)
+	return worker(...);
+end
 });

@@ -14,14 +14,14 @@ local cal_task = require("widgets.cal_task")
 local menubar_utils = require("menubar.utils")
 
 
-local menu_bg = function (cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
+local menu_bg = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
 -- [[[ Main Menu
 local mymainmenu = awful.menu({
 	items = {
-		{"lock", screen_lock, beautiful.menu_lock_icon},
-		{"log out", function() awesome.quit() end, beautiful.menu_logout_icon},
-		{"reboot", "reboot", beautiful.menu_reboot_icon},
-		{"power off", "shutdown now", beautiful.menu_power_icon},
+		{ "lock", screen_lock, beautiful.menu_lock_icon },
+		{ "log out", function() awesome.quit() end, beautiful.menu_logout_icon },
+		{ "reboot", "reboot", beautiful.menu_reboot_icon },
+		{ "power off", "shutdown now", beautiful.menu_power_icon },
 	},
 	theme = {
 		height = 34,
@@ -53,7 +53,7 @@ end
 
 menulauncher:connect_signal("button::press", function(_, _, _, button)
 	if button == 1 then
-		 mymainmenu:show({coords = {x = 0, y = 32}})
+		mymainmenu:show({ coords = { x = 0, y = 32 } })
 	elseif button == 2 then
 		toggle_kill_switch()
 	end
@@ -63,36 +63,36 @@ end)
 local mouse_in_main = false
 -- when mouse leaves launcher icon without entering menu. close it
 menulauncher:connect_signal("mouse::leave", function()
-		if mymainmenu.wibox.visible then
-			gears.timer{
-				timeout = 0.1,
-				autostart = true,
-				callback = function () if not mouse_in_main then mymainmenu:hide() end end,
-				single_shot = true
-			}
-		end
+	if mymainmenu.wibox.visible then
+		gears.timer {
+			timeout = 0.1,
+			autostart = true,
+			callback = function() if not mouse_in_main then mymainmenu:hide() end end,
+			single_shot = true
+		}
 	end
+end
 )
 mymainmenu.wibox:connect_signal("mouse::enter", function() mouse_in_main = true end)
-mymainmenu.wibox:connect_signal("mouse::leave", function() 
-		mymainmenu:hide()
-		mouse_in_main = false
-	end
+mymainmenu.wibox:connect_signal("mouse::leave", function()
+	mymainmenu:hide()
+	mouse_in_main = false
+end
 )
 -- ]]]
 
 
--- [[[ Middle Box	
+-- [[[ Middle Box
 local on_middlebar_mouse_button = function(_, _, _, button)
 	if button == 3 then
 		awful.spawn("rofi -show drun", false)
 	elseif button == 2 then
 		awful.spawn("rofi -modi window -show window", false)
 	elseif button == 4 then
-		if mouse.screen ~= awful.screen.focused({client = true, mouse = false})	then awful.screen.focus(mouse.screen) end
+		if mouse.screen ~= awful.screen.focused({ client = true, mouse = false }) then awful.screen.focus(mouse.screen) end
 		awful.client.focus.byidx(-1)
 	elseif button == 5 then
-		if mouse.screen ~= awful.screen.focused({client = true, mouse = false})	then awful.screen.focus(mouse.screen) end
+		if mouse.screen ~= awful.screen.focused({ client = true, mouse = false }) then awful.screen.focus(mouse.screen) end
 		awful.client.focus.byidx(1)
 	end
 end
@@ -101,27 +101,27 @@ end
 
 -- [[[Taglist //tasklist
 local taglist_buttons = gears.table.join(
-	-- move to tag on clicking the title
+-- move to tag on clicking the title
 	awful.button({}, 1, function(t) t:view_only() end),
 	-- move focused window to clicked tag
-	awful.button({modkey}, 1, function(t)
-			if client.focus then
-				client.focus:move_to_tag(t)
-			end
+	awful.button({ modkey }, 1, function(t)
+		if client.focus then
+			client.focus:move_to_tag(t)
 		end
+	end
 	),
 	-- adds focused window to the clicked tag also
-	awful.button({modkey}, 3, function(t)
-			if client.focus then
-				client.focus:toggle_tag(t)
-			end
+	awful.button({ modkey }, 3, function(t)
+		if client.focus then
+			client.focus:toggle_tag(t)
 		end
+	end
 	)
 )
 
 local tasklist_buttons = gears.table.join(
-	-- unminimise window
-	awful.button({}, 1, function(c)	c.minimized = false end)
+-- unminimise window
+	awful.button({}, 1, function(c) c.minimized = false end)
 )
 
 -- ]]]
@@ -154,25 +154,31 @@ clock_widget:buttons(gears.table.join(
 local mysystray = wibox.container.margin(wibox.widget.systray(), 0, beautiful.systray_icon_spacing, 4, 4)
 
 -- Media Widget
-local my_media_widget = media_widget({icons = beautiful.widget_media, font = beautiful.font, space = beautiful.widget_icon_gap})
+local my_media_widget = media_widget({ icons = beautiful.widget_media, font = beautiful.font,
+	space = beautiful.widget_icon_gap })
 
 -- Volume Widget
-local my_volume_widget = volume_widget({icon = beautiful.widget_vol, font = beautiful.font, space = beautiful.widget_icon_gap})
+local my_volume_widget = volume_widget({ icon = beautiful.widget_vol, font = beautiful.font,
+	space = beautiful.widget_icon_gap })
 
 -- Wifi Widget
-local my_wifi_widget = wifi_widget({wifi_icons = beautiful.widget_wifi, eth_icon = beautiful.widget_eth, font = beautiful.font, space = beautiful.widget_icon_gap})
+local my_wifi_widget = wifi_widget({ wifi_icons = beautiful.widget_wifi, eth_icon = beautiful.widget_eth,
+	font = beautiful.font, space = beautiful.widget_icon_gap })
 
 -- Brightness Widget
-local my_brightness_widget = brightness_widget({icon = beautiful.widget_brightness, font = beautiful.font, space = beautiful.widget_icon_gap})
+local my_brightness_widget = brightness_widget({ icon = beautiful.widget_brightness, font = beautiful.font,
+	space = beautiful.widget_icon_gap })
 
 -- Battery
-local my_battery_widget = battery_widget({icon = beautiful.widget_batt, font = beautiful.font, space = beautiful.widget_icon_gap})
+local my_battery_widget = battery_widget({ icon = beautiful.widget_batt, font = beautiful.font,
+	space = beautiful.widget_icon_gap })
 
 -- Memory Widget
-local my_memory_widget = memory_widget({icon = beautiful.widget_mem, font = beautiful.font, space = beautiful.widget_icon_gap})
+local my_memory_widget = memory_widget({ icon = beautiful.widget_mem, font = beautiful.font,
+	space = beautiful.widget_icon_gap })
 
 -- CPU Widget
-local my_cpu_widget = cpu_widget({icon = beautiful.widget_cpu, font = beautiful.font, space = beautiful.widget_icon_gap})
+local my_cpu_widget = cpu_widget({ icon = beautiful.widget_cpu, font = beautiful.font, space = beautiful.widget_icon_gap })
 
 -- ]]]
 
@@ -193,13 +199,13 @@ local function generate_wibar(s)
 	}
 
 	s.mytasklist = awful.widget.tasklist {
-		screen = s,
-		filter = awful.widget.tasklist.filter.minimizedcurrenttags,
-		buttons = tasklist_buttons,
-		layout   = {
+		screen          = s,
+		filter          = awful.widget.tasklist.filter.minimizedcurrenttags,
+		buttons         = tasklist_buttons,
+		layout          = {
 			spacing = 10,
 			layout  = wibox.layout.fixed.horizontal
-    },
+		},
 		widget_template = {
 			{
 				id     = 'appicon',
@@ -238,11 +244,11 @@ local function generate_wibar(s)
 				span_ratio = 0.65,
 				color = beautiful.fg_normal,
 				orientation = 'vertical',
-				forced_width= 20
+				forced_width = 20
 			},
 		},
 		my_middle_widget,
-		{	-- Right widgets
+		{ -- Right widgets
 			layout = wibox.layout.fixed.horizontal,
 			spacing = beautiful.widget_gap,
 			spacing_widget = {

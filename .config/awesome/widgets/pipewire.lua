@@ -22,8 +22,8 @@ local worker = function(user_args)
 	local icon = args.icon;
 	local font = args.font or "sans-serif 9";
 	local timeout = 2;
-	
-	volume_widget = wibox.widget{
+
+	volume_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
 		spacing = args.space,
 		{
@@ -38,7 +38,7 @@ local worker = function(user_args)
 		},
 
 		update_volume = function(self, text)
-			
+
 			local volume_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, "#04a5e5", text);
 
 			if self.volume:get_markup() ~= volume_markup then
@@ -49,7 +49,7 @@ local worker = function(user_args)
 
 	local update_widget = function(widget, stdout, stderr, _, _)
 		-- if album ~= nil and title ~= nil and artist ~= nil then
-			widget:update_volume(stdout);
+		widget:update_volume(stdout);
 		-- end;
 	end;
 
@@ -61,30 +61,30 @@ local worker = function(user_args)
 	--  - scroll down - volume down
 	--  - right click - start noisetorch
 	volume_widget:connect_signal("button::press", function(_, _, _, button)
-			if button == 1 then
-				awful.spawn("pavucontrol");
-				return
-				-- using amixer instead of pactl to limit volume to 100%
-			elseif button == 4 then
-				awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false);
-				-- awful.spawn("amixer set Master 5%+", false);
-			elseif button == 5 then
-				awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
-				-- awful.spawn("amixer set Master 5%-", false);
-			elseif button == 3 then
-				awful.spawn.easy_async_with_shell(NOISETORCH_STATUS_CMD, function(_, _, _, exitcode)
-						awful.spawn("noisetorch -" .. (exitcode == 0 and "u" or "i"), false)
-					end
-				)
-			end;
-			awful.spawn.easy_async(UPDATE_CMD, function(stdout, stderr, _, _) update_widget(volume_widget, stdout, stderr) end)
+		if button == 1 then
+			awful.spawn("pavucontrol");
+			return
+			-- using amixer instead of pactl to limit volume to 100%
+		elseif button == 4 then
+			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false);
+			-- awful.spawn("amixer set Master 5%+", false);
+		elseif button == 5 then
+			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
+			-- awful.spawn("amixer set Master 5%-", false);
+		elseif button == 3 then
+			awful.spawn.easy_async_with_shell(NOISETORCH_STATUS_CMD, function(_, _, _, exitcode)
+				awful.spawn("noisetorch -" .. (exitcode == 0 and "u" or "i"), false)
+			end
+			)
 		end
+		awful.spawn.easy_async(UPDATE_CMD, function(stdout, stderr, _, _) update_widget(volume_widget, stdout, stderr) end)
+	end
 	);
 
 	return volume_widget;
 end;
 
-return setmetatable(volume_widget, {	__call = function(_, ...)
-		return worker(...);
-	end
+return setmetatable(volume_widget, { __call = function(_, ...)
+	return worker(...);
+end
 });

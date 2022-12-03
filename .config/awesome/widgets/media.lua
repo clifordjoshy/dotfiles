@@ -28,14 +28,14 @@ local worker = function(user_args)
 	local dim_opacity = 0.5;
 	local max_length = 20;
 	local timeout = 1;
-	
+
 	local player_info = {}
 	local current_player = nil
 
 	--if player override> 0 skip player updates until that many turns [to see the choice before going back to top player]
 	local player_override = 0
 
-	media_widget = wibox.widget{
+	media_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
 		spacing = user_args.space,
 		-- throwing in a separator here because i can't think of a better way to hide the sep when spotify is closed
@@ -44,7 +44,7 @@ local worker = function(user_args)
 			span_ratio = 0.65,
 			color = "#aaaaaa",
 			orientation = 'vertical',
-			forced_width= 4
+			forced_width = 4
 		},
 		{
 			id = "icon",
@@ -57,7 +57,7 @@ local worker = function(user_args)
 			widget = wibox.widget.textbox
 		},
 
-		update_markup= function(self)
+		update_markup = function(self)
 			self.icon.image = current_player == "spotify" and spotify_icon or default_icon
 			if self.song_info:get_markup() ~= player_info[current_player].text then
 				self.song_info:set_markup(player_info[current_player].text);
@@ -78,7 +78,7 @@ local worker = function(user_args)
 				widget:set_visible(false);
 			end
 			return;
-		end;
+		end
 
 		-- some player has been opened
 		if current_player == nil then
@@ -96,16 +96,17 @@ local worker = function(user_args)
 			local player, title, artist, status = string.match(p, "(.*)/#/(.*)/#/(.*)/#/(.*)")
 			local song_text;
 			if artist == '' then
-				song_text = ellipsize(title, 2*max_length)
+				song_text = ellipsize(title, 2 * max_length)
 			else
-				song_text = string.format("%s ► %s", ellipsize(title,max_length), ellipsize(artist, max_length));
-			end;
+				song_text = string.format("%s ► %s", ellipsize(title, max_length), ellipsize(artist, max_length));
+			end
 
-			local song_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font, player == "spotify" and "#1db954" or "#b5bfe2", song_text);
+			local song_markup = string.format("<span font='%s' foreground='%s'>%s</span>", font,
+				player == "spotify" and "#1db954" or "#b5bfe2", song_text);
 			while player_info[player] ~= nil do
 				player = player .. ' '
 			end
-			player_info[player] = {text = song_markup, playing = status == "Playing"};
+			player_info[player] = { text = song_markup, playing = status == "Playing" };
 
 			-- find highest priority player [first in list]
 			if top_player == nil then
@@ -135,40 +136,40 @@ local worker = function(user_args)
 	--  - right click - open instance if current player is spotify/mpv
 	--  - middle click - go to next player
 	media_widget:connect_signal("button::press", function(_, _, _, button)
-			if button == 1 then
-				awful.spawn("playerctl play-pause --player=" .. current_player, false);
-			elseif button == 4 then
-				awful.spawn("playerctl previous --player=" .. current_player, false);
-			elseif button == 5 then
-				awful.spawn("playerctl next --player=" .. current_player, false);
-			elseif button == 3 then
-				if current_player == "spotify" then
-					for c in awful.client.iterate(function(c) return awful.rules.match(c, {class = "Spotify"}) end) do
-						c:jump_to(false);
-						return
-					end;
-				elseif string.find(current_player, "mpv") then
-					awful.spawn("wmctrl -xa mpv", false);
+		if button == 1 then
+			awful.spawn("playerctl play-pause --player=" .. current_player, false);
+		elseif button == 4 then
+			awful.spawn("playerctl previous --player=" .. current_player, false);
+		elseif button == 5 then
+			awful.spawn("playerctl next --player=" .. current_player, false);
+		elseif button == 3 then
+			if current_player == "spotify" then
+				for c in awful.client.iterate(function(c) return awful.rules.match(c, { class = "Spotify" }) end) do
+					c:jump_to(false);
+					return
 				end
-			elseif button == 2 then
-				k, _ = next(player_info, current_player)
-				if k == nil then
-					k, _ = next(player_info, nil)
-				end
-				current_player = k
-				player_override = 2
-				media_widget:update_markup()
-			end;
-		
-			awful.spawn.easy_async_with_shell("sleep 0.1 && " .. GET_PLAYER_INFO, 
-				function(stdout, stderr, _, _) update_widget(media_widget, stdout, stderr) end)
+			elseif string.find(current_player, "mpv") then
+				awful.spawn("wmctrl -xa mpv", false);
+			end
+		elseif button == 2 then
+			k, _ = next(player_info, current_player)
+			if k == nil then
+				k, _ = next(player_info, nil)
+			end
+			current_player = k
+			player_override = 2
+			media_widget:update_markup()
 		end
+
+		awful.spawn.easy_async_with_shell("sleep 0.1 && " .. GET_PLAYER_INFO,
+			function(stdout, stderr, _, _) update_widget(media_widget, stdout, stderr) end)
+	end
 	);
 
 	return media_widget;
 end;
 
-return setmetatable(media_widget, {	__call = function(_, ...)
-		return worker(...);
-	end
+return setmetatable(media_widget, { __call = function(_, ...)
+	return worker(...);
+end
 });

@@ -24,7 +24,7 @@ local worker = function(user_args)
 	local speed_timeout = 4;
 	local gap = user_args.space;
 
-	wifi_widget = wibox.widget{
+	wifi_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
 		spacing = gap,
 		{
@@ -41,7 +41,7 @@ local worker = function(user_args)
 
 			local strength_icon = eth_icon;
 			if strength >= 0 then
-				strength_icon = wifi_icons[math.ceil(strength/25) + 1]
+				strength_icon = wifi_icons[math.ceil(strength / 25) + 1]
 			end
 			if self.icon.image ~= strength_icon then
 				self.icon.image = strength_icon
@@ -69,13 +69,13 @@ local worker = function(user_args)
 		local speed;
 		local K_pos = stdout:find("K")
 		if K_pos then
-			local data = tonumber(stdout:sub(1, K_pos-1))
+			local data = tonumber(stdout:sub(1, K_pos - 1))
 			if data == nil then return end
-			speed = string.format("%.1f MB/s", data/(1024 * speed_timeout))
+			speed = string.format("%.1f MB/s", data / (1024 * speed_timeout))
 		else
 			local data = tonumber(stdout) or 0
 			if data == nil then return end
-			speed = string.format("%.1f KB/s", data/(1024 * speed_timeout))
+			speed = string.format("%.1f KB/s", data / (1024 * speed_timeout))
 		end
 		widget:update_speed(speed)
 	end
@@ -104,41 +104,41 @@ local worker = function(user_args)
 	watch(NET_TYPE_CMD, timeout, update_type, wifi_widget);
 	-- watch(NET_SPEED_CMD, speed_timeout, update_speed, wifi_widget);
 	gears.timer {
-    timeout   = speed_timeout,
-    call_now  = true,
-    autostart = true,
-    callback  = function()
+		timeout   = speed_timeout,
+		call_now  = true,
+		autostart = true,
+		callback  = function()
 			awful.spawn.easy_async_with_shell(NET_SPEED_CMD:format(interface), function(out) update_speed(wifi_widget, out) end)
-    end
+		end
 	}
 
 	--- Adds mouse controls to the widget:
 	--  - left click - nmtui
 	--  - right click - refresh status
 	wifi_widget:connect_signal("button::press", function(_, _, _, button)
-			if button == 1 then
-				local nmtui_window = function(c) return awful.rules.match(c, {instance = "nmtui"}) end;
-				for c in awful.client.iterate(nmtui_window) do
-					c:jump_to(false);
-					return;
-				end;
-				awful.spawn("alacritty --class nmtui -e bash -c 'nmcli device wifi rescan && nmtui'", false);
-			elseif button == 3 then
-				awful.spawn.easy_async("nmcli network connectivity check", function (stdout) update_conn(wifi_widget, stdout) end) 
-			end;
+		if button == 1 then
+			local nmtui_window = function(c) return awful.rules.match(c, { instance = "nmtui" }) end;
+			for c in awful.client.iterate(nmtui_window) do
+				c:jump_to(false);
+				return;
+			end
+			awful.spawn("alacritty --class nmtui -e bash -c 'nmcli device wifi rescan && nmtui'", false);
+		elseif button == 3 then
+			awful.spawn.easy_async("nmcli network connectivity check", function(stdout) update_conn(wifi_widget, stdout) end)
 		end
+	end
 	);
 
 	local last_result = ""
 	local info_tooltip;
-	info_tooltip = awful.tooltip{
-		objects = {wifi_widget},
+	info_tooltip = awful.tooltip {
+		objects = { wifi_widget },
 		timer_function = function()
-			 awful.spawn.easy_async_with_shell(NET_INFO_CMD:format(interface), function(result)
-					local formatted = result:gsub("GENERAL.CONNECTION:", "ssid: "):gsub("IP4.ADDRESS....", "ip  : "):sub(0, -2)
-					last_result = formatted
-					info_tooltip:set_markup(last_result)
-				end)
+			awful.spawn.easy_async_with_shell(NET_INFO_CMD:format(interface), function(result)
+				local formatted = result:gsub("GENERAL.CONNECTION:", "ssid: "):gsub("IP4.ADDRESS....", "ip  : "):sub(0, -2)
+				last_result = formatted
+				info_tooltip:set_markup(last_result)
+			end)
 			return last_result
 		end,
 		delay_show = 1,
@@ -151,7 +151,7 @@ local worker = function(user_args)
 	return wifi_widget;
 end;
 
-return setmetatable(wifi_widget, {	__call = function(_, ...)
-		return worker(...);
-	end
+return setmetatable(wifi_widget, { __call = function(_, ...)
+	return worker(...);
+end
 });

@@ -4,17 +4,17 @@
 -- Based off of https://github.com/berlam/awesome-upower-battery
 -------------------------------------------------
 
-local wibox = require("wibox");
-local upower   = require("lgi").require("UPowerGlib")
+local wibox   = require("wibox");
+local upower  = require("lgi").require("UPowerGlib")
 local naughty = require("naughty")
 
 local battery_widget = {}
 
-function update_widget (device)
+function update_widget(device)
 
 	local is_charging = device.state == upower.DeviceState.PENDING_CHARGE or
-											device.state == upower.DeviceState.FULLY_CHARGED or
-											device.state == upower.DeviceState.CHARGING
+			device.state == upower.DeviceState.FULLY_CHARGED or
+			device.state == upower.DeviceState.CHARGING
 
 	battery_widget:update_battery(math.floor(device.percentage), is_charging)
 end
@@ -31,7 +31,7 @@ local worker = function(user_args)
 	local icon = args.icon;
 	local font = args.font or "sans-serif 9";
 
-	battery_widget = wibox.widget{
+	battery_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
 		spacing = args.space,
 		{
@@ -71,7 +71,7 @@ local worker = function(user_args)
 	return battery_widget;
 end;
 
-return setmetatable(battery_widget, {	__call = function(_, ...)
-		return worker(...);
-	end
+return setmetatable(battery_widget, { __call = function(_, ...)
+	return worker(...);
+end
 });
