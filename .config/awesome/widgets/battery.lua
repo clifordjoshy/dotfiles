@@ -8,6 +8,7 @@ local wibox     = require("wibox");
 local upower    = require("lgi").require("UPowerGlib")
 local naughty   = require("naughty")
 local beautiful = require("beautiful")
+local awful     = require("awful")
 
 local battery_widget = {}
 
@@ -53,18 +54,60 @@ local worker = function()
 
 			if self.percentage:get_markup() ~= battery_markup then
 				if percentage <= 10 and not is_charging then
-					naughty.notify({
-						title = "Battery Low",
-						text = "Battery level has dropped below 10%.\nShutdown imminent. Recharge immediately.",
-						icon = "/usr/share/icons/Adwaita/32x32/status/battery-level-10-charging-symbolic.symbolic.png",
-						timeout = 0
-					})
+					awful.popup {
+						widget = {
+							widget = wibox.widget.background,
+							bg = beautiful.notification_bg,
+							{
+								widget = wibox.container.margin,
+								margins = 15,
+								{
+									layout = wibox.layout.fixed.horizontal,
+									spacing = 10,
+									{
+										image = "/usr/share/icons/Papirus-Dark/symbolic/status/battery-level-10-symbolic.svg",
+										widget = wibox.widget.imagebox,
+										forced_height = 50,
+										forced_width = 60
+									},
+									{
+										markup = "<b>Battery Low</b>\nBattery level has dropped below 10%.\nShutdown imminent. Recharge immediately.",
+										widget = wibox.widget.textbox,
+										font = 'sans-serif 12'
+									},
+
+								},
+							}
+						},
+						border_color = beautiful.notification_fg,
+						border_width = 2,
+						ontop = true,
+						hide_on_right_click = true,
+						type = "dialog",
+						placement = awful.placement.centered,
+						shape = beautiful.notification_shape,
+						visible = true
+					}
 				end
 				self.percentage:set_markup(battery_markup);
 			end
 		end
 	}
 	update_widget(display_device)
+
+
+	--- Adds mouse controls to the widget:
+	--  - left click - power manager
+	--  - right click - unlimited power mode
+	battery_widget:connect_signal("button::press", function(_, _, _, button)
+		if button == 1 then
+			awful.spawn("lxqt-config-powermanagement");
+		elseif button == 3 then
+			awful.spawn("unlimited-power", false)
+			return
+		end
+	end
+	);
 	return battery_widget;
 end;
 

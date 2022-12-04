@@ -204,7 +204,6 @@ local function generate_wibar(s)
 			{
 				id     = 'appicon',
 				widget = wibox.widget.imagebox,
-				-- image = beautiful.minimise_def_icon			-- default icon for apps without icon
 			},
 			widget = wibox.container.background,
 			-- bg = "#ffffff30",

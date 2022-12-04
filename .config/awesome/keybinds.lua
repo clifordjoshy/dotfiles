@@ -97,6 +97,7 @@ local globalkeys = gears.table.join(
 			local c = awful.client.restore()
 			if c then
 				c.minimized = false
+				client.focus = c
 			end
 		end,
 		{ description = "restore minimized", group = "client" }
