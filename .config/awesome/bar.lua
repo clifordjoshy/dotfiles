@@ -211,7 +211,9 @@ local function generate_wibar(s)
 			-- shape_border_width = 5,
 			-- shape_border_color = "#00000000"
 			create_callback = function(self, c)
-				self.appicon.image = menubar_utils.lookup_icon(string.lower(c.class)) or c.icon or beautiful.minimise_def_icon
+				local clientclass = string.lower(c.class)
+				local icon_theme_icon = menubar_utils.lookup_icon(clientclass) or menubar_utils.lookup_icon(string.match(clientclass, "([^-]+)"))
+				self.appicon.image = icon_theme_icon or c.icon or beautiful.minimise_def_icon
 			end
 		}
 	}

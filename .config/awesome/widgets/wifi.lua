@@ -121,7 +121,7 @@ local worker = function()
 				c:jump_to(false);
 				return;
 			end
-			awful.spawn("alacritty --class nmtui -e bash -c 'nmcli device wifi rescan && nmtui'", false);
+			awful.spawn("alacritty --class nmtui -e bash -c 'nmcli device wifi rescan ; nmtui'", false);
 		elseif button == 3 then
 			awful.spawn.easy_async("nmcli network connectivity check", function(stdout) update_conn(wifi_widget, stdout) end)
 		end
