@@ -51,7 +51,7 @@ local function run_once(cmd_arr)
 	end
 end
 
-run_once({ "picom", "greenclip daemon", "playerctld daemon", "libinput-gestures", "lxqt-powermanagement" })
+run_once({ "picom", "greenclip daemon", "playerctld daemon", "libinput-gestures", "xfce4-power-manager" })
 
 
 terminal = "alacritty"
@@ -240,3 +240,9 @@ client.connect_signal("property::urgent", function(c)
 		c.urgent = false
 	end
 end)
+
+-- disable all notification actions. (mostly brave with it's annoying "settings")
+naughty.config.notify_callback = function(args)
+	args.actions = nil
+	return args
+end

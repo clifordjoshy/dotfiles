@@ -17,20 +17,19 @@ autoload -Uz compinit
 # zstyle ':completion:*' menu select
 # zmodload zsh/complist
 
-# Auto complete with case insenstivity
+# Auto complete with case insensitivity
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 compinit -d ~/.cache/zsh/zcompdump
 _comp_options+=(globdots)
 
-# Enable searching through history
-bindkey '^R' history-incremental-pattern-search-backward
-# delete key
-bindkey "^[[3~" delete-char
-# home key
-bindkey "^[[H" beginning-of-line
-# end key
-bindkey "^[[F" end-of-line
+bindkey '^R' history-incremental-pattern-search-backward # ctrl + r -> history search
+bindkey "^[[3~" delete-char # delete key
+bindkey "^[[H" beginning-of-line # home key
+bindkey "^[[F" end-of-line # end key
+bindkey "^H" backward-delete-word # ctrl + backspace
+bindkey "^[[1;5C" forward-word # ctrl + rightarrow
+bindkey "^[[1;5D" backward-word # ctrl + leftarrow
 
 setopt HIST_IGNORE_DUPS
 
@@ -42,10 +41,10 @@ if [ "$TERM" = "alacritty" ]; then
 fi
 
 . ~/.config/aliasrc
-. /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 . /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 . /usr/share/zsh/plugins/zsh-sudo/sudo.plugin.zsh
-. /usr/share/autojump/autojump.zsh
-. /usr/share/doc/pkgfile/command-not-found.zsh
+#. /usr/share/doc/pkgfile/command-not-found.zsh
 
 bindkey '^[[Z' autosuggest-accept
+
+. /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

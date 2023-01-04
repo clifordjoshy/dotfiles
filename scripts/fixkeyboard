@@ -5,7 +5,5 @@ setxkbmap -option caps:escape
 # caps lock on shift+esc
 xmodmap -e "keycode 9 = Escape Caps_Lock"
 
-# remap PgUp and PgDn to Super and shift+key for original functionality
-xmodmap -e "keycode 112 = Super_R Prior"
-xmodmap -e "keycode 117 = Super_R Next"
-
+# remap Insert to Super and shift+key for original functionality
+ xmodmap -e "keycode 118 = Super_R Insert" 

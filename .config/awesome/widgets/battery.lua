@@ -101,7 +101,7 @@ local worker = function()
 	--  - right click - unlimited power mode
 	battery_widget:connect_signal("button::press", function(_, _, _, button)
 		if button == 1 then
-			awful.spawn("lxqt-config-powermanagement");
+			awful.spawn("xfce4-power-manager-settings");
 		elseif button == 3 then
 			awful.spawn("unlimited-power", false)
 			return
