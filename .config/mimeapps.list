@@ -9,6 +9,7 @@ image/jpeg=brave-browser.desktop;
 image/png=gimp.desktop;brave-browser.desktop;
 text/csv=libreoffice-calc.desktop;
 application/x-shellscript=org.gnome.gedit.desktop;
+text/x-c++src=org.gnome.gedit.desktop;
 
 [Removed Associations]
 
@@ -80,3 +81,4 @@ image/x-portable-graymap=xviewer.desktop
 image/jpeg=xviewer.desktop
 image/vnd.microsoft.icon=xviewer.desktop
 image/tiff=xviewer.desktop
+text/x-c++src=org.gnome.gedit.desktop

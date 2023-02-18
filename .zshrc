@@ -43,7 +43,7 @@ fi
 . ~/.config/aliasrc
 . /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 . /usr/share/zsh/plugins/zsh-sudo/sudo.plugin.zsh
-#. /usr/share/doc/pkgfile/command-not-found.zsh
+. /usr/share/doc/pkgfile/command-not-found.zsh
 
 bindkey '^[[Z' autosuggest-accept
 

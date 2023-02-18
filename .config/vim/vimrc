@@ -29,3 +29,5 @@ hi normal guibg=NONE ctermbg=NONE
 
 vnoremap <C-c> "+y
 map <C-v> "+P
+map <S-q> <Nop>
+

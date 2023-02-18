@@ -87,10 +87,7 @@ local worker = function()
 		local current_player_exists = false;
 		local top_player = nil;
 
-		--escape ampersand character
-		local escaped = string.gsub(stdout, "&", "&amp;");
-
-		for p in string.gmatch(escaped, "([^\n]*)\n") do
+		for p in string.gmatch(stdout, "([^\n]*)\n") do
 			local player, title, artist, status = string.match(p, "(.*)/#/(.*)/#/(.*)/#/(.*)")
 			local song_text;
 			if artist == '' then
@@ -98,6 +95,9 @@ local worker = function()
 			else
 				song_text = string.format("%s ► %s", ellipsize(title, max_length), ellipsize(artist, max_length));
 			end
+			
+			-- escape ampersand
+			song_text = string.gsub(song_text, "&", "&amp;")
 
 			local song_markup = string.format("<span foreground='%s'>%s</span>",
 				player == "spotify" and "#1db954" or "#b5bfe2", song_text);
