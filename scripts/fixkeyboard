@@ -6,4 +6,8 @@ setxkbmap -option caps:escape
 xmodmap -e "keycode 9 = Escape Caps_Lock"
 
 # remap Insert to Super and shift+key for original functionality
- xmodmap -e "keycode 118 = Super_R Insert" 
+xmodmap -e "keycode 118 = Super_R Insert" 
+
+# remap pgup and pgdown to up arrow
+xmodmap -e "keycode 112 = Up Prior"
+xmodmap -e "keycode 117 = Up Next"

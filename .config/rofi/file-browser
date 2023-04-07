@@ -3,6 +3,7 @@ exclude *cache*
 exclude .android
 exclude .vscode
 exclude .arduino15
+exclude .vim
 exclude node_modules
 exclude .git
 exclude .cfg
