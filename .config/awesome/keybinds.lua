@@ -64,10 +64,6 @@ local globalkeys = gears.table.join(
 		awesome.restart,
 		{ description = "reload awesome", group = "awesome" }
 	),
-	awful.key({ modkey, "Shift" }, "q",
-		awesome.quit,
-		{ description = "quit awesome", group = "awesome" }
-	),
 	awful.key({ modkey }, "l",
 		function() awful.tag.incmwfact(0.05) end,
 		{ description = "increase master width factor", group = "layout" }
@@ -144,11 +140,12 @@ local globalkeys = gears.table.join(
 		function() awful.spawn("rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'", false) end,
 		{ description = "clipboard manager", group = "apps" }
 	),
-	awful.key({ modkey }, "e",
-		function() awful.spawn.with_shell("rofi -modi blocks -show blocks -blocks-wrap ~/scripts/rofi-ytm/rofi-ytm.py -theme-str 'listview{lines:5;}'") end
-		,
-		{ description = "youtube music script", group = "apps" }
-	),
+	-- awful.key({ modkey }, "e",
+	-- 	function() awful.spawn.with_shell(
+	-- 		"rofi -modi blocks -show blocks -blocks-wrap ~/scripts/rofi-ytm/rofi-ytm.py -theme-str 'listview{lines:5;}'") end
+	-- 	,
+	-- 	{ description = "youtube music script", group = "apps" }
+	-- ),
 
 
 	-- pass false to awful.spawn for non window applications. otherwise loading cursor will show up
@@ -197,11 +194,10 @@ local globalkeys = gears.table.join(
 		function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end),
 	awful.key({}, "XF86AudioRaiseVolume",
 		function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end),
-	awful.key({}, "XF86AudioMute", function() awful.spawn.with_shell("pactl set-sink-mute @DEFAULT_SINK@ toggle", false) end)
-	,
+	awful.key({}, "XF86AudioMute",
+		function() awful.spawn.with_shell("pactl set-sink-mute @DEFAULT_SINK@ toggle", false) end),
 	awful.key({}, "XF86AudioMicMute",
 		function() awful.spawn.with_shell("pactl set-source-mute @DEFAULT_SOURCE@ toggle", false) end),
-
 	awful.key({}, "XF86AudioPlay", function() awful.spawn("playerctl play-pause", false) end),
 	awful.key({}, "XF86AudioPause", function() awful.spawn("playerctl play-pause", false) end),
 	awful.key({}, "XF86AudioPrev", function() awful.spawn("playerctl previous", false) end),

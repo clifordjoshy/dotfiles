@@ -20,7 +20,7 @@ local worker = function()
 
 	local wifi_icons = beautiful.widget_wifi;
 	local eth_icon = beautiful.widget_eth;
-	local timeout = 10;
+	local timeout = 5;
 	local speed_timeout = 4;
 
 	wifi_widget = wibox.widget {

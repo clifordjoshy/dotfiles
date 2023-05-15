@@ -51,7 +51,8 @@ local function run_once(cmd_arr)
 	end
 end
 
-run_once({ "picom", "greenclip daemon", "playerctld daemon", "libinput-gestures", "xfce4-power-manager" })
+run_once({ "picom", "greenclip daemon", "playerctld daemon", "libinput-gestures", "xfce4-power-manager",
+	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1" })
 
 
 terminal = "alacritty"
@@ -202,16 +203,15 @@ client.connect_signal("manage", function(c)
 		awful.placement.no_offscreen(c)
 	end
 
-	-- Windows like spotify only set class name after window opens.
-	-- So add a listener for when it attains classname and then apply rules
-	if c.name == nil and c.class == nil then
-		c.minimized = true
-		c:connect_signal("property::class", function()
-			c.minimized = false
-			awful.rules.apply(c)
-		end
-		)
-	end
+	-- -- Windows like spotify *used to* only set class name after window opens.
+	-- if c.name == nil and c.class == nil then
+	-- 	c.minimized = true
+	-- 	c:connect_signal("property::class", function()
+	-- 		c.minimized = false
+	-- 		awful.rules.apply(c)
+	-- 	end
+	-- 	)
+	-- end
 
 	c.shape = gears.shape.rounded_rect
 end
