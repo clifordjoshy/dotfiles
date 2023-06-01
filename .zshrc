@@ -28,8 +28,10 @@ bindkey "^[[3~" delete-char # delete key
 bindkey "^[[H" beginning-of-line # home key
 bindkey "^[[F" end-of-line # end key
 bindkey "^H" backward-delete-word # ctrl + backspace
+bindkey "5~" delete-word # ctrl + delete
 bindkey "^[[1;5C" forward-word # ctrl + rightarrow
 bindkey "^[[1;5D" backward-word # ctrl + leftarrow
+
 
 setopt HIST_IGNORE_DUPS
 

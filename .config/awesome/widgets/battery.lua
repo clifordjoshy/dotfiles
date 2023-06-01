@@ -4,16 +4,14 @@
 -- Based off of https://github.com/berlam/awesome-upower-battery
 -------------------------------------------------
 
-local wibox     = require("wibox");
-local upower    = require("lgi").require("UPowerGlib")
-local naughty   = require("naughty")
-local beautiful = require("beautiful")
-local awful     = require("awful")
+local wibox          = require("wibox");
+local upower         = require("lgi").require("UPowerGlib")
+local beautiful      = require("beautiful")
+local awful          = require("awful")
 
 local battery_widget = {}
 
 local function update_widget(device)
-
 	local is_charging = device.state == upower.DeviceState.PENDING_CHARGE or
 			device.state == upower.DeviceState.FULLY_CHARGED or
 			device.state == upower.DeviceState.CHARGING
@@ -27,7 +25,6 @@ local display_device = upower.Client():get_display_device()
 display_device.on_notify = update_widget
 
 local worker = function()
-
 	local icon = beautiful.widget_batt;
 
 	battery_widget = wibox.widget {
@@ -71,7 +68,8 @@ local worker = function()
 										forced_width = 60
 									},
 									{
-										markup = "<b>Battery Low</b>\nBattery level has dropped below 10%.\nShutdown imminent. Recharge immediately.",
+										markup =
+										"<b>Battery Low</b>\nBattery level has dropped below 10%.\nShutdown imminent. Recharge immediately.",
 										widget = wibox.widget.textbox,
 										font = 'sans-serif 12'
 									},
@@ -100,9 +98,7 @@ local worker = function()
 	--  - left click - power manager
 	--  - right click - unlimited power mode
 	battery_widget:connect_signal("button::press", function(_, _, _, button)
-		if button == 1 then
-			awful.spawn("xfce4-power-manager-settings");
-		elseif button == 3 then
+		if button == 3 then
 			awful.spawn("unlimited-power", false)
 			return
 		end
@@ -111,7 +107,8 @@ local worker = function()
 	return battery_widget;
 end;
 
-return setmetatable(battery_widget, { __call = function(_, ...)
-	return worker(...);
-end
+return setmetatable(battery_widget, {
+	__call = function(_, ...)
+		return worker(...);
+	end
 });

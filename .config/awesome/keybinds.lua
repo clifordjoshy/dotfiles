@@ -118,7 +118,7 @@ local globalkeys = gears.table.join(
 	),
 
 	--lock screen
-	awful.key({ modkey }, "q",
+	awful.key({ modkey, "Shift" }, "q",
 		function() awful.spawn(screen_lock, false) end,
 		{ description = "lock screen", group = "system" }
 	),
