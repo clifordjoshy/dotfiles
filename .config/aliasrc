@@ -1,6 +1,6 @@
 #!/bin/sh 
 
-alias config='/usr/bin/git --git-dir=/home/cliford/.cfg/ --work-tree=/home/cliford'
+alias config='/usr/bin/git --git-dir=/home/cliford/.local/share/cfg/ --work-tree=/home/cliford'
 
 # Verbosity and settings that you pretty much just always are going to want.
 alias \
