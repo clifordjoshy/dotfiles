@@ -164,12 +164,25 @@ local globalkeys = gears.table.join(
 		end,
 		{ description = "launch spotify", group = "apps" }
 	),
+	awful.key({ modkey }, "x",
+		function()
+			awful.spawn("nemo")
+		end,
+		{ description = "launch explorer", group = "apps" }
+	),
 	awful.key({ modkey }, "n",
 		function() awful.spawn("gedit") end,
 		{ description = "launch notepad", group = "apps" }
 	),
 	awful.key({ modkey }, "v",
-		function() awful.spawn("code") end,
+		function()
+			local vscode = function(c) return awful.rules.match(c, { class = "Code" }) end;
+			for c in awful.client.iterate(vscode) do
+				c.urgent = true
+				return;
+			end
+			awful.spawn("code")
+		end,
 		{ description = "launch vs code", group = "apps" }
 	),
 	awful.key({ modkey }, "w",
