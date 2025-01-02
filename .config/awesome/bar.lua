@@ -18,10 +18,10 @@ local menu_bg = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
 -- [[[ Main Menu
 local mymainmenu = awful.menu({
 	items = {
-		{ "lock", screen_lock, beautiful.menu_lock_icon },
-		{ "log out", function() awesome.quit() end, beautiful.menu_logout_icon },
-		{ "reboot", "reboot", beautiful.menu_reboot_icon },
-		{ "power off", "shutdown now", beautiful.menu_power_icon },
+		{ "lock",      screen_lock,                   beautiful.menu_lock_icon },
+		{ "log out",   function() awesome.quit() end, beautiful.menu_logout_icon },
+		{ "reboot",    "reboot",                      beautiful.menu_reboot_icon },
+		{ "power off", "shutdown now",                beautiful.menu_power_icon },
 	},
 	theme = {
 		height = 34,
@@ -162,9 +162,6 @@ local my_volume_widget = volume_widget()
 -- Wifi Widget
 local my_wifi_widget = wifi_widget()
 
--- Brightness Widget
-local my_brightness_widget = brightness_widget()
-
 -- Battery
 local my_battery_widget = battery_widget()
 
@@ -185,6 +182,10 @@ local function generate_wibar(s)
 	-- 	awful.button({}, 2, function() awful.layout.set(awful.layout.layouts[1]) end),
 	-- 	awful.button({}, 3, function() awful.layout.inc(-1) end)
 	-- ))
+
+
+	-- Brightness Widget
+	local my_brightness_widget = brightness_widget(s)
 
 	s.mytaglist = awful.widget.taglist {
 		screen = s,
@@ -212,7 +213,8 @@ local function generate_wibar(s)
 			-- shape_border_color = "#00000000"
 			create_callback = function(self, c)
 				local clientclass = string.lower(c.class)
-				local icon_theme_icon = menubar_utils.lookup_icon(clientclass) or menubar_utils.lookup_icon(string.match(clientclass, "([^-]+)"))
+				local icon_theme_icon = menubar_utils.lookup_icon(clientclass) or
+						menubar_utils.lookup_icon(string.match(clientclass, "([^-]+)"))
 				self.appicon.image = icon_theme_icon or c.icon or beautiful.minimise_def_icon
 			end
 		}
@@ -255,7 +257,7 @@ local function generate_wibar(s)
 			my_volume_widget,
 			my_memory_widget,
 			my_cpu_widget,
-			s.index == 1 and my_brightness_widget or nil,
+			my_brightness_widget,
 			my_battery_widget or nil,
 			my_wifi_widget,
 			clock_widget,
