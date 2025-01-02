@@ -2,6 +2,7 @@
 
 xrdb -merge /home/cliford/.Xresources
 
+xrandr --auto
 xrandr --output HDMI-A-0 --scale 1.25x1.25 --left-of eDP
 xrandr --output DisplayPort-0 --scale 1.25x1.25 --left-of eDP
 xrandr --output eDP --scale 0.9999x0.9999 --pos 2400x270 --primary
