@@ -2,7 +2,7 @@
 
 export PATH="$HOME/.local/bin:$PATH"
 
-fixkeyboard
+# fixkeyboard
 
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export EDITOR="vim"
@@ -10,6 +10,7 @@ export VISUAL="vim"
 export TERMINAL="alacritty"
 export BROWSER="brave"
 export GTK_THEME="Catppuccin-Mocha"
+export DIFFPROG="meld"
 
 # ~/ Clean-up:
 export XDG_CONFIG_HOME="$HOME/.config"
