@@ -13,7 +13,6 @@ local battery_widget = require("widgets.battery")
 local cal_task = require("widgets.cal_task")
 local menubar_utils = require("menubar.utils")
 
-
 local menu_bg = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
 -- [[[ Main Menu
 local mymainmenu = awful.menu({
@@ -172,6 +171,12 @@ local my_memory_widget = memory_widget()
 local my_cpu_widget = cpu_widget()
 
 -- ]]]
+
+
+-- global function to refresh volume
+refresh_volume = function()
+	my_volume_widget:force_refresh()
+end
 
 
 local function generate_wibar(s)

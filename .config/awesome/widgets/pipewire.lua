@@ -12,14 +12,14 @@ local beautiful = require("beautiful")
 -- local GET_SOURCE_VOL_CMD = "pactl get-source-volume @DEFAULT_SOURCE@";
 local NOISETORCH_STATUS_CMD = "pactl get-default-source | grep -q NoiseTorch"
 
-local UPDATE_CMD = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{printf \\\"%s\\\",\\$5}' && pactl get-default-source | grep -q NoiseTorch && echo -n ' N'\""
+-- local UPDATE_CMD = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{printf \\\"%s\\\",\\$5}' && pactl get-default-source | grep -q NoiseTorch && echo -n ' N'\""
+local UPDATE_CMD = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{printf \\\"%s\\\",\\$5}'\""
 
 local volume_widget = {}
 
 local worker = function()
-
 	local icon = beautiful.widget_vol;
-	local timeout = 2;
+	local timeout = 4;
 
 	volume_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
@@ -35,12 +35,15 @@ local worker = function()
 		},
 
 		update_volume = function(self, text)
-
 			local volume_markup = string.format("<span foreground='%s'>%s</span>", "#04a5e5", text);
 
 			if self.volume:get_markup() ~= volume_markup then
 				self.volume:set_markup(volume_markup);
 			end
+		end,
+
+		force_refresh = function(self)
+			awful.spawn.easy_async(UPDATE_CMD, function(stdout, _, _, _) self:update_volume(stdout) end)
 		end
 	}
 
@@ -69,19 +72,20 @@ local worker = function()
 			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
 			-- awful.spawn("amixer set Master 5%-", false);
 		elseif button == 3 then
-			awful.spawn.easy_async_with_shell(NOISETORCH_STATUS_CMD, function(_, _, _, exitcode)
-				awful.spawn("noisetorch -" .. (exitcode == 0 and "u" or "i"), false)
-			end
-			)
+			-- awful.spawn.easy_async_with_shell(NOISETORCH_STATUS_CMD, function(_, _, _, exitcode)
+			-- 	awful.spawn("noisetorch -" .. (exitcode == 0 and "u" or "i"), false)
+			-- end
+			-- )
 		end
-		awful.spawn.easy_async(UPDATE_CMD, function(stdout, stderr, _, _) update_widget(volume_widget, stdout, stderr) end)
+		volume_widget:force_refresh()
 	end
 	);
 
 	return volume_widget;
 end;
 
-return setmetatable(volume_widget, { __call = function(_, ...)
-	return worker(...);
-end
+return setmetatable(volume_widget, {
+	__call = function(_, ...)
+		return worker(...);
+	end
 });

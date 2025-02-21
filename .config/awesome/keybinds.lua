@@ -204,9 +204,13 @@ local globalkeys = gears.table.join(
 
 	--Media Keys
 	awful.key({}, "XF86AudioLowerVolume",
-		function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end),
+		function()
+			awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false); refresh_volume()
+		end),
 	awful.key({}, "XF86AudioRaiseVolume",
-		function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end),
+		function()
+			awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false); refresh_volume()
+		end),
 	awful.key({}, "XF86AudioMute",
 		function() awful.spawn.with_shell("pactl set-sink-mute @DEFAULT_SINK@ toggle", false) end),
 	awful.key({}, "XF86AudioMicMute",
@@ -239,11 +243,15 @@ local globalkeys = gears.table.join(
 		{ description = "pause/play track", group = "functions" }
 	),
 	awful.key({ modkey, "Shift" }, "[",
-		function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end,
+		function()
+			awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false); refresh_volume()
+		end,
 		{ description = "volume down", group = "functions" }
 	),
 	awful.key({ modkey, "Shift" }, "]",
-		function() awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end,
+		function()
+			awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false); refresh_volume()
+		end,
 		{ description = "volume up", group = "functions" }
 	)
 

@@ -9,7 +9,7 @@ local naughty   = require("naughty")
 local beautiful = require("beautiful")
 
 -- Taskwarrior stuff
-local task = {}
+local task      = {}
 function task.hide()
 	if not task.notification then return end
 	naughty.destroy(task.notification)
@@ -42,10 +42,13 @@ function cal.build(month, year)
 	local t = os.time { year = year or current_year, month = month and month + 1 or current_month + 1, day = 0 }
 	local d = os.date("*t", t)
 	local mth_days, st_day, this_month = d.day, (d.wday - d.day - cal.week_start + 1) % 7, os.date("%B %Y", t)
-	local notifytable = { [1] = string.format("%s%s\n", string.rep(" ", math.floor((28 - this_month:len()) / 2)),
-		"<b>" .. this_month .. "</b>") }
-	for x = 0, 6 do notifytable[#notifytable + 1] = os.date("%a",
-			os.time { year = 2006, month = 1, day = x + cal.week_start })
+	local notifytable = {
+		[1] = string.format("%s%s\n", string.rep(" ", math.floor((28 - this_month:len()) / 2)),
+			"<b>" .. this_month .. "</b>")
+	}
+	for x = 0, 6 do
+		notifytable[#notifytable + 1] = os.date("%a",
+					os.time { year = 2006, month = 1, day = x + cal.week_start })
 				:sub(1, utf8.offset(1, 3)) .. " "
 	end
 	notifytable[#notifytable] = string.format("%s\n%s", notifytable[#notifytable]:sub(1, -2), string.rep(" ", st_day * 4))
@@ -126,9 +129,9 @@ function attach(widget)
 	task.followtag           = true
 	task.notification_preset = { font = "monospace 10" }
 
-	cal.week_start          = 2 --monday
-	cal.followtag           = true
-	cal.notification_preset = { font = "monospace 10" }
+	cal.week_start           = 2 --monday
+	cal.followtag            = true
+	cal.notification_preset  = { font = "monospace 10" }
 
 	widget:connect_signal("mouse::leave", function()
 		cal.hide()
@@ -156,8 +159,8 @@ function attach(widget)
 			end
 		end
 		),
-		awful.button({}, 5, function() if cal.notification then cal.prev() end end),
-		awful.button({}, 4, function() if cal.notification then cal.next() end end))
+		awful.button({}, 4, function() if cal.notification then cal.prev() end end),
+		awful.button({}, 5, function() if cal.notification then cal.next() end end))
 	)
 end
 
