@@ -8,8 +8,6 @@ local wibox = require("wibox");
 local watch = require("awful.widget.watch");
 local beautiful = require("beautiful")
 
--- local GET_SINK_VOL_CMD = "pactl get-sink-volume @DEFAULT_SINK@";
--- local GET_SOURCE_VOL_CMD = "pactl get-source-volume @DEFAULT_SOURCE@";
 local NOISETORCH_STATUS_CMD = "pactl get-default-source | grep -q NoiseTorch"
 
 -- local UPDATE_CMD = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{printf \\\"%s\\\",\\$5}' && pactl get-default-source | grep -q NoiseTorch && echo -n ' N'\""
@@ -64,13 +62,10 @@ local worker = function()
 		if button == 1 then
 			awful.spawn("pavucontrol");
 			return
-			-- using amixer instead of pactl to limit volume to 100%
 		elseif button == 4 then
 			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false);
-			-- awful.spawn("amixer set Master 5%+", false);
 		elseif button == 5 then
 			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
-			-- awful.spawn("amixer set Master 5%-", false);
 		elseif button == 3 then
 			-- awful.spawn.easy_async_with_shell(NOISETORCH_STATUS_CMD, function(_, _, _, exitcode)
 			-- 	awful.spawn("noisetorch -" .. (exitcode == 0 and "u" or "i"), false)
