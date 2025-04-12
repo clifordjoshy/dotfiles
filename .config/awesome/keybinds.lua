@@ -203,14 +203,8 @@ local globalkeys = gears.table.join(
 	),
 
 	--Media Keys
-	awful.key({}, "XF86AudioLowerVolume",
-		function()
-			awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false); refresh_volume()
-		end),
-	awful.key({}, "XF86AudioRaiseVolume",
-		function()
-			awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false); refresh_volume()
-		end),
+	awful.key({}, "XF86AudioLowerVolume", decrease_volume),
+	awful.key({}, "XF86AudioRaiseVolume", increase_volume),
 	awful.key({}, "XF86AudioMute",
 		function() awful.spawn.with_shell("pactl set-sink-mute @DEFAULT_SINK@ toggle", false) end),
 	awful.key({}, "XF86AudioMicMute",

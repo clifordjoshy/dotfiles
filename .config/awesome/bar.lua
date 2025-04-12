@@ -173,8 +173,13 @@ local my_cpu_widget = cpu_widget()
 -- ]]]
 
 
--- global function to refresh volume
-refresh_volume = function()
+-- global functions to handle volume
+increase_volume = function()
+	my_volume_widget:increase_volume()
+	my_volume_widget:force_refresh()
+end
+decrease_volume = function()
+	my_volume_widget:decrease_volume()
 	my_volume_widget:force_refresh()
 end
 

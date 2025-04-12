@@ -3,19 +3,20 @@
 -- Also toggles noisetorch
 -------------------------------------------------
 
-local awful = require("awful");
-local wibox = require("wibox");
-local watch = require("awful.widget.watch");
-local beautiful = require("beautiful")
+local awful                 = require("awful");
+local wibox                 = require("wibox");
+local watch                 = require("awful.widget.watch");
+local beautiful             = require("beautiful");
+local naughty               = require("naughty")
 
 local NOISETORCH_STATUS_CMD = "pactl get-default-source | grep -q NoiseTorch"
 
 -- local UPDATE_CMD = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{printf \\\"%s\\\",\\$5}' && pactl get-default-source | grep -q NoiseTorch && echo -n ' N'\""
-local UPDATE_CMD = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{printf \\\"%s\\\",\\$5}'\""
+local UPDATE_CMD            = "bash -c \"pactl get-sink-volume @DEFAULT_SINK@ | awk '{printf \\\"%s\\\",\\$5}'\""
 
-local volume_widget = {}
+local volume_widget         = {}
 
-local worker = function()
+local worker                = function()
 	local icon = beautiful.widget_vol;
 	local timeout = 4;
 
@@ -40,8 +41,32 @@ local worker = function()
 			end
 		end,
 
+		increase_volume = function(self)
+			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false);
+		end,
+
+		decrease_volume = function(self)
+			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
+		end,
+
 		force_refresh = function(self)
-			awful.spawn.easy_async(UPDATE_CMD, function(stdout, _, _, _) self:update_volume(stdout) end)
+			awful.spawn.easy_async(UPDATE_CMD, function(volume_str, _, _, _)
+				local volume_int = math.floor(tonumber(string.sub(volume_str, 1, -3)));
+
+				-- round volume to next multiple of 5
+				if volume_int % 5 ~= 0 then
+					local rounded_volume = math.floor(volume_int / 5 + 0.5) * 5
+					awful.spawn(string.format("pactl set-sink-volume @DEFAULT_SINK@ %d%%", rounded_volume), false);
+					naughty.notify({
+						preset = naughty.config.presets.low,
+						title = "Volume Override",
+						text = string.format("Anomaly Fixed:  %d -> %d", volume_int, rounded_volume),
+						timeout = 1,
+					})
+					volume_int = rounded_volume
+				end
+				self:update_volume(string.format("%d%%", volume_int))
+			end)
 		end
 	}
 
@@ -63,9 +88,9 @@ local worker = function()
 			awful.spawn("pavucontrol");
 			return
 		elseif button == 4 then
-			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false);
+			volume_widget:increase_volume()
 		elseif button == 5 then
-			awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false);
+			volume_widget:decrease_volume()
 		elseif button == 3 then
 			-- awful.spawn.easy_async_with_shell(NOISETORCH_STATUS_CMD, function(_, _, _, exitcode)
 			-- 	awful.spawn("noisetorch -" .. (exitcode == 0 and "u" or "i"), false)
