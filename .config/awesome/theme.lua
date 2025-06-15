@@ -61,7 +61,8 @@ theme.menu_power_icon  = icondir .. "power.svg"
 
 theme.minimise_def_icon = icondir .. "minimise_def.png"
 
-theme.taglist_font        = "sans-serif semi-bold italic 10"
+theme.taglist_font        = "Noto Sans Malayalam Black 10"
+theme.taglist_spacing     = -4
 theme.taglist_bg_focus    = "#00000000"
 theme.taglist_bg_urgent   = "#00000000"
 theme.taglist_fg_focus    = "#42adf0"

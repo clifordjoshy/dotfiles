@@ -60,7 +60,7 @@ editor = "vim"
 modkey = "Mod4" -- Super Key
 browser = "brave"
 screen_lock = "dm-tool lock"
-tagnames = { "one", "two", "three", "four", "five" }
+tagnames = { "ഒന്ന് ", "രണ്ട് ", "മൂന്ന് ", "നാല് ", "അഞ്ച് " }
 
 awful.layout.layouts = {
 	awful.layout.suit.tile,
@@ -174,13 +174,13 @@ awful.rules.rules = {
 		properties = { floating = true, placement = awful.placement.centered, ontop = true }
 	},
 
-	--Set music stuff to always map on the tag named "five" on screen 1.
+	--Set music stuff to always map on the 5th tag on screen 1.
 	{
 		rule_any = {
 			instance = { "mpv-ytm" },
 			class = { "Spotify" }
 		},
-		properties = { screen = 1, tag = "five" }
+		properties = { screen = 1, tag = tagnames[5] }
 	},
 
 	--Stuff that needs to launch in the second monitor
