@@ -5,7 +5,7 @@
 
 local awful                 = require("awful");
 local wibox                 = require("wibox");
-local watch                 = require("awful.widget.watch");
+local gears                 = require("gears");
 local beautiful             = require("beautiful");
 local naughty               = require("naughty")
 
@@ -18,7 +18,7 @@ local volume_widget         = {}
 
 local worker                = function()
 	local icon = beautiful.widget_vol;
-	local timeout = 4;
+	local timeout = 5;
 
 	volume_widget = wibox.widget {
 		layout = wibox.layout.fixed.horizontal,
@@ -70,13 +70,12 @@ local worker                = function()
 		end
 	}
 
-	local update_widget = function(widget, stdout, stderr, _, _)
-		-- if album ~= nil and title ~= nil and artist ~= nil then
-		widget:update_volume(stdout);
-		-- end;
-	end;
-
-	watch(UPDATE_CMD, timeout, update_widget, volume_widget);
+	gears.timer {
+		timeout   = timeout,
+		call_now  = true,
+		autostart = true,
+		callback  = function() volume_widget:force_refresh() end
+	}
 
 	--- Adds mouse controls to the widget:
 	--  - left click - pavucontrol
