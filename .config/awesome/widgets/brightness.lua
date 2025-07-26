@@ -47,8 +47,6 @@ local worker    = function(screen)
 
 		set_screen_brightness = function(self, brightness_int)
 			if monitor_index == 0 then
-				print(debug.traceback())
-				print(brightness_int)
 				awful.spawn(string.format("light -S %d", brightness_int), false)
 			else
 				awful.spawn(string.format("ddcutil -d %d setvcp 10 %d", monitor_index, brightness_int), false)
@@ -80,7 +78,6 @@ local worker    = function(screen)
 					return
 				end
 				local brightness_int = math.ceil(brightness_num);
-				print(brightness_int);
 
 				-- round brightness to next multiple of 5
 				if brightness_int % 5 ~= 0 then
@@ -123,7 +120,7 @@ local worker    = function(screen)
 			awful.spawn("fixmonitors", false)
 			return
 		end
-		-- brightness_widget:force_refresh()
+		brightness_widget:force_refresh()
 	end
 	);
 
