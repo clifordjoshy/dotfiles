@@ -10,7 +10,7 @@ local beautiful = require("beautiful")
 local naughty   = require("naughty")
 
 local worker    = function(screen)
-	local monitor = (screen.index == 1 and "sysfs/backlight/auto" or "sysfs/backlight/ddcci1")
+	local monitor_index = screen.index - 1
 
 	local icon = beautiful.widget_brightness;
 	local timeout = 5;
@@ -28,7 +28,7 @@ local worker    = function(screen)
 			widget = wibox.widget.textbox
 		},
 
-		update_brightness = function(self, brightness)
+		update_brightness_text = function(self, brightness)
 			local brightness_markup = string.format("<span foreground='%s'>%d%%</span>", "#c782ff", brightness);
 
 			if self.brightness:get_markup() ~= brightness_markup then
@@ -37,25 +37,52 @@ local worker    = function(screen)
 		end,
 
 		increase_brightness = function(self)
-			awful.spawn(string.format("light -s '%s' -A 5", monitor), false);
+			if monitor_index == 0 then
+				awful.spawn("light -A 5", false);
+			else
+				awful.spawn(string.format("ddcutil -d %d setvcp 10 + 5", monitor_index), false)
+			end
+		end,
+
+
+		set_brightness = function(self, brightness_int)
+			if monitor_index == 0 then
+				awful.spawn(string.format("light -S %d", brightness_int), false)
+			else
+				awful.spawn(string.format("ddcutil -d %d setvcp 10 %d", monitor_index, brightness_int), false)
+			end
 		end,
 
 		max_brightness = function(self)
-			awful.spawn(string.format("light -s '%s' -S 100", monitor), false)
+			self:set_brightness(100)
 		end,
 
 		decrease_brightness = function(self)
-			awful.spawn(string.format("light -s '%s' -U 5", monitor), false);
+			if monitor_index == 0 then
+				awful.spawn("light -U 5", false);
+			else
+				awful.spawn(string.format("ddcutil -d %d setvcp 10 - 5", monitor_index), false)
+			end
 		end,
 
 		force_refresh = function(self)
-			awful.spawn.easy_async("light -s '%s' -G", function(brightness_str, _, _, _)
-				local brightness_int = math.ceil(tonumber(brightness_str));
+			local cmd = ""
+			if monitor_index == 0 then
+				cmd = "light -G"
+			else
+				cmd = string.format('bash -c "ddcutil -t -d %d getvcp 10 | tail -1 | cut -d\' \' -f4"', monitor_index)
+			end
+			awful.spawn.easy_async(cmd, function(brightness_str, _, _, _)
+				local brightness_num = tonumber(brightness_str);
+				if not brightness_num then
+					return
+				end
+				local brightness_int = math.ceil(brightness_num);
 
 				-- round brightness to next multiple of 5
 				if brightness_int % 5 ~= 0 then
 					local rounded_brightness = math.floor(brightness_int / 5 + 0.5) * 5
-					awful.spawn(string.format("light -s '%s' -S %d", monitor, rounded_brightness), false);
+					self:set_brightness(rounded_brightness)
 					naughty.notify({
 						preset = naughty.config.presets.low,
 						title = "Brightness Override",
@@ -64,6 +91,7 @@ local worker    = function(screen)
 					})
 					brightness_int = rounded_brightness
 				end
+
 				self:update_brightness(brightness_int)
 			end)
 		end

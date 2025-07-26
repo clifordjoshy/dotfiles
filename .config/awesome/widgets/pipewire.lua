@@ -51,7 +51,12 @@ local worker                = function()
 
 		force_refresh = function(self)
 			awful.spawn.easy_async(UPDATE_CMD, function(volume_str, _, _, _)
-				local volume_int = math.floor(tonumber(string.sub(volume_str, 1, -3)));
+				local volume_num = tonumber(string.sub(volume_str, 1, -3));
+				if not volume_num then
+					return
+				end
+
+				local volume_int = math.floor(volume_num);
 
 				-- round volume to next multiple of 5
 				if volume_int % 5 ~= 0 then
