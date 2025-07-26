@@ -45,8 +45,10 @@ local worker    = function(screen)
 		end,
 
 
-		set_brightness = function(self, brightness_int)
+		set_screen_brightness = function(self, brightness_int)
 			if monitor_index == 0 then
+				print(debug.traceback())
+				print(brightness_int)
 				awful.spawn(string.format("light -S %d", brightness_int), false)
 			else
 				awful.spawn(string.format("ddcutil -d %d setvcp 10 %d", monitor_index, brightness_int), false)
@@ -54,7 +56,7 @@ local worker    = function(screen)
 		end,
 
 		max_brightness = function(self)
-			self:set_brightness(100)
+			self:set_screen_brightness(100)
 		end,
 
 		decrease_brightness = function(self)
@@ -78,11 +80,12 @@ local worker    = function(screen)
 					return
 				end
 				local brightness_int = math.ceil(brightness_num);
+				print(brightness_int);
 
 				-- round brightness to next multiple of 5
 				if brightness_int % 5 ~= 0 then
 					local rounded_brightness = math.floor(brightness_int / 5 + 0.5) * 5
-					self:set_brightness(rounded_brightness)
+					self:set_screen_brightness(rounded_brightness)
 					naughty.notify({
 						preset = naughty.config.presets.low,
 						title = "Brightness Override",
@@ -92,7 +95,7 @@ local worker    = function(screen)
 					brightness_int = rounded_brightness
 				end
 
-				self:update_brightness(brightness_int)
+				self:update_brightness_text(brightness_int)
 			end)
 		end
 	}
@@ -120,7 +123,7 @@ local worker    = function(screen)
 			awful.spawn("fixmonitors", false)
 			return
 		end
-		brightness_widget:force_refresh()
+		-- brightness_widget:force_refresh()
 	end
 	);
 
