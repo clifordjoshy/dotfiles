@@ -1,0 +1,6 @@
+[Unit]
+Description=Periodically update the tldr cache
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/tldr --update
