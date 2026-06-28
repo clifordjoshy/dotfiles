@@ -1,5 +1,6 @@
 local gears = require("gears")
 local awful = require("awful")
+local beautiful = require("beautiful")
 
 local hotkeys_popup = require("awful.hotkeys_popup")
 
@@ -64,30 +65,30 @@ local globalkeys = gears.table.join(
 		awesome.restart,
 		{ description = "reload awesome", group = "awesome" }
 	),
-	awful.key({ modkey }, "l",
+	awful.key({ modkey, "Control" }, "k",
 		function() awful.tag.incmwfact(0.05) end,
 		{ description = "increase master width factor", group = "layout" }
 	),
-	awful.key({ modkey }, "h",
+	awful.key({ modkey, "Control" }, "j",
 		function() awful.tag.incmwfact(-0.05) end,
 		{ description = "decrease master width factor", group = "layout" }
 	),
-	awful.key({ modkey, "Shift" }, "h",
+	awful.key({ modkey, "Shift", "Control" }, "k",
 		function() awful.tag.incnmaster(1, nil, true) end,
 		{ description = "increase the number of master clients", group = "layout" }
 	),
-	awful.key({ modkey, "Shift" }, "l",
+	awful.key({ modkey, "Shift", "Control" }, "j",
 		function() awful.tag.incnmaster(-1, nil, true) end,
 		{ description = "decrease the number of master clients", group = "layout" }
 	),
-	awful.key({ modkey, "Control" }, "h",
-		function() awful.tag.incncol(1, nil, true) end,
-		{ description = "increase the number of columns", group = "layout" }
-	),
-	awful.key({ modkey, "Control" }, "l",
-		function() awful.tag.incncol(-1, nil, true) end,
-		{ description = "decrease the number of columns", group = "layout" }
-	),
+	-- awful.key({ modkey,}, "h",
+	-- 	function() awful.tag.incncol(1, nil, true); end,
+	-- 	{ description = "increase the number of columns", group = "layout" }
+	-- ),
+	-- awful.key({ modkey, "Control" }, "l",
+	-- 	function() awful.tag.incncol(-1, nil, true) end,
+	-- 	{ description = "decrease the number of columns", group = "layout" }
+	-- ),
 	awful.key({ modkey, "Shift" }, "g",
 		function()
 			local c = awful.client.restore()
@@ -118,7 +119,7 @@ local globalkeys = gears.table.join(
 	),
 
 	--lock screen
-	awful.key({ modkey, "Shift" }, "q",
+	awful.key({ modkey }, "l",
 		function() awful.spawn(screen_lock, false) end,
 		{ description = "lock screen", group = "system" }
 	),
@@ -130,15 +131,19 @@ local globalkeys = gears.table.join(
 	),
 	awful.key({ modkey, "Shift" }, "z",
 		function() awful.spawn("rofi -modi window -show window", false) end,
-		{ description = "window switcher", group = "apps" }
+		{ description = "windowV switcher", group = "apps" }
 	),
 	awful.key({ modkey, "Shift" }, "space",
 		function() awful.spawn("rofi -modi file-browser-extended -show file-browser-extended", false) end,
 		{ description = "rofi file browser", group = "apps" }
 	),
-	awful.key({ modkey }, "z",
+	awful.key({ modkey }, "v",
 		function() awful.spawn("rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'", false) end,
 		{ description = "clipboard manager", group = "apps" }
+	),
+	awful.key({ modkey }, ".",
+		function() awful.spawn("rofimoji -a copy --max-recent 8 -s neutral", false) end,
+		{ description = "emoji picker", group = "apps" }
 	),
 	-- awful.key({ modkey }, "e",
 	-- 	function() awful.spawn.with_shell(
@@ -174,17 +179,17 @@ local globalkeys = gears.table.join(
 		function() awful.spawn("gedit") end,
 		{ description = "launch notepad", group = "apps" }
 	),
-	awful.key({ modkey }, "v",
-		function()
-			local vscode = function(c) return awful.rules.match(c, { class = "Code" }) end;
-			for c in awful.client.iterate(vscode) do
-				c.urgent = true
-				return;
-			end
-			awful.spawn("code")
-		end,
-		{ description = "launch vs code", group = "apps" }
-	),
+	-- awful.key({ modkey }, "z",
+	-- 	function()
+	-- 		local vscode = function(c) return awful.rules.match(c, { class = "Code" }) end;
+	-- 		for c in awful.client.iterate(vscode) do
+	-- 			c.urgent = true
+	-- 			return;
+	-- 		end
+	-- 		awful.spawn("code")
+	-- 	end,
+	-- 	{ description = "launch vs code", group = "apps" }
+	-- ),
 	awful.key({ modkey }, "w",
 		function() awful.spawn("brave web.whatsapp.com") end,
 		{ description = "launch whatsapp", group = "apps" }
