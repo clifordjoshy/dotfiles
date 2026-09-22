@@ -36,44 +36,37 @@ local worker    = function(screen)
 			end
 		end,
 
+		max_brightness = function(self)
+			self:set_screen_brightness(100)
+		end,
+
 		increase_brightness = function(self)
 			if monitor_index == 0 then
 				awful.spawn("light -A 5", false);
 			else
-				awful.spawn(string.format("ddcutil -d %d setvcp 10 + 5", monitor_index), false)
+				self:_ddcutil_with_bus_number("setvcp 10 + 5")
 			end
 		end,
-
 
 		set_screen_brightness = function(self, brightness_int)
 			if monitor_index == 0 then
 				awful.spawn(string.format("light -S %d", brightness_int), false)
 			else
-				awful.spawn(string.format("ddcutil -d %d setvcp 10 %d", monitor_index, brightness_int), false)
+				self:_ddcutil_with_bus_number("setvcp 10 %d", brightness_int)
 			end
-		end,
-
-		max_brightness = function(self)
-			self:set_screen_brightness(100)
 		end,
 
 		decrease_brightness = function(self)
 			if monitor_index == 0 then
 				awful.spawn("light -U 5", false);
 			else
-				awful.spawn(string.format("ddcutil -d %d setvcp 10 - 5", monitor_index), false)
+				self:_ddcutil_with_bus_number("setvcp 10 - 5")
 			end
 		end,
 
 		force_refresh = function(self)
-			local cmd = ""
-			if monitor_index == 0 then
-				cmd = "light -G"
-			else
-				cmd = string.format('bash -c "ddcutil -t -d %d getvcp 10 | tail -1 | cut -d\' \' -f4"', monitor_index)
-			end
-			awful.spawn.easy_async(cmd, function(brightness_str, _, _, _)
-				local brightness_num = tonumber(brightness_str);
+			local handler = function(brightness)
+				local brightness_num = tonumber(brightness);
 				if not brightness_num then
 					return
 				end
@@ -93,8 +86,54 @@ local worker    = function(screen)
 				end
 
 				self:update_brightness_text(brightness_int)
-			end)
-		end
+			end
+
+			if monitor_index == 0 then
+				awful.spawn.easy_async("light -G", handler)
+			else
+				self:_ddcutil_with_bus_number('-t getvcp 10', function(stdout)
+					-- output looks like:  VCP 10 C 30 100
+					local curr = gears.string.split(stdout, " ")[4]
+					handler(curr)
+				end)
+			end
+		end,
+
+
+		_ddcutil_with_bus_number = function(self, args_str, handler, skip_retry)
+			local _refetch_ddc_bus_number_and_run = function()
+				local ddc_bus_cmd = string.format(
+					'bash -c "ddcutil detect | grep -A 1 \'Display %d\' | tail -1 | cut -d\'-\' -f2"',
+					monitor_index)
+				awful.spawn.easy_async(ddc_bus_cmd, function(bus_number_str)
+					local bus_number = tonumber(bus_number_str);
+					if not bus_number then
+						return
+					end
+					self._ddc_bus_number = bus_number
+					self:_ddcutil_with_bus_number(args_str, handler, true)
+				end)
+			end
+
+			if self._ddc_bus_number ~= nil then
+				local cmd = string.format("ddcutil -b %d %s", self._ddc_bus_number, args_str)
+
+				awful.spawn.easy_async(cmd, function(stdout, stderr, reason, exit_code)
+					if exit_code == 0 then
+						if handler then
+							handler(stdout, stderr, reason, exit_code)
+						end
+					else
+						if not skip_retry then
+							_refetch_ddc_bus_number_and_run()
+						end
+					end
+				end)
+			else
+				_refetch_ddc_bus_number_and_run()
+			end
+		end,
+
 	}
 
 	gears.timer {
