@@ -12,6 +12,7 @@ local cpu_widget = require("widgets.cpu")
 local battery_widget = require("widgets.battery")
 local cal_task = require("widgets.cal_task")
 local menubar_utils = require("menubar.utils")
+local caffeine = require("caffeine")
 
 local menu_bg = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
 -- [[[ Main Menu
@@ -57,6 +58,7 @@ menulauncher:connect_signal("button::press", function(_, _, _, button)
 		toggle_kill_switch()
 	end
 end)
+
 
 -- Hide the menu when the mouse leaves it
 local mouse_in_main = false
@@ -271,7 +273,12 @@ local function generate_wibar(s)
 			my_battery_widget or nil,
 			my_wifi_widget,
 			clock_widget,
-			s.index == 1 and mysystray or nil,
+
+			wibox.widget {
+				caffeine.widget,
+				s.index == 1 and mysystray or nil,
+				layout = wibox.layout.fixed.horizontal -- or wibox.layout.fixed.vertical
+			}
 		},
 	}
 end

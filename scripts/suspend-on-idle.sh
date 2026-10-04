@@ -55,6 +55,14 @@ while true; do
   idle_minutes=$((idle_millis / 60000))
 
   if [[ $idle_minutes -ge $SLEEP_THRESHOLD_MINUTES ]]; then
+
+    # check for systemd inhibitors
+    if systemd-inhibit --list --mode=block --what=sleep --no-legend --no-pager | grep -q .; then
+      echo "System is idle, but an active systemd inhibitor block was detected. Staying awake."
+      sleep 60
+      continue
+    fi
+
 		echo "Caught lacking. Time to sleep"
 
     charge_state=$(upower -i /org/freedesktop/UPower/devices/DisplayDevice | awk '/state/ {print $2}')
