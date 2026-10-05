@@ -51,8 +51,14 @@ local function run_once(cmd_arr)
 	end
 end
 
-run_once({ "picom", "greenclip daemon", "playerctld daemon", "libinput-gestures",
-	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1" })
+run_once({
+	"picom",
+	"greenclip daemon",
+	"playerctld daemon",
+	"libinput-gestures",
+	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1",
+	"xscreensaver -nosplash&"
+})
 
 
 terminal = "alacritty"
