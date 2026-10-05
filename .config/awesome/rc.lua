@@ -173,23 +173,18 @@ awful.rules.rules = {
 		},
 		properties = { floating = true, placement = awful.placement.centered, ontop = true }
 	},
-
+	-- Fullscreen
+	{
+		rule       = { fullscreen = true },
+		properties = { shape = nil, ontop = true, border_width = 0 }
+	},
 	--Set music stuff to always map on the 5th tag on screen 1.
 	{
 		rule_any = {
-			instance = { "mpv-ytm" },
 			class = { "Spotify" }
 		},
 		properties = { screen = 1, tag = tagnames[5] }
 	},
-
-	--Stuff that needs to launch in the second monitor
-	-- {
-	-- 	rule_any = {
-	-- 		class = { "discord" }
-	-- 	},
-	-- 	properties = { screen = 2}
-	-- },
 }
 
 -- Signals
@@ -212,8 +207,6 @@ client.connect_signal("manage", function(c)
 	-- 	end
 	-- 	)
 	-- end
-
-	c.shape = gears.shape.rounded_rect
 end
 )
 
@@ -231,6 +224,15 @@ client.connect_signal("property::maximized", function(c)
 	end
 	manual_maximise = false
 end);
+
+client.connect_signal("property::ontop", function(c)
+	if c.ontop then
+		c.shape = nil
+	else
+		c.shape = gears.shape.rounded_rect;
+	end
+end)
+
 
 client.connect_signal("property::urgent", function(c)
 	if c.class ~= "Spotify" then

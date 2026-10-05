@@ -11,6 +11,11 @@ local AUTO_CAFFEINE_APPS = {
     "discord"
 }
 
+-- apps that shouldn't be caffeinated even on other triggers
+local ANTI_CAFFEINE_APPS = {
+    "flameshot"
+}
+
 local active_triggers = {}
 
 local caffeine_textbox = wibox.widget {
@@ -107,30 +112,48 @@ local release_caffeine = function(trigger)
     kill_caffeine_process()
 end
 
+local _handle_fullscreen_signal = function(c, is_fullscreen)
+    local appname = c.instance
+    if gears.table.hasitem(ANTI_CAFFEINE_APPS, appname) then
+        return
+    end
 
--- Signals
-client.connect_signal("manage", function(c)
-    local appname = c.instance
-    if gears.table.hasitem(AUTO_CAFFEINE_APPS, appname) ~= nil then
-        request_caffeine(appname)
-    end
-end
-)
-client.connect_signal("unmanage", function(c)
-    local appname = c.instance
-    if gears.table.hasitem(AUTO_CAFFEINE_APPS, appname) ~= nil then
-        release_caffeine(appname)
-    end
-end)
-client.connect_signal("property::fullscreen", function(c)
-    local trigger = string.format("fullscreen (%s)", c.instance)
-    if c.fullscreen then
+    local trigger = string.format("fullscreen (%s)", appname)
+    if is_fullscreen then
         request_caffeine(trigger)
-    else
+    elseif gears.table.hasitem(active_triggers, trigger) ~= nil then
         release_caffeine(trigger)
     end
 end
-)
+
+local _handle_app_signal = function(c, is_open)
+    local appname = c.instance
+
+    if gears.table.hasitem(AUTO_CAFFEINE_APPS, appname) ~= nil then
+        if is_open then
+            request_caffeine(appname)
+        else
+            release_caffeine(appname)
+        end
+    end
+
+    -- release fullscreen triggers
+    -- (for apps that were closed while fullscreen)
+    if not is_open and c.fullscreen then
+        _handle_fullscreen_signal(c, false)
+    end
+end
+
+-- Signals
+client.connect_signal("manage", function(c)
+    _handle_app_signal(c, true)
+end)
+client.connect_signal("unmanage", function(c)
+    _handle_app_signal(c, false)
+end)
+client.connect_signal("property::fullscreen", function(c)
+    _handle_fullscreen_signal(c, c.fullscreen)
+end)
 
 local on_media_play = function(media_name)
     local trigger = string.format("media (%s)", media_name)
