@@ -1,11 +1,11 @@
 # XScreenSaver Preferences File
-# Written by xscreensaver-settings 6.15 for cliford on Mon Oct  5 22:01:43 2026.
+# Written by xscreensaver-settings 6.16 for cliford on Tue Oct  6 23:52:32 2026.
 # https://www.jwz.org/xscreensaver/
 
 timeout:	0:20:00
-cycle:		0:10:00
-lock:		False
-lockTimeout:	0:00:00
+cycle:		0:00:00
+lock:		True
+lockTimeout:	0:30:00
 passwdTimeout:	0:00:30
 visualID:	default
 installColormap:    True
@@ -36,8 +36,8 @@ textLiteral:	XScreenSaver
 textFile:	
 textProgram:	fortune
 textURL:	https://en.wikipedia.org/w/index.php?title=Special:NewPages&feed=rss
-dialogTheme:	darkgray
-settingsGeom:	5,37 384,683
+dialogTheme:	default
+settingsGeom:	5,37 987,394
 
 programs:								      \
   GL: 				deepstars --root			    \n\
@@ -47,8 +47,8 @@ programs:								      \
 				phosphor --root --scale 2 --ticks 1 --fg      \
 				  #ff7900				    \n\
 				pacman --root --delay 65323		    \n\
-				blaster --root --delay 33871 --num_robots     \
-				  6 --num_lasers 4 --num_stars 11	    \n\
+				blaster --root --delay 45161 --num_robots     \
+				  8 --num_lasers 4 --num_stars 24	    \n\
 -				bsod --root --delay 120 --no-systemd	    \n\
 -				squiral --root				    \n\
 -				maze --root				    \n\
@@ -333,6 +333,10 @@ programs:								      \
 - GL: 				trizm --root				    \n\
 - GL: 				universeball --root			    \n\
 - GL: 				worldpieces --root			    \n\
+- GL: 				polarnight --root			    \n\
+- GL: 				amigajuggler --root			    \n\
+- GL: 				floppy --root				    \n\
+- GL: 				graphstat --root			    \n\
 
 
 pointerHysteresis:  10

@@ -65,7 +65,7 @@ terminal = "alacritty"
 editor = "vim"
 modkey = "Mod4" -- Super Key
 browser = "brave"
-screen_lock = "dm-tool lock"
+screen_lock = "xscreensaver-command -lock"
 tagnames = { "ഒന്ന് ", "രണ്ട് ", "മൂന്ന് ", "നാല് ", "അഞ്ച് " }
 
 awful.layout.layouts = {
