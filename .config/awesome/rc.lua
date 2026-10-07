@@ -6,8 +6,7 @@ pcall(require, "luarocks.loader")
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
--- Widget and layout library
-local wibox = require("wibox")
+
 -- Theme handling library
 local beautiful = require("beautiful")
 -- Notification library
@@ -17,47 +16,47 @@ local naughty = require("naughty")
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
-	naughty.notify({
-		preset = naughty.config.presets.critical,
-		title = "Oops, there were errors during startup!",
-		text = awesome.startup_errors
-	})
+  naughty.notify({
+    preset = naughty.config.presets.critical,
+    title = "Oops, there were errors during startup!",
+    text = awesome.startup_errors
+  })
 end
 
 -- Handle runtime errors after startup
 do
-	local in_error = false
-	awesome.connect_signal("debug::error", function(err)
-		-- Make sure we don't go into an endless error loop
-		if in_error then
-			return
-		end
-		in_error = true
+  local in_error = false
+  awesome.connect_signal("debug::error", function(err)
+    -- Make sure we don't go into an endless error loop
+    if in_error then
+      return
+    end
+    in_error = true
 
-		naughty.notify({
-			preset = naughty.config.presets.critical,
-			title = "Oops, an error happened!",
-			text = tostring(err)
-		})
-		in_error = false
-	end
-	)
+    naughty.notify({
+      preset = naughty.config.presets.critical,
+      title = "Oops, an error happened!",
+      text = tostring(err)
+    })
+    in_error = false
+  end
+  )
 end
 
 -- Autostart windowless processes
 local function run_once(cmd_arr)
-	for _, cmd in ipairs(cmd_arr) do
-		awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
-	end
+  for _, cmd in ipairs(cmd_arr) do
+    awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
+  end
 end
 
 run_once({
-	"picom",
-	"greenclip daemon",
-	"playerctld daemon",
-	"libinput-gestures",
-	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1",
-	"xscreensaver -nosplash&"
+  "picom",
+  "greenclip daemon",
+  "playerctld daemon",
+  "libinput-gestures",
+  "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1",
+  "xscreensaver -nosplash&"
 })
 
 
@@ -65,15 +64,15 @@ terminal = "alacritty"
 editor = "vim"
 modkey = "Mod4" -- Super Key
 browser = "brave"
-screen_lock = "xscreensaver-command -lock"
+screen_lock = "loginctl lock-session"
 tagnames = { "ഒന്ന് ", "രണ്ട് ", "മൂന്ന് ", "നാല് ", "അഞ്ച് " }
 
 awful.layout.layouts = {
-	awful.layout.suit.tile,
-	awful.layout.suit.tile.bottom,
-	-- awful.layout.suit.magnifier,
-	-- awful.layout.suit.spiral.dwindle,
-	awful.layout.suit.max,
+  awful.layout.suit.tile,
+  awful.layout.suit.tile.bottom,
+  -- awful.layout.suit.magnifier,
+  -- awful.layout.suit.spiral.dwindle,
+  awful.layout.suit.max,
 }
 
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
@@ -82,17 +81,17 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 -- Screen
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", function(s)
-	gears.wallpaper.maximized(beautiful.wallpapers, s, true)
+  gears.wallpaper.maximized(beautiful.wallpapers, s, true)
 end
 )
 
-local generate_wibar = require("bar")
+local bar = require("bar")
 awful.screen.connect_for_each_screen(function(s)
-	gears.wallpaper.maximized(beautiful.wallpapers, s, true)
-	-- Tags
-	awful.tag(tagnames, s, awful.layout.layouts[1])
+  gears.wallpaper.maximized(beautiful.wallpapers, s, true)
+  -- Tags
+  awful.tag(tagnames, s, awful.layout.layouts[1])
 
-	generate_wibar(s)
+  bar.generate_wibar(s)
 end
 )
 
@@ -102,117 +101,110 @@ local keybinds = require("keybinds")
 -- mouse functionality
 
 local mouse_functions = {
-	activate = function(c)
-		c:emit_signal("request::activate", "mouse_click", { raise = true })
-	end
+  activate = function(c)
+    c:emit_signal("request::activate", "mouse_click", { raise = true })
+  end,
 }
 
 mouse_functions.left_click_elevated = function(c)
-	mouse_functions.activate(c)
-	awful.mouse.client.move(c)
+  mouse_functions.activate(c)
+  awful.mouse.client.move(c)
 end
 
 mouse_functions.right_click_elevated = function(c)
-	mouse_functions.activate(c)
-	awful.mouse.client.resize(c)
+  mouse_functions.activate(c)
+  awful.mouse.client.resize(c)
 end
 
 mouse_functions.middle_click_elevated = function(c)
-	c:kill()
+  c:kill()
 end
 
 mouse_functions.left_click = function(c)
-	-- a function from bar.lua. the kill switch is tied to the arch logo
-	handle_kill_switch(function() c:kill() end, function() mouse_functions.activate(c) end)
+  if bar.is_kill_switch_enabled() then
+    c:kill()
+    bar.toggle_kill_switch()
+  else
+    mouse_functions.activate(c)
+  end
 end
+
 
 mouse_functions.right_click = mouse_functions.activate
 mouse_functions.middle_click = mouse_functions.activate
 
 
-clientbuttons = gears.table.join(
-	awful.button({}, 1, mouse_functions.left_click),
-	awful.button({}, 2, mouse_functions.middle_click),
-	awful.button({}, 3, mouse_functions.right_click),
-	awful.button({ modkey }, 1, mouse_functions.left_click_elevated),
-	awful.button({ modkey }, 3, mouse_functions.right_click_elevated),
-	awful.button({ modkey }, 2, mouse_functions.middle_click_elevated)
+local clientbuttons = gears.table.join(
+  awful.button({}, 1, mouse_functions.left_click),
+  awful.button({}, 2, mouse_functions.middle_click),
+  awful.button({}, 3, mouse_functions.right_click),
+  awful.button({ modkey }, 1, mouse_functions.left_click_elevated),
+  awful.button({ modkey }, 3, mouse_functions.right_click_elevated),
+  awful.button({ modkey }, 2, mouse_functions.middle_click_elevated)
 )
 
 root.keys(keybinds.globalkeys)
 
 -- Rules
 awful.rules.rules = {
-	-- All clients will match this rule.
-	{
-		rule = {},
-		properties = {
-			border_width = beautiful.border_width,
-			border_color = beautiful.border_normal,
-			focus = awful.client.focus.filter,
-			raise = true,
-			keys = keybinds.clientkeys,
-			buttons = clientbuttons,
-			screen = awful.screen.preferred,
-			placement = awful.placement.no_overlap + awful.placement.no_offscreen
-		}
-	},
-	-- Floating clients.
-	{
-		rule_any = {
-			instance = {
-				"nmtui", -- set when launched from wifi widget
-				"blueberry.py"
-			},
-			class = {
-				"Pavucontrol",
-				"Qalculate-gtk",
-			},
-			-- Note that the name property shown in xprop might be set slightly after creation of the client
-			-- and the name shown there might not match defined rules here.
-			role = {
-				"pop-up" -- e.g. Google Chrome's (detached) Developer Tools.
-			},
-			type = {
-				"dialog"
-			}
-		},
-		properties = { floating = true, placement = awful.placement.centered, ontop = true }
-	},
-	-- Fullscreen
-	{
-		rule       = { fullscreen = true },
-		properties = { shape = nil, ontop = true, border_width = 0 }
-	},
-	--Set music stuff to always map on the 5th tag on screen 1.
-	{
-		rule_any = {
-			class = { "Spotify" }
-		},
-		properties = { screen = 1, tag = tagnames[5] }
-	},
+  -- All clients will match this rule.
+  {
+    rule = { type = "normal" },
+    properties = {
+      border_width = beautiful.border_width,
+      border_color = beautiful.border_normal,
+      focus = awful.client.focus.filter,
+      raise = true,
+      keys = keybinds.clientkeys,
+      buttons = clientbuttons,
+      screen = awful.screen.preferred,
+      placement = awful.placement.no_overlap + awful.placement.no_offscreen,
+    }
+  },
+  -- Floating clients.
+  {
+    rule_any = {
+      instance = {
+        "nmtui", -- set when launched from wifi widget
+        "blueberry.py"
+      },
+      class = {
+        "pavucontrol",
+        "Qalculate-gtk",
+      },
+      role = {
+        "pop-up" -- e.g. Google Chrome's (detached) Developer Tools.
+      },
+      type = {
+        "dialog"
+      }
+    },
+    properties = { floating = true, placement = awful.placement.centered, ontop = true }
+  },
+  --Set music stuff to always map on the 5th tag on screen 1.
+  {
+    rule_any = {
+      class = { "Spotify" }
+    },
+    properties = { screen = 1, tag = tagnames[5] }
+  },
 }
 
 -- Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function(c)
-	-- Set new windows at the slave
-	if not awesome.startup then awful.client.setslave(c) end
+  -- Set new windows at the slave
+  if not awesome.startup then awful.client.setslave(c) end
 
-	if awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
-		-- Prevent clients from being unreachable after screen count changes.
-		awful.placement.no_offscreen(c)
-	end
+  if awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
+    -- Prevent clients from being unreachable after screen count changes.
+    awful.placement.no_offscreen(c)
+  end
 
-	-- -- Windows like spotify *used to* only set class name after window opens.
-	-- if c.name == nil and c.class == nil then
-	-- 	c.minimized = true
-	-- 	c:connect_signal("property::class", function()
-	-- 		c.minimized = false
-	-- 		awful.rules.apply(c)
-	-- 	end
-	-- 	)
-	-- end
+  if c.type == "normal" then
+    -- setting shape delayed since width is not available when we specify it in rules
+    c.shape = gears.shape.rounded_rect
+  end
 end
 )
 
@@ -220,37 +212,31 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
 client.connect_signal("property::maximized", function(c)
-	-- manual maximise set in keybinds.lua
-	-- to prevent auto maximising by browsers and such
-	if manual_maximise and c.maximized then
-		c.shape = nil
-	else
-		c.shape = gears.shape.rounded_rect;
-		c.maximized = false
-	end
-	manual_maximise = false
+  -- manual maximise set in keybinds.lua
+  -- to prevent auto maximising by browsers and such
+  if not c.manual_maximise and c.maximized then
+    c.maximized = false
+    return
+  end
+
+  if c.maximized then
+    c.shape = nil
+  else
+    c.shape = gears.shape.rounded_rect;
+  end
+
+  c.manual_maximise = false
 end);
 
-client.connect_signal("property::ontop", function(c)
-	if c.ontop then
-		c.shape = nil
-	else
-		c.shape = gears.shape.rounded_rect;
-	end
-end)
-
-
 client.connect_signal("property::urgent", function(c)
-	if c.class ~= "Spotify" then
-		c.minimized = false
-		c:jump_to()
-	else
-		c.urgent = false
-	end
+  c.minimized = false
+  c:jump_to()
 end)
 
 -- disable all notification actions. (mostly brave with it's annoying "settings")
 naughty.config.notify_callback = function(args)
-	args.actions = nil
-	return args
+  args.actions = nil
+  return args
 end
+
+-- Global Utils

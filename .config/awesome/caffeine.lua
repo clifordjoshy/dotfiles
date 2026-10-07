@@ -11,11 +11,6 @@ local AUTO_CAFFEINE_APPS = {
     "discord"
 }
 
--- apps that shouldn't be caffeinated even on other triggers
-local ANTI_CAFFEINE_APPS = {
-    "flameshot"
-}
-
 local active_triggers = {}
 
 local caffeine_textbox = wibox.widget {
@@ -113,12 +108,7 @@ local release_caffeine = function(trigger)
 end
 
 local _handle_fullscreen_signal = function(c, is_fullscreen)
-    local appname = c.instance
-    if gears.table.hasitem(ANTI_CAFFEINE_APPS, appname) then
-        return
-    end
-
-    local trigger = string.format("fullscreen (%s)", appname)
+    local trigger = string.format("fullscreen (%s)", c.instance)
     if is_fullscreen then
         request_caffeine(trigger)
     elseif gears.table.hasitem(active_triggers, trigger) ~= nil then

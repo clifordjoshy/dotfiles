@@ -27,11 +27,11 @@ while true; do
     current_time=$(date +%s%3N)
 
     if [ -f "$SESSION_START_IDLE_FILE" ]; then
-      start_time=$(< $SESSION_START_IDLE_FILE)
+      start_time=$(< "$SESSION_START_IDLE_FILE")
       idle_millis=$(($current_time - $start_time))
     else
       echo "No graphical session found. Starting new login timeout"
-      echo $current_time > $SESSION_START_IDLE_FILE
+      echo $current_time > "$SESSION_START_IDLE_FILE"
       idle_millis=0
     fi
     cached_pid=""
@@ -40,7 +40,7 @@ while true; do
 
     if [ -f "$SESSION_START_IDLE_FILE" ]; then
       echo "Graphical session begun. Killing login timeout"
-      rm $SESSION_START_IDLE_FILE
+      rm "$SESSION_START_IDLE_FILE"
     fi
 
     if [ "$pid" != "$cached_pid" ]; then
