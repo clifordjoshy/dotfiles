@@ -81,8 +81,9 @@ local function on_player_event(player)
 
   local p_state = state.players[player.player_instance]
 
-  if title == "" and artist == "" then
+  if (title == "" and artist == "") or player.playback_status == "STOPPED" then
     p_state.hidden = true
+    media_widget:refresh()
     return
   end
 

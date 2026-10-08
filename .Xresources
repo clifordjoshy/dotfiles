@@ -2,7 +2,7 @@ Xft.dpi: 120
 
 ! XScreenSaver
 xscreensaver-auth.default.*.newLoginCommand:
-xscreensaver-auth.passwd.asterisks: False
+xscreensaver-auth.passwd.asterisks: True
 
 !heading font controls logo size
 xscreensaver-auth.?.Dialog.headingFont:      sans-serif 6
@@ -13,10 +13,10 @@ xscreensaver-auth.?.Dialog.labelFont:        sans-serif 10
 xscreensaver-auth.?.Dialog.dateFont:         sans-serif 10
 xscreensaver-auth.?.Dialog.buttonFont:       sans-serif 8
 
-xscreensaver-auth.?.Dialog.shadowWidth:			     0
-xscreensaver-auth.?.Dialog.thermometer.width:		 4
-xscreensaver-auth.?.Dialog.borderWidth: 	       2
-xscreensaver-auth.?.Dialog.internalPadding:      14
+xscreensaver-auth.?.Dialog.shadowWidth:        0
+xscreensaver-auth.?.Dialog.thermometer.width:  4
+xscreensaver-auth.?.Dialog.borderWidth:        2
+xscreensaver-auth.?.Dialog.internalPadding:    14
 
 xscreensaver-auth.?.Dialog.foreground:              #abb2bf
 xscreensaver-auth.?.Dialog.background:              #282c34
@@ -24,9 +24,9 @@ xscreensaver-auth.?.Dialog.button.foreground:       #282c34
 xscreensaver-auth.?.Dialog.button.background:       #61afef
 xscreensaver-auth.?.Dialog.logo.background:	        #282c34
 xscreensaver-auth.?.Dialog.text.foreground:	        #abb2bf
-xscreensaver-auth.?.Dialog.text.background:	        #21252b
-xscreensaver-auth.?.Dialog.error.foreground:	      #be5046
+xscreensaver-auth.?.Dialog.text.background:         #21252b
+xscreensaver-auth.?.Dialog.error.foreground:        #be5046
 xscreensaver-auth.?.Dialog.thermometer.foreground:  #4b5263
 xscreensaver-auth.?.Dialog.thermometer.background:  #282c34
-xscreensaver-auth.?.Dialog.borderColor:			        #abb2bf
+xscreensaver-auth.?.Dialog.borderColor:             #abb2bf
 

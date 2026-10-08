@@ -182,6 +182,7 @@ local function generate_wibar(s)
 
       wibox.widget {
         caffeine.widget,
+        spacing = beautiful.systray_icon_spacing,
         s.index == 1 and systray or nil,
         layout = wibox.layout.fixed.horizontal -- or wibox.layout.fixed.vertical
       }

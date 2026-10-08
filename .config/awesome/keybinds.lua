@@ -163,6 +163,7 @@ local globalkeys = gears.table.join(
     function()
       local spotify = function(c) return awful.rules.match(c, { class = "Spotify" }) end;
       for c in awful.client.iterate(spotify) do
+        c:jump_to(false)
         return;
       end
       awful.spawn("spotify")

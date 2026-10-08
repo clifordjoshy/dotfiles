@@ -52,7 +52,7 @@ local wifi_widget = wibox.widget {
 
 local state = {
   last_rx = 0,
-  last_time = os.clock(),
+  last_time = GLib.get_monotonic_time() / 1000000,
   current_interface = "",
 }
 local nm_client = nil;
@@ -102,11 +102,12 @@ gears.timer {
       return true
     end
     local sys_path = string.format("/sys/class/net/%s/statistics/rx_bytes", state.current_interface)
+
     local contents = GLib.file_get_contents(sys_path)
 
     if contents then
       local current_rx = tonumber(contents) or 0
-      local now = os.clock()
+      local now = GLib.get_monotonic_time() / 1000000
       local elapsed = now - state.last_time
 
       if state.last_rx > 0 and elapsed > 0 then
@@ -165,7 +166,7 @@ local info_tooltip = awful.tooltip {
 
     return string.format("ssid: %s\nip  : %s", ssid, ip_str)
   end,
-  delay_show = 1,
+  delay_show = 0.5,
   fg = "#cdcdcd",
   bg = "#202020",
   border_width = 1,

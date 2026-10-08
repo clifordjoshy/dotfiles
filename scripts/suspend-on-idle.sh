@@ -18,7 +18,7 @@ user_xauthority=""
 
 while true; do
 
-  pid=$(pgrep -x awesome)
+  pid=$(pgrep -x awesome | head -n1)
 
   if [ -z "$pid" ]; then
     # no graphical session started yet.
