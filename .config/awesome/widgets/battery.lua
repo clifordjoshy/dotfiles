@@ -38,12 +38,14 @@ local battery_widget = wibox.widget {
   end
 }
 
-local function update_widget(device)
-  local is_charging = device.state == upower.DeviceState.PENDING_CHARGE or
-      device.state == upower.DeviceState.FULLY_CHARGED or
-      device.state == upower.DeviceState.CHARGING
+local upower_device  = nil;
 
-  local charge = math.floor(device.percentage);
+local function update_widget()
+  local is_charging = upower_device.state == upower.DeviceState.PENDING_CHARGE or
+      upower_device.state == upower.DeviceState.FULLY_CHARGED or
+      upower_device.state == upower.DeviceState.CHARGING
+
+  local charge = math.floor(upower_device.percentage);
 
   if charge <= 10 and not is_charging then
     awful.popup {
@@ -86,13 +88,15 @@ local function update_widget(device)
   battery_widget:update_text(charge, is_charging)
 end
 
-gears.timer.delayed_call(function()
-  -- get current battery device
-  local display_device = upower.Client():get_display_device()
-  -- callback for when device updates
-  display_device.on_notify = update_widget
 
-  update_widget(display_device)
+gears.timer.delayed_call(function()
+  upower_device = upower.Client():get_display_device()
+
+  upower_device.on_notify = function(device, pspec)
+    update_widget()
+  end
+
+  update_widget()
 end
 
 )

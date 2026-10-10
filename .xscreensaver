@@ -1,5 +1,5 @@
 # XScreenSaver Preferences File
-# Written by xscreensaver-settings 6.16 for cliford on Tue Oct  6 23:52:32 2026.
+# Written by xscreensaver-settings 6.16 for cliford on Sat Oct 10 12:53:08 2026.
 # https://www.jwz.org/xscreensaver/
 
 timeout:	0:20:00
@@ -40,7 +40,6 @@ dialogTheme:	default
 settingsGeom:	5,37 987,394
 
 programs:								      \
-  GL: 				deepstars --root			    \n\
 				xmatrix --root --small --mode binary	      \
 				  --no-trace --no-knock-knock --delay	      \
 				  89516 --density 40			    \n\
@@ -49,6 +48,12 @@ programs:								      \
 				pacman --root --delay 65323		    \n\
 				blaster --root --delay 45161 --num_robots     \
 				  8 --num_lasers 4 --num_stars 24	    \n\
+  GL: 				deepstars --root --speed 2.129 --smear	      \
+				  2.613					    \n\
+				loop --root				    \n\
+  GL: 				unknownpleasures --root			    \n\
+  GL: 				hextrail --root --speed 0.797 --no-wander     \
+				  --no-spin				    \n\
 -				bsod --root --delay 120 --no-systemd	    \n\
 -				squiral --root				    \n\
 -				maze --root				    \n\
@@ -125,7 +130,6 @@ programs:								      \
 -				deluxe --root				    \n\
 -				demon --root				    \n\
 - GL: 				extrusion --root			    \n\
--				loop --root				    \n\
 -				penetrate --root			    \n\
 -				petri --root				    \n\
 - GL: 				pulsar --root				    \n\
@@ -250,7 +254,6 @@ programs:								      \
 - GL: 				kaleidocycle --root			    \n\
 - GL: 				quasicrystal --root			    \n\
 - GL: 				starnest --root				    \n\
-- GL: 				unknownpleasures --root			    \n\
 - GL: 				alienbeacon --root			    \n\
 -				binaryring --root			    \n\
 - GL: 				cityflow --root				    \n\
@@ -303,7 +306,6 @@ programs:								      \
 - GL: 				neontriangulator --root			    \n\
 - GL: 				stripeytorus --root			    \n\
 - GL: 				chompytower --root			    \n\
-- GL: 				hextrail --root				    \n\
 - GL: 				mapscroller --root			    \n\
 - GL: 				nakagin --root				    \n\
 - GL: 				squirtorus --root			    \n\
