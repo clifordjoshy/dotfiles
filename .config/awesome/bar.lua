@@ -20,6 +20,7 @@ local mymainmenu = awful.menu({
   items = {
     { "lock",      screen_lock,                   beautiful.menu_lock_icon },
     { "log out",   function() awesome.quit() end, beautiful.menu_logout_icon },
+    { "hibernate", "systemctl hibernate",         beautiful.menu_hibernate_icon },
     { "reboot",    "reboot",                      beautiful.menu_reboot_icon },
     { "power off", "shutdown now",                beautiful.menu_power_icon },
   },

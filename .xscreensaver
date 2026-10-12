@@ -43,17 +43,18 @@ programs:								      \
 				xmatrix --root --small --mode binary	      \
 				  --no-trace --no-knock-knock --delay	      \
 				  89516 --density 40			    \n\
-				phosphor --root --scale 2 --ticks 1 --fg      \
+				phosphor --root --scale 3 --ticks 1 --fg      \
 				  #ff7900				    \n\
 				pacman --root --delay 65323		    \n\
-				blaster --root --delay 45161 --num_robots     \
-				  8 --num_lasers 4 --num_stars 24	    \n\
-  GL: 				deepstars --root --speed 2.129 --smear	      \
-				  2.613					    \n\
+  GL: 				deepstars --root			    \n\
 				loop --root				    \n\
   GL: 				unknownpleasures --root			    \n\
   GL: 				hextrail --root --speed 0.797 --no-wander     \
 				  --no-spin				    \n\
+				pong --root --noise 0 --clock		      \
+				  --tv-brightness -39.718		    \n\
+-				blaster --root --delay 45161 --num_robots     \
+				  8 --num_lasers 4 --num_stars 24	    \n\
 -				bsod --root --delay 120 --no-systemd	    \n\
 -				squiral --root				    \n\
 -				maze --root				    \n\
@@ -200,7 +201,6 @@ programs:								      \
 - GL: 				mirrorblob --root			    \n\
 -				piecewise --root			    \n\
 - GL: 				polytopes --root			    \n\
--				pong --root				    \n\
 -				popsquares --root			    \n\
 - GL: 				surfaces --root				    \n\
 -				xanalogtv --root			    \n\

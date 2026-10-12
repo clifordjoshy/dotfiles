@@ -8,7 +8,7 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local globalkeys = gears.table.join(
   awful.key({ modkey }, "s",
     hotkeys_popup.show_help,
-    { description = "show help", group = "awesome" }
+    { description = "show help", group = "system" }
   ),
   awful.key({ modkey }, "Left",
     awful.tag.viewprev,
@@ -44,10 +44,6 @@ local globalkeys = gears.table.join(
     function() awful.screen.focus_relative(1) end,
     { description = "focus the next screen", group = "screen" }
   ),
-  awful.key({ modkey }, "u",
-    awful.client.urgent.jumpto,
-    { description = "jump to urgent client", group = "client" }
-  ),
   awful.key({ modkey }, "Tab",
     function()
       awful.client.focus.history.previous()
@@ -63,7 +59,7 @@ local globalkeys = gears.table.join(
   ),
   awful.key({ modkey, "Control" }, "r",
     awesome.restart,
-    { description = "reload awesome", group = "awesome" }
+    { description = "reload awesome", group = "system" }
   ),
   awful.key({ modkey, "Control" }, "k",
     function() awful.tag.incmwfact(0.05) end,
@@ -99,16 +95,6 @@ local globalkeys = gears.table.join(
     end,
     { description = "restore minimized", group = "client" }
   ),
-  awful.key({ modkey }, "t",
-    function()
-      for s in screen do
-        for _, c in pairs(s.clients) do
-          c.minimized = true
-        end
-      end
-    end,
-    { description = "minimize all windows", group = "client" }
-  ),
   awful.key({ modkey }, "a",
     function() awful.layout.inc(-1) end,
     { description = "switch to previous layout", group = "layout" }
@@ -127,11 +113,11 @@ local globalkeys = gears.table.join(
   -- Prompt
   awful.key({ modkey }, "space",
     function() awful.spawn("rofi -show drun", false) end,
-    { description = "run prompt", group = "apps" }
+    { description = "app launcher", group = "apps" }
   ),
   awful.key({ modkey, "Shift" }, "z",
     function() awful.spawn("rofi -modi window -show window", false) end,
-    { description = "windowV switcher", group = "apps" }
+    { description = "window switcher", group = "apps" }
   ),
   awful.key({ modkey, "Shift" }, "space",
     function() awful.spawn("rofi -modi file-browser-extended -show file-browser-extended", false) end,
@@ -145,13 +131,6 @@ local globalkeys = gears.table.join(
     function() awful.spawn("rofimoji -a copy --max-recent 8 -s neutral", false) end,
     { description = "emoji picker", group = "apps" }
   ),
-  -- awful.key({ modkey }, "e",
-  -- 	function() awful.spawn.with_shell(
-  -- 		"rofi -modi blocks -show blocks -blocks-wrap ~/scripts/rofi-ytm/rofi-ytm.py -theme-str 'listview{lines:5;}'") end
-  -- 	,
-  -- 	{ description = "youtube music script", group = "apps" }
-  -- ),
-
 
   -- pass false to awful.spawn for non window applications. otherwise loading cursor will show up
   -- Apps
@@ -160,37 +139,17 @@ local globalkeys = gears.table.join(
     { description = "launch browser", group = "apps" }
   ),
   awful.key({ modkey }, "c",
-    function()
-      local spotify = function(c) return awful.rules.match(c, { class = "Spotify" }) end;
-      for c in awful.client.iterate(spotify) do
-        c:jump_to(false)
-        return;
-      end
-      awful.spawn("spotify")
-    end,
+    function() awful.spawn("spotify") end,
     { description = "launch spotify", group = "apps" }
   ),
   awful.key({ modkey }, "x",
-    function()
-      awful.spawn("nemo")
-    end,
+    function() awful.spawn("nemo") end,
     { description = "launch explorer", group = "apps" }
   ),
   awful.key({ modkey }, "n",
     function() awful.spawn("gedit") end,
     { description = "launch notepad", group = "apps" }
   ),
-  -- awful.key({ modkey }, "z",
-  -- 	function()
-  -- 		local vscode = function(c) return awful.rules.match(c, { class = "Code" }) end;
-  -- 		for c in awful.client.iterate(vscode) do
-  -- 			c.urgent = true
-  -- 			return;
-  -- 		end
-  -- 		awful.spawn("code")
-  -- 	end,
-  -- 	{ description = "launch vs code", group = "apps" }
-  -- ),
   awful.key({ modkey }, "w",
     function() awful.spawn("brave web.whatsapp.com") end,
     { description = "launch whatsapp", group = "apps" }
@@ -248,13 +207,13 @@ local globalkeys = gears.table.join(
   ),
   awful.key({ modkey, "Shift" }, "[",
     function()
-      awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%", false); refresh_volume()
+      awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false)
     end,
     { description = "volume down", group = "functions" }
   ),
   awful.key({ modkey, "Shift" }, "]",
     function()
-      awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%", false); refresh_volume()
+      awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false)
     end,
     { description = "volume up", group = "functions" }
   )
@@ -356,19 +315,6 @@ for i = 1, #tagnames do
       end,
       { description = "move focused client to tag #" .. i, group = "tag" }
     )
-  -- Toggle tag on focused client.
-  -- awful.key({modkey, "Control", "Shift"},
-  -- 	"#" .. i + 9,
-  -- 	function()
-  -- 		if client.focus then
-  -- 			local tag = client.focus.screen.tags[i]
-  -- 			if tag then
-  -- 				client.focus:toggle_tag(tag)
-  -- 			end
-  -- 		end
-  -- 	end,
-  -- 	{ description = "toggle focused client on tag #" .. i, group = "tag" }
-  -- )
   )
 end
 
