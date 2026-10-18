@@ -1,6 +1,6 @@
 local gears = require("gears")
 local awful = require("awful")
-local beautiful = require("beautiful")
+local caffeine = require("caffeine")
 
 local hotkeys_popup = require("awful.hotkeys_popup")
 
@@ -57,10 +57,6 @@ local globalkeys = gears.table.join(
     function() awful.spawn(terminal) end,
     { description = "open a terminal", group = "apps" }
   ),
-  awful.key({ modkey, "Control" }, "r",
-    awesome.restart,
-    { description = "reload awesome", group = "system" }
-  ),
   awful.key({ modkey, "Control" }, "k",
     function() awful.tag.incmwfact(0.05) end,
     { description = "increase master width factor", group = "layout" }
@@ -104,10 +100,18 @@ local globalkeys = gears.table.join(
     { description = "switch to next layout", group = "layout" }
   ),
 
-  --lock screen
+  -- system utils
   awful.key({ modkey }, "l",
     function() awful.spawn(screen_lock, false) end,
     { description = "lock screen", group = "system" }
+  ),
+  awful.key({ modkey, "Control" }, "r",
+    awesome.restart,
+    { description = "reload awesome", group = "system" }
+  ),
+  awful.key({ modkey, "Shift" }, "i",
+    caffeine.toggle_caffeine,
+    { description = "inhibit idle action", group = "system" }
   ),
 
   -- Prompt

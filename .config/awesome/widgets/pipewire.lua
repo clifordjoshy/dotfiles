@@ -42,24 +42,6 @@ local fetch_volume = function()
       local volume = tonumber(stdout:match("(%d+)%%")) or 0
       local is_muted = stdout:match("Mute: yes") ~= nil
 
-
-      local volume_int = math.floor(volume);
-      if volume_int % 5 ~= 0 then
-        -- round volume to next multiple of 5
-        local rounded_volume = math.floor(volume_int / 5 + 0.5) * 5
-        naughty.notify({
-          preset = naughty.config.presets.low,
-          title = "Volume Override",
-          text = string.format("Anomaly Fixed:  %d -> %d", volume_int, rounded_volume),
-          timeout = 1,
-        })
-        awful.spawn(
-          string.format("pactl set-sink-volume @DEFAULT_SINK@ %d%%", volume_int),
-          false
-        );
-        return
-      end
-
       volume_widget:update_volume_text(volume, is_muted)
     end
   )

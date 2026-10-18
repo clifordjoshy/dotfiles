@@ -20,8 +20,13 @@ local caffeine_textbox = wibox.widget {
     end,
 }
 
+local XSCREENSAVER_RESET_CMD = "xscreensaver-command -deactivate >/dev/null"
 local INHIBITOR_CMD =
-"systemd-inhibit --what=sleep --who=awesome-widget --why='Detected fullscreen or caffeine apps' sleep 365d"
+    "systemd-inhibit --what=sleep:idle --who=awesome-widget "
+    .. "--why='Detected fullscreen or caffeine apps' "
+    .. "bash -c 'while true; do "
+    .. XSCREENSAVER_RESET_CMD
+    .. "; sleep 30; done'"
 
 local function kill_caffeine_process()
     if not caffeine_job_id then return end
@@ -83,6 +88,15 @@ local function _handle_app_signal(c, is_open)
     _handle_fullscreen_signal(c, false)
 end
 
+local function toggle_manual_trigger()
+    local trigger = string.format("manual")
+    if gears.table.hasitem(active_triggers, trigger) then
+        release_caffeine(trigger)
+    else
+        request_caffeine(trigger)
+    end
+end
+
 -- Signals
 client.connect_signal("manage", function(c)
     _handle_app_signal(c, true)
@@ -118,8 +132,8 @@ caffeine_textbox:connect_signal("button::press", function()
     kill_caffeine_process()
 end)
 
+
 return {
-    handle_media_play = on_media_play,
-    handle_media_stop = on_media_stop,
+    toggle_caffeine = toggle_manual_trigger,
     widget = caffeine_textbox
 }

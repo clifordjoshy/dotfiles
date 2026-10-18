@@ -18,11 +18,11 @@ local menu_bg = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 10) end
 -- [[[ Main Menu
 local mymainmenu = awful.menu({
   items = {
-    { "lock",      screen_lock,                   beautiful.menu_lock_icon },
-    { "log out",   function() awesome.quit() end, beautiful.menu_logout_icon },
-    { "hibernate", "systemctl hibernate",         beautiful.menu_hibernate_icon },
-    { "reboot",    "reboot",                      beautiful.menu_reboot_icon },
-    { "power off", "shutdown now",                beautiful.menu_power_icon },
+    { "lock",      screen_lock,           beautiful.menu_lock_icon },
+    { "hibernate", "systemctl hibernate", beautiful.menu_hibernate_icon },
+    { "reboot",    "reboot",              beautiful.menu_reboot_icon },
+    { "power off", "shutdown now",        beautiful.menu_power_icon },
+    -- { "log out",   function() awesome.quit() end, beautiful.menu_logout_icon },
   },
   theme = {
     height = 34,

@@ -57,7 +57,7 @@ theme.menu_launcher       = icondir .. "arch.png"
 theme.menu_hibernate_icon = icondir .. "hibernate.svg"
 theme.menu_lock_icon      = icondir .. "lock.svg"
 theme.menu_logout_icon    = icondir .. "log-out.svg"
-theme.menu_reboot_icon    = icondir .. "refresh-cw.svg"
+theme.menu_reboot_icon    = icondir .. "reboot.svg"
 theme.menu_power_icon     = icondir .. "power.svg"
 
 theme.minimise_def_icon = icondir .. "minimise_def.png"
