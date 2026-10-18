@@ -93,7 +93,7 @@ end
 -- [[[ Widgets
 
 -- Systray Container
-local systray = wibox.container.margin(wibox.widget.systray(), 0, beautiful.systray_icon_spacing, 4, 4)
+local systray = wibox.container.margin(wibox.widget.systray(), 0, 0, 6, 6)
 
 
 local function generate_wibar(s)
@@ -183,9 +183,8 @@ local function generate_wibar(s)
 
       wibox.widget {
         caffeine.widget,
-        spacing = beautiful.systray_icon_spacing,
-        s.index == 1 and systray or nil,
-        layout = wibox.layout.fixed.horizontal -- or wibox.layout.fixed.vertical
+        systray, -- only visible on main screen
+        layout = wibox.layout.fixed.horizontal
       }
     },
   }

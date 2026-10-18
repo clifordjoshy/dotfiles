@@ -1,4 +1,4 @@
-local naughty = require("naughty")
+local beautiful = require("beautiful")
 local awful = require("awful")
 local gears = require("gears")
 local wibox = require("wibox")
@@ -12,21 +12,22 @@ local AUTO_CAFFEINE_APPS = {
 }
 
 local caffeine_textbox = wibox.widget {
-    widget = wibox.widget.textbox,
-    text = "☕",
+    widget = wibox.container.margin,
+    right = beautiful.systray_icon_spacing,
+    {
+        widget = wibox.widget.textbox,
+        text = "☕",
+    },
     visible = false,
     refresh = function(self)
         self:set_visible(caffeine_job_id ~= nil)
     end,
 }
 
-local XSCREENSAVER_RESET_CMD = "xscreensaver-command -deactivate >/dev/null"
 local INHIBITOR_CMD =
     "systemd-inhibit --what=sleep:idle --who=awesome-widget "
     .. "--why='Detected fullscreen or caffeine apps' "
-    .. "bash -c 'while true; do "
-    .. XSCREENSAVER_RESET_CMD
-    .. "; sleep 30; done'"
+    .. "bash -c 'sleep infinity'"
 
 local function kill_caffeine_process()
     if not caffeine_job_id then return end
